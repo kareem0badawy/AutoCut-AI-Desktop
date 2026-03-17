@@ -1,0 +1,14 @@
+# API Keys & Config
+config.json
+
+# Folders
+assets/
+output/
+
+# Prompt Template
+groq_keys.txt
+
+# Python
+__pycache__/
+*.pyc
+*.pyo

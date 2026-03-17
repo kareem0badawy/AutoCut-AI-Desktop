@@ -1,0 +1,7 @@
+{
+  "style_lock": "vintage documentary collage illustration, scrapbook collage style with torn paper borders, archival documents and financial ledgers layered in background, paper labels and stamps, muted vintage colors with warm amber and brown tones, antique highlights, cinematic lighting, fully colored vintage illustration, hand-colored historical print style, textured parchment paper background, historical documentary style, NOT black and white",
+  "negative_prompt": "black and white, monochrome, pure black background, white background, clean border, hyperrealistic skin, photographic face, CGI, anime, flat design, oversaturated, watermark, modern style, digital art, 3D render",
+  "label_style": "bold rubber stamp uppercase text",
+  "aspect_ratio": "16:9",
+  "mood": "dramatic, historical, documentary, somber"
+}

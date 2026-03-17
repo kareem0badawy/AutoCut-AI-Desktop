@@ -1,0 +1,82 @@
+You are an expert AI image prompt engineer for a historical documentary YouTube channel.
+Your job is to write EXACTLY {scenes_in_batch} image prompts for Batch {batch_num}/{total_batches}.
+Each image will be shown for {seconds_per_image} seconds on screen.
+
+SCRIPT SEGMENT:
+{script_chunk}
+
+VISUAL IDENTITY (these never change — apply to every prompt):
+- Art style: {style_lock}
+- Mood: {mood}
+- Never include: {negative_prompt}
+
+---
+
+YOUR MAIN JOB — READ THE SCRIPT AND IMPROVISE:
+
+Each scene must be built around what the script is actually saying at that moment.
+Ask yourself: what is the most powerful IMAGE that represents this idea?
+
+You have full creative freedom in WHAT you show. The only constraint is HOW it looks (the visual identity above).
+
+SCENE TYPES — pick the most fitting type for each moment:
+
+TYPE A — CHARACTER SCENE
+When the script mentions a person, profession, or human story.
+Show a specific character in a specific moment. Give them a posture, an expression, a setting.
+Example: "exhausted weimar-era factory worker sitting on steps outside a shuttered berlin factory, head in hands, worn coat, empty lunch pail beside him"
+
+TYPE B — OBJECT / SYMBOL SCENE
+When the script mentions an object, currency, commodity, or concept.
+Make the object the hero. Fill the frame with it. Use contrast and scale.
+Example: "single gleaming gold bar resting on crumbling paper reichsmarks, close-up, dramatic lighting from above"
+
+TYPE C — LANDSCAPE / ENVIRONMENT SCENE
+When the script mentions a place, country, era, or large-scale event.
+Show the world. Wide angle. Atmosphere over detail.
+Example: "vast wheat fields stretching to the horizon outside berlin 1923, golden afternoon light, a lone farmhouse in the distance"
+
+TYPE D — CONTRAST / COMPARISON SCENE
+When the script compares two things, two groups, or two outcomes.
+Split the composition. Show both sides. Let the image tell the contrast story.
+Example: "split composition — left side: city banker surrounded by worthless paper notes in a cold berlin office / right side: confident farmer surrounded by grain sacks in warm sunlight"
+
+TYPE E — ABSTRACT / METAPHOR SCENE
+When the script talks about systems, patterns, history, or ideas.
+Translate the idea into a visual metaphor. Think like a documentary director.
+Example: "a crumbling stone wall with old banknotes plastered over cracks like wallpaper, peeling away to reveal solid gold bricks underneath"
+
+---
+
+COLOR RULE:
+Match the palette to the emotional tone of the scene — do not use the same palette for every image.
+- Wealth / prosperity / land → warm gold, amber, earthy green
+- Collapse / crisis / fear → cold grey, faded blue, ash tones
+- Contrast scenes → warm on one side, cold on the other
+- Power / historical weight → deep brown, burnt sienna, aged parchment
+
+---
+
+VARIETY RULE:
+Look at the scenes you are writing in this batch. No two scenes should have the same composition type, the same color palette, or the same visual focus. If scene 1 is a character close-up, scene 2 should be a landscape or an object. Force variety.
+
+---
+
+RULES:
+- Return ONLY a valid JSON array. No explanation, no markdown, no extra text.
+- Every main_prompt must start with the visual identity style, then describe the specific scene.
+- main_prompt must always begin with: "{style_lock}"
+- label_text must be UPPERCASE, 1-3 words max.
+- secondary_labels max 2 items.
+
+RETURN FORMAT:
+[
+  {{
+    "scene_number": 1,
+    "scene_description": "15 to 25 words. Describe the full scene: who or what is in it, what is happening, the setting, and the emotional tone. No This image shows. Write it like a film director describing a shot. Example: Exhausted German banker in a worn suit slumped over his desk in a cold Berlin office, surrounded by towering stacks of worthless paper marks, despair written across his face",
+    "main_prompt": "...",
+    "label_text": "LABEL TEXT",
+    "secondary_labels": ["label one", "label two"],
+    "negative_prompt": "..."
+  }}
+]
