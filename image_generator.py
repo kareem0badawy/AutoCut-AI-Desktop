@@ -1,161 +1,247 @@
 ﻿import json
-import os
-import time
-from huggingface_hub import InferenceClient
+import re
+import argparse
+from pathlib import Path
+from typing import List, Optional, Tuple
 
-CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
+CONFIG_PATH = Path(__file__).resolve().parent / "config.json"
+IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".webp")
 
-TEST_MODE = True
-TEST_COUNT = 5
 
-def load_json(path):
+def load_json(path: Path):
     with open(path, "r", encoding="utf-8-sig") as f:
         return json.load(f)
 
-def generate_image(client, prompt, width, height, scene_num):
-    for attempt in range(3):
-        try:
-            image = client.text_to_image(
-                prompt=prompt,
-                model="black-forest-labs/FLUX.1-schnell",
-                width=width,
-                height=height,
-                num_inference_steps=4,
-                guidance_scale=0.0
-            )
-            return image
-        except Exception as e:
-            err = str(e)
-            if "loading" in err.lower() or "503" in err:
-                print(f"  الموديل بيتحمل، انتظار 20 ثانية...")
-                time.sleep(20)
-            elif "429" in err:
-                print(f"  Rate limit، انتظار 15 ثانية...")
-                time.sleep(15)
-            else:
-                print(f"  محاولة {attempt+1} فشلت: {err[:100]}")
-                time.sleep(5)
+
+def save_json(data, path: Path):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+
+
+def parse_duration(duration_str: str) -> int:
+    parts = str(duration_str).strip().split(".")
+    minutes = int(parts[0]) if parts and parts[0] else 0
+    seconds = int(parts[1]) if len(parts) > 1 and parts[1] else 0
+    return minutes * 60 + seconds
+
+
+def seconds_to_mmss(total_seconds: int) -> str:
+    total_seconds = max(0, int(total_seconds))
+    minutes = total_seconds // 60
+    seconds = total_seconds % 60
+    return f"{minutes:02d}:{seconds:02d}"
+
+
+def list_image_files(folder: Path) -> List[Path]:
+    if not folder.exists():
+        return []
+    return sorted(
+        [
+            f for f in folder.iterdir()
+            if f.is_file() and f.suffix.lower() in IMAGE_EXTENSIONS
+        ]
+    )
+
+
+def normalize_text(text: str) -> str:
+    text = str(text).lower().strip()
+    text = re.sub(r"\.(jpg|jpeg|png|webp)$", "", text)
+    text = text.replace("_", " ")
+    text = re.sub(r"[^a-z0-9\s]", " ", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
+
+
+def extract_scene_number(text: str) -> Optional[int]:
+    if not text:
+        return None
+    match = re.search(r"scene[_\-\s]*0*(\d+)", str(text).lower())
+    if match:
+        return int(match.group(1))
     return None
 
-def generate_prompts(limit=None, reset=False):
-    config = load_json(CONFIG_PATH)
-    BASE   = config["base_path"]
-    style  = load_json(f"{BASE}/style_config.json")
-    script = load_txt(f"{BASE}/script.txt")
-    template = load_txt(f"{BASE}/prompts_template.txt")
 
-    seconds_per_image = config["seconds_per_image"]
-    audio_duration    = parse_duration(config["audio_duration"])
-    total_images      = math.ceil(audio_duration / seconds_per_image)
-    scenes_per_batch  = config["scenes_per_batch"]
-    total_batches     = math.ceil(total_images / scenes_per_batch)
+def build_requested_names(scene: dict) -> List[str]:
+    candidates = []
 
-    print(f"مدة الصوت: {audio_duration} ثانية")
-    print(f"صورة كل: {seconds_per_image} ثواني")
-    print(f"إجمالي الصور: {total_images} صورة")
-    print(f"عدد الـ batches: {total_batches}")
-    print("-" * 40)
+    for key in ("image", "image_name", "filename"):
+        value = scene.get(key)
+        if isinstance(value, str) and value.strip():
+            candidates.append(value.strip())
 
-    if limit:
-        total_images  = min(limit, total_images)
-        total_batches = math.ceil(total_images / scenes_per_batch)
-        print(f"🎯 Limit مفعّل — هيتولد {total_images} مشهد بس")
-        print(f"   عدد الـ batches بعد الـ limit: {total_batches}")
-        print("-" * 40)
+    images = scene.get("images", [])
+    if isinstance(images, list):
+        for img in images:
+            if isinstance(img, str) and img.strip():
+                candidates.append(img.strip())
 
-    # ── Resume من آخر مشهد محفوظ ──
-    output_path = f"{BASE}/output/prompts.json"
-    os.makedirs(f"{BASE}/output", exist_ok=True)
+    scene_number = scene.get("scene_number")
+    if scene_number is not None:
+        candidates.append(f"scene_{int(scene_number):03d}")
 
-    if reset and os.path.exists(output_path):
-            os.remove(output_path)
-            print("🗑️ تم مسح الملف القديم")
+    desc = scene.get("scene_description", "")
+    if scene_number is not None and desc:
+        candidates.append(f"scene_{int(scene_number):03d}_{desc}")
 
-    if os.path.exists(output_path):
-        try:
-            all_scenes  = load_json(output_path)
-            resume_from = len(all_scenes)
-            print(f"⏩ ملف موجود — Resume من مشهد {resume_from + 1}")
-        except (json.JSONDecodeError, ValueError):
-            print("⚠️ ملف تالف — هيبدأ من الأول")
-            all_scenes  = []
-            resume_from = 0
-    else:
-        all_scenes  = []
-        resume_from = 0
+    return candidates
 
-    client = Groq(api_key=config["groq_api_key"])
 
-    words           = script.split()
-    words_per_batch = math.ceil(len(words) / total_batches)
-    scene_counter   = resume_from + 1
+def debug_print_folders(image_folders: List[Path]):
+    print("\n========== AI MAPPER DEBUG ==========")
+    for folder in image_folders:
+        files = list_image_files(folder)
+        print(f"[DEBUG] folder: {folder} | exists={folder.exists()} | image_count={len(files)}")
+        if files:
+            preview = ", ".join(f.name for f in files[:5])
+            print(f"        preview: {preview}")
+    print("=====================================\n")
 
-    for i in range(total_batches):
-        batch_start_scene = i * scenes_per_batch
 
-        if batch_start_scene < resume_from:
-            print(f"Batch {i+1}/{total_batches} — ✅ موجود، skip")
+def find_image_for_scene(scene: dict, image_folders: List[Path]) -> Tuple[Optional[Path], Optional[str]]:
+    scene_number = scene.get("scene_number")
+    requested_names = build_requested_names(scene)
+    normalized_candidates = [normalize_text(x) for x in requested_names if x]
+
+    for folder in image_folders:
+        files = list_image_files(folder)
+        if not files:
             continue
 
-        start_word = i * words_per_batch
-        end_word   = min((i + 1) * words_per_batch, len(words))
-        chunk      = " ".join(words[start_word:end_word])
+        # 1) scene number match first
+        if scene_number is not None:
+            for file in files:
+                file_scene_num = extract_scene_number(file.name)
+                if file_scene_num == int(scene_number):
+                    return file, f"scene_number match in {folder}"
 
-        remaining  = total_images - len(all_scenes)
-        if remaining <= 0:
+        # 2) exact / contains normalized name
+        for requested in normalized_candidates:
+            if not requested:
+                continue
+            for file in files:
+                file_norm = normalize_text(file.name)
+                if file_norm == requested:
+                    return file, f"normalized exact match in {folder}"
+                if requested and file_norm.startswith(requested):
+                    return file, f"normalized startswith match in {folder}"
+                if requested and requested in file_norm:
+                    return file, f"normalized contains match in {folder}"
+
+    return None, None
+
+
+def build_mapping(prompts: List[dict], seconds_per_image: int, audio_duration: int, image_folders: List[Path]):
+    mapping = []
+    current_start = 0
+    missing = []
+
+    total_scenes = len(prompts)
+    print(f"[DEBUG] total prompts loaded: {total_scenes}")
+    print(f"[DEBUG] seconds_per_image from config: {seconds_per_image}")
+    print(f"[DEBUG] audio_duration from config: {audio_duration}s")
+
+    for i, scene in enumerate(prompts, start=1):
+        if current_start >= audio_duration:
+            print(f"[DEBUG] stopping at scene {i} because timeline reached audio duration")
             break
-        batch_size = min(scenes_per_batch, remaining)
 
-        print(f"Batch {i+1}/{total_batches} — {batch_size} مشاهد...")
-        batch = generate_batch(client, chunk, style, i+1, total_batches, batch_size, seconds_per_image, template)
+        start_sec = current_start
+        end_sec = min(current_start + seconds_per_image, audio_duration)
 
-        for s in batch:
-            s["scene_number"] = scene_counter
-            if "scene_description" in s:
-                desc = s["scene_description"]
-                desc = re.sub(
-                    r'^(This image|This scene|The image|The scene)\s+(shows|represents|depicts|is|captures|features|presents)\s+',
-                    '', desc, flags=re.IGNORECASE
-                ).strip()
-                desc = re.sub(r"[',\.\-\(\)\[\]\"!?;:]", " ", desc)
-                desc = re.sub(r"\s+", " ", desc).strip()
-                if len(desc) > 100:
-                    desc = desc[:100].rsplit(' ', 1)[0].strip()
-                if desc:
-                    desc = desc[0].upper() + desc[1:]
-                s["scene_description"] = desc
-            all_scenes.append(s)
-            scene_counter += 1
+        image_path, match_reason = find_image_for_scene(scene, image_folders)
 
-        save_json(all_scenes, output_path)
-        print(f"  💾 حُفظ {len(all_scenes)}/{total_images} مشهد")
+        if image_path:
+            images = [image_path.name]
+            print(f"✅ scene {i:03d} -> {image_path.name}")
+            print(f"   [MATCH] {match_reason}")
+        else:
+            scene_num = scene.get("scene_number", i)
+            requested = build_requested_names(scene)
+            print(f"⚠️ scene {i:03d} image not found")
+            print(f"   requested candidates: {requested}")
+            images = []
+            missing.append(
+                {
+                    "scene_number": scene_num,
+                    "requested_candidates": requested,
+                }
+            )
 
-        if i < total_batches - 1 and remaining - batch_size > 0:
-            print("انتظار 4 ثواني...")
-            time.sleep(4)
+        mapping.append(
+            {
+                "scene_number": scene.get("scene_number", i),
+                "start": seconds_to_mmss(start_sec),
+                "end": seconds_to_mmss(end_sec),
+                "images": images,
+                "scene_description": scene.get("scene_description", ""),
+                "label_text": scene.get("label_text", ""),
+            }
+        )
 
-    txt  = "=" * 60 + "\n"
-    txt += "AUTOCUT - PROMPTS OUTPUT\n"
-    txt += f"Total Scenes: {len(all_scenes)} | Seconds per image: {seconds_per_image}\n"
-    txt += "=" * 60 + "\n\n"
-    for s in all_scenes:
-        txt += f"SCENE {s['scene_number']}\n"
-        txt += f"Description: {s['scene_description']}\n"
-        txt += "-" * 40 + "\n"
-        txt += f"MAIN PROMPT:\n{s['main_prompt']}\n\n"
-        txt += f"LABEL TEXT: {s['label_text']}\n"
-        txt += f"SECONDARY LABELS: {', '.join(s['secondary_labels'])}\n"
-        txt += f"\nNEGATIVE PROMPT:\n{s['negative_prompt']}\n"
-        txt += "=" * 60 + "\n\n"
+        current_start = end_sec
 
-    save_txt(txt, f"{BASE}/output/prompts_output.txt")
-    print(f"\n✅ تم! عدد المشاهد الفعلي: {len(all_scenes)}")
-    print(f"الملفات في: {BASE}/output/")
+    return mapping, missing
+
+
+def main(reset: bool = False):
+    config = load_json(CONFIG_PATH)
+    base_path = Path(config["base_path"])
+
+    prompts_path = base_path / "output" / "prompts.json"
+    mapping_path = base_path / "mapping.json"
+
+    image_folders = [
+        base_path / "source" / "images",
+        base_path / "output" / "images",
+        base_path / "assets" / "images",
+    ]
+
+    seconds_per_image = int(config.get("seconds_per_image", 10))
+    audio_duration = parse_duration(config.get("audio_duration", "1.00"))
+
+    if not prompts_path.exists():
+        raise FileNotFoundError(f"prompts.json not found: {prompts_path}")
+
+    if reset and mapping_path.exists():
+        mapping_path.unlink()
+        print(f"🗑️ deleted old mapping: {mapping_path}")
+
+    debug_print_folders(image_folders)
+
+    prompts = load_json(prompts_path)
+    if not prompts:
+        raise ValueError(f"No prompts found in {prompts_path}")
+
+    total_images_found = sum(len(list_image_files(folder)) for folder in image_folders)
+    if total_images_found == 0:
+        raise ValueError(
+            "No images found in any configured folder:\n"
+            + "\n".join(str(folder) for folder in image_folders)
+        )
+
+    mapping, missing = build_mapping(
+        prompts=prompts,
+        seconds_per_image=seconds_per_image,
+        audio_duration=audio_duration,
+        image_folders=image_folders,
+    )
+
+    save_json(mapping, mapping_path)
+
+    print(f"\n💾 mapping saved to: {mapping_path}")
+    print(f"✅ total mapped scenes: {len(mapping)}")
+
+    if missing:
+        print("\n⚠️ scenes with missing images:")
+        for item in missing:
+            print(f" - scene {item['scene_number']}: {item['requested_candidates']}")
+    else:
+        print("\n✅ all scenes mapped successfully")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--limit", type=int, default=None)
-    parser.add_argument("--reset", action="store_true")
+    parser.add_argument("--reset", action="store_true", help="Delete old mapping.json before rebuilding")
     args = parser.parse_args()
-    generate_prompts(limit=args.limit, reset=args.reset)
+    main(reset=args.reset)

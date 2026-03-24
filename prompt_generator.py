@@ -46,16 +46,33 @@ def clean_and_parse_json(raw):
             raw += ']'
         return json.loads(raw)
 
-def generate_batch(client, script_chunk, style, batch_num, total_batches, scenes_in_batch, seconds_per_image, template):
+def build_previous_scenes_summary(all_scenes, last_n=5):
+    """بيبني ملخص بآخر المشاهد اللي اتعملت عشان الـ AI يتجنب تكرارها"""
+    if not all_scenes:
+        return "No previous scenes yet."
+    last = all_scenes[-last_n:]
+    lines = []
+    for s in last:
+        desc  = s.get("scene_description", "")
+        label = s.get("label_text", "")
+        lines.append(f"- Scene {s.get('scene_number', '?')}: [{label}] {desc}")
+    return "\n".join(lines)
+
+def generate_batch(client, script_chunk, style, batch_num, total_batches,
+                   scenes_in_batch, seconds_per_image, template, all_scenes):
+    
+    previous_scenes_summary = build_previous_scenes_summary(all_scenes)
+
     prompt = template.format(
-        batch_num         = batch_num,
-        total_batches     = total_batches,
-        scenes_in_batch   = scenes_in_batch,
-        seconds_per_image = seconds_per_image,
-        script_chunk      = script_chunk,
-        style_lock        = style["style_lock"],
-        mood              = style["mood"],
-        negative_prompt   = style["negative_prompt"],
+        batch_num              = batch_num,
+        total_batches          = total_batches,
+        scenes_in_batch        = scenes_in_batch,
+        seconds_per_image      = seconds_per_image,
+        script_chunk           = script_chunk,
+        style_lock             = style["style_lock"],
+        mood                   = style["mood"],
+        negative_prompt        = style["negative_prompt"],
+        previous_scenes        = previous_scenes_summary,
     )
     max_tokens = min(scenes_in_batch * 500, 8000)
 
@@ -97,7 +114,6 @@ def generate_prompts(limit=None, reset=False):
     audio_duration    = parse_duration(config["audio_duration"])
     total_images      = math.ceil(audio_duration / seconds_per_image)
 
-    # لو في limit، نحسب عدد المشاهد منه
     if limit:
         total_images = min(limit, total_images)
         print(f"🎯 Limit مفعّل — هيتولد {total_images} مشهد بس")
@@ -114,34 +130,31 @@ def generate_prompts(limit=None, reset=False):
     output_path = f"{BASE}/output/prompts.json"
     os.makedirs(f"{BASE}/output", exist_ok=True)
 
-    # Reset — يمسح الملف ويبدأ من الأول
     if reset:
         if os.path.exists(output_path):
             os.remove(output_path)
             print("🗑️  تم مسح الملف القديم — بيبدأ من الأول")
-        all_scenes = []
+        all_scenes  = []
         resume_from = 0
-    # Resume — يكمل من آخر نقطة
     elif os.path.exists(output_path):
-        all_scenes = load_json(output_path)
+        all_scenes  = load_json(output_path)
         resume_from = len(all_scenes)
         if resume_from >= total_images:
             print(f"✅ الملف مكتمل بالفعل ({resume_from} مشهد) — مفيش حاجة تتعمل")
             return
         print(f"⏩ Resume من مشهد {resume_from + 1}")
     else:
-        all_scenes = []
+        all_scenes  = []
         resume_from = 0
 
     client = Groq(api_key=config["groq_api_key"])
-    words = script.split()
+    words           = script.split()
     words_per_batch = math.ceil(len(words) / total_batches)
-    scene_counter = resume_from + 1
+    scene_counter   = resume_from + 1
 
     for i in range(total_batches):
         batch_start_scene = i * scenes_per_batch
 
-        # Skip الـ batches المكتملة
         if batch_start_scene < resume_from:
             print(f"Batch {i+1}/{total_batches} — ✅ موجود، skip")
             continue
@@ -156,14 +169,23 @@ def generate_prompts(limit=None, reset=False):
         batch_size = min(scenes_per_batch, remaining)
 
         print(f"Batch {i+1}/{total_batches} — {batch_size} مشاهد...")
-        batch = generate_batch(client, chunk, style, i+1, total_batches, batch_size, seconds_per_image, template)
+
+        # ← التعديل الرئيسي: بنمرر all_scenes عشان يعرف اللي اتعمل قبل كده
+        batch = generate_batch(
+            client, chunk, style,
+            batch_num        = i + 1,
+            total_batches    = total_batches,
+            scenes_in_batch  = batch_size,
+            seconds_per_image= seconds_per_image,
+            template         = template,
+            all_scenes       = all_scenes,
+        )
 
         for s in batch:
             s["scene_number"] = scene_counter
             all_scenes.append(s)
             scene_counter += 1
 
-        # حفظ بعد كل batch
         save_json(all_scenes, output_path)
         print(f"  💾 حُفظ {len(all_scenes)}/{total_images} مشهد")
 
@@ -171,8 +193,8 @@ def generate_prompts(limit=None, reset=False):
             print("انتظار 4 ثواني...")
             time.sleep(4)
 
-    # حفظ الـ txt
-    txt = "=" * 60 + "\n"
+    # ── حفظ الـ txt بنفس الفورمات الأصلي ──
+    txt  = "=" * 60 + "\n"
     txt += "AUTOCUT - PROMPTS OUTPUT\n"
     txt += f"Total Scenes: {len(all_scenes)} | Seconds per image: {seconds_per_image}\n"
     txt += "=" * 60 + "\n\n"
