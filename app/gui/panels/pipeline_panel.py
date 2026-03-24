@@ -1,3 +1,5 @@
+import subprocess
+import sys
 import traceback
 from pathlib import Path
 
@@ -5,10 +7,12 @@ from PySide6.QtCore import Qt, QThread, Signal, QObject
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
     QScrollArea, QFrame, QProgressBar, QPlainTextEdit, QCheckBox,
-    QGroupBox, QSpinBox, QMessageBox,
+    QSpinBox, QMessageBox,
 )
 
-from app.gui.theme import COLORS
+from app.i18n import lang_manager, t
+from app.gui.theme import get_colors
+from app.gui.widgets import make_separator, make_badge
 from app.core.config_manager import load_config, load_style, validate_config, BASE_DIR
 
 
@@ -47,345 +51,541 @@ class PipelinePanel(QWidget):
         super().__init__(parent)
         self._thread = None
         self._worker = None
+        self._step_cards: list[dict] = []
+        self._translatable: dict[str, QLabel | QPushButton] = {}
         self._build_ui()
 
     def _build_ui(self):
-        layout = QVBoxLayout(self)
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QFrame.NoFrame)
+
+        container = QWidget()
+        layout = QVBoxLayout(container)
+        layout.setContentsMargins(40, 36, 40, 40)
+        layout.setSpacing(24)
+
+        layout.addWidget(self._header_section())
+        layout.addWidget(self._steps_section())
+        layout.addWidget(self._export_section())
+        layout.addWidget(self._log_section())
+        layout.addStretch()
+
+        scroll.setWidget(container)
+        main = QVBoxLayout(self)
+        main.setContentsMargins(0, 0, 0, 0)
+        main.addWidget(scroll)
+
+    def _header_section(self) -> QWidget:
+        C = get_colors()
+        w = QWidget()
+        layout = QVBoxLayout(w)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(0)
+        layout.setSpacing(6)
 
-        top = QWidget()
-        top_layout = QVBoxLayout(top)
-        top_layout.setContentsMargins(40, 30, 40, 20)
-        top_layout.setSpacing(16)
-
-        title = QLabel("Pipeline Runner")
+        title = QLabel(t("pipeline_title"))
         title.setObjectName("heading")
-        top_layout.addWidget(title)
+        sub = QLabel(t("pipeline_subtitle"))
+        sub.setStyleSheet(f"color: {C['text_sec']}; font-size: 14px; background: transparent;")
 
-        desc = QLabel("Run each step individually or run the full pipeline. Logs appear in real time.")
-        desc.setStyleSheet(f"color: {COLORS['text_sec']}; font-size: 12px;")
-        top_layout.addWidget(desc)
+        self._translatable["pipeline_title"] = title
+        self._translatable["pipeline_subtitle"] = sub
+        layout.addWidget(title)
+        layout.addWidget(sub)
+        return w
 
-        top_layout.addWidget(self._steps_card())
-        top_layout.addWidget(self._options_card())
+    def _steps_section(self) -> QWidget:
+        C = get_colors()
+        container = QWidget()
+        layout = QVBoxLayout(container)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(12)
 
-        layout.addWidget(top)
+        step_defs = [
+            {
+                "num": "1",
+                "title_key": "step1_title",
+                "desc_key": "step1_desc",
+                "input_key": "step1_input",
+                "output_key": "step1_output",
+                "run_fn": self._run_step1,
+                "external": False,
+                "color": C["accent"],
+            },
+            {
+                "num": "2",
+                "title_key": "step2_title",
+                "desc_key": "step2_desc",
+                "input_key": "step2_input",
+                "output_key": "step2_output",
+                "note_key": "step2_note",
+                "run_fn": None,
+                "external": True,
+                "color": C["warning"],
+            },
+            {
+                "num": "3",
+                "title_key": "step3_title",
+                "desc_key": "step3_desc",
+                "input_key": "step3_input",
+                "output_key": "step3_output",
+                "run_fn": self._run_step3,
+                "external": False,
+                "color": "#8b5cf6",
+            },
+            {
+                "num": "4",
+                "title_key": "step4_title",
+                "desc_key": "step4_desc",
+                "input_key": "step4_input",
+                "output_key": "step4_output",
+                "run_fn": self._run_step4,
+                "external": False,
+                "color": C["success"],
+            },
+        ]
 
-        logs_container = QWidget()
-        logs_container.setObjectName("card_dark")
-        logs_layout = QVBoxLayout(logs_container)
-        logs_layout.setContentsMargins(20, 16, 20, 16)
-        logs_layout.setSpacing(8)
+        self._step_cards = []
+        for i, step in enumerate(step_defs):
+            card_widget, card_refs = self._build_step_card(step, C)
+            card_refs["step_def"] = step
+            self._step_cards.append(card_refs)
+            layout.addWidget(card_widget)
 
-        log_header = QHBoxLayout()
-        log_label = QLabel("Logs")
-        log_label.setObjectName("subheading")
-        clear_btn = QPushButton("Clear")
-        clear_btn.setObjectName("secondary")
-        clear_btn.setFixedWidth(70)
-        clear_btn.clicked.connect(self._clear_logs)
-        log_header.addWidget(log_label)
-        log_header.addStretch()
-        log_header.addWidget(clear_btn)
-        logs_layout.addLayout(log_header)
+            if i < len(step_defs) - 1:
+                arr = QLabel("↓")
+                arr.setAlignment(Qt.AlignCenter)
+                arr.setStyleSheet(f"color: {C['text_dim']}; font-size: 20px; background: transparent;")
+                layout.addWidget(arr)
 
-        self._progress_bar = QProgressBar()
-        self._progress_bar.setVisible(False)
-        self._progress_bar.setTextVisible(False)
-        logs_layout.addWidget(self._progress_bar)
+        layout.addSpacing(8)
 
-        self._log_view = QPlainTextEdit()
-        self._log_view.setReadOnly(True)
-        self._log_view.setMinimumHeight(300)
-        self._log_view.setStyleSheet(
-            f"background: #0a0a0a; color: {COLORS['success']}; font-family: monospace; font-size: 12px;"
+        run_all_row = QHBoxLayout()
+        self._run_all_btn = QPushButton("  ⚡  " + t("run_all"))
+        self._run_all_btn.setObjectName("primary")
+        self._run_all_btn.setFixedHeight(44)
+        self._run_all_btn.clicked.connect(self._run_all)
+
+        self._run_all_desc = QLabel(t("run_all_desc"))
+        self._run_all_desc.setStyleSheet(f"color: {C['text_dim']}; font-size: 12px; background: transparent;")
+        self._translatable["run_all"] = self._run_all_btn
+        self._translatable["run_all_desc"] = self._run_all_desc
+
+        run_all_row.addWidget(self._run_all_btn)
+        run_all_row.addSpacing(12)
+        run_all_row.addWidget(self._run_all_desc)
+        run_all_row.addStretch()
+
+        container.layout().addLayout(run_all_row)
+
+        step1_card_refs = self._step_cards[0]
+        opts = self._build_step1_options(C)
+        self._step1_opts_widget = opts
+        container.layout().insertWidget(1, opts)
+
+        return container
+
+    def _build_step_card(self, step: dict, C: dict) -> tuple[QWidget, dict]:
+        card = QWidget()
+        card.setObjectName("step_card")
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(20, 18, 20, 18)
+        layout.setSpacing(10)
+
+        top_row = QHBoxLayout()
+        top_row.setSpacing(14)
+
+        num = QLabel(step["num"])
+        num.setFixedSize(36, 36)
+        num.setAlignment(Qt.AlignCenter)
+        num.setStyleSheet(
+            f"background: {step['color']}22; color: {step['color']}; "
+            f"border: 2px solid {step['color']}; border-radius: 18px; "
+            f"font-weight: bold; font-size: 15px;"
         )
-        logs_layout.addWidget(self._log_view)
 
-        layout.addWidget(logs_container, 1)
+        title_col = QVBoxLayout()
+        title_col.setSpacing(2)
+        title_lbl = QLabel(t(step["title_key"]))
+        title_lbl.setStyleSheet(f"font-weight: 700; font-size: 15px; color: {C['text']}; background: transparent;")
+        desc_lbl = QLabel(t(step["desc_key"]))
+        desc_lbl.setStyleSheet(f"font-size: 12px; color: {C['text_sec']}; background: transparent;")
+        desc_lbl.setWordWrap(True)
+        title_col.addWidget(title_lbl)
+        title_col.addWidget(desc_lbl)
 
-    def _steps_card(self):
+        top_row.addWidget(num)
+        top_row.addLayout(title_col, 1)
+
+        refs: dict = {
+            "title_lbl": title_lbl,
+            "desc_lbl": desc_lbl,
+        }
+
+        if step["external"]:
+            ext_badge = make_badge("🔗 " + t("step2_note").split("—")[0].strip(), "warning", C)
+            top_row.addWidget(ext_badge)
+            refs["ext_badge"] = ext_badge
+        else:
+            run_btn = QPushButton("  ▶  " + t("run_step"))
+            run_btn.setObjectName("primary")
+            run_btn.setFixedHeight(34)
+            run_btn.setFixedWidth(120)
+            run_btn.clicked.connect(step["run_fn"])
+            top_row.addWidget(run_btn)
+            refs["run_btn"] = run_btn
+
+        layout.addLayout(top_row)
+        layout.addWidget(make_separator(C))
+
+        io_row = QHBoxLayout()
+        io_row.setSpacing(20)
+
+        in_lbl = QLabel(t(step["input_key"]))
+        in_lbl.setStyleSheet(f"font-size: 11px; color: {C['text_dim']}; background: transparent;")
+        in_lbl.setWordWrap(True)
+        out_lbl = QLabel(t(step["output_key"]))
+        out_lbl.setStyleSheet(
+            f"font-size: 11px; color: {step['color']}; font-weight: 600; background: transparent;"
+        )
+        out_lbl.setWordWrap(True)
+
+        io_row.addWidget(in_lbl, 1)
+        io_row.addWidget(QLabel("→"))
+        io_row.addWidget(out_lbl, 1)
+        layout.addLayout(io_row)
+
+        refs["in_lbl"] = in_lbl
+        refs["out_lbl"] = out_lbl
+
+        if step.get("note_key"):
+            note = QLabel(t(step["note_key"]))
+            note.setStyleSheet(
+                f"font-size: 11px; color: {C['warning']}; background: transparent; font-style: italic;"
+            )
+            note.setWordWrap(True)
+            layout.addWidget(note)
+            refs["note_lbl"] = note
+
+        self._step_progress = getattr(self, "_step_progress", {})
+        pbar = QProgressBar()
+        pbar.setVisible(False)
+        pbar.setFixedHeight(6)
+        pbar.setValue(0)
+        pbar.setRange(0, 100)
+        layout.addWidget(pbar)
+        key = f"pbar_{step['num']}"
+        self._step_progress[key] = pbar
+        refs["pbar"] = pbar
+
+        status_lbl = QLabel("")
+        status_lbl.setStyleSheet("background: transparent; font-size: 11px;")
+        status_lbl.setVisible(False)
+        layout.addWidget(status_lbl)
+        refs["status_lbl"] = status_lbl
+
+        return card, refs
+
+    def _build_step1_options(self, C: dict) -> QWidget:
+        grp = QWidget()
+        grp.setObjectName("card_dark")
+        layout = QVBoxLayout(grp)
+        layout.setContentsMargins(18, 14, 18, 14)
+        layout.setSpacing(10)
+
+        title = QLabel(t("step1_options"))
+        title.setStyleSheet(f"font-weight: 600; font-size: 13px; color: {C['text']}; background: transparent;")
+        self._translatable["step1_options"] = title
+        layout.addWidget(title)
+
+        self._reset_check = QCheckBox(t("reset_option"))
+        self._reset_check.setStyleSheet(f"color: {C['text_sec']}; background: transparent;")
+        self._translatable["reset_option"] = self._reset_check
+        layout.addWidget(self._reset_check)
+
+        limit_row = QHBoxLayout()
+        self._limit_check = QCheckBox(t("limit_option"))
+        self._limit_check.setStyleSheet(f"color: {C['text_sec']}; background: transparent;")
+        self._limit_spin = QSpinBox()
+        self._limit_spin.setRange(1, 999)
+        self._limit_spin.setValue(10)
+        self._limit_spin.setFixedWidth(70)
+        self._limit_spin.setEnabled(False)
+        self._limit_check.toggled.connect(self._limit_spin.setEnabled)
+        self._translatable["limit_option"] = self._limit_check
+        limit_row.addWidget(self._limit_check)
+        limit_row.addWidget(self._limit_spin)
+        limit_row.addStretch()
+        layout.addLayout(limit_row)
+
+        note = QLabel(t("limit_note"))
+        note.setStyleSheet(f"font-size: 11px; color: {C['text_dim']}; background: transparent;")
+        self._translatable["limit_note"] = note
+        layout.addWidget(note)
+
+        return grp
+
+    def _export_section(self) -> QWidget:
+        C = get_colors()
+        card = QWidget()
+        card.setObjectName("card")
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(24, 20, 24, 20)
+        layout.setSpacing(12)
+
+        row = QHBoxLayout()
+        row.setSpacing(16)
+
+        left = QVBoxLayout()
+        left.setSpacing(4)
+        title = QLabel("🎬  " + t("export_video"))
+        title.setStyleSheet(f"font-weight: 700; font-size: 16px; color: {C['text']}; background: transparent;")
+        desc = QLabel(t("export_video_desc"))
+        desc.setStyleSheet(f"font-size: 12px; color: {C['text_sec']}; background: transparent;")
+        self._translatable["export_video"] = title
+        self._translatable["export_video_desc"] = desc
+        left.addWidget(title)
+        left.addWidget(desc)
+
+        self._export_btn = QPushButton(t("open_output_folder"))
+        self._export_btn.setObjectName("export_btn")
+        self._export_btn.setFixedHeight(48)
+        self._export_btn.setFixedWidth(200)
+        self._export_btn.clicked.connect(self._open_output)
+        self._translatable["open_output_folder"] = self._export_btn
+
+        row.addLayout(left, 1)
+        row.addWidget(self._export_btn)
+        layout.addLayout(row)
+
+        return card
+
+    def _log_section(self) -> QWidget:
+        C = get_colors()
         card = QWidget()
         card.setObjectName("card")
         layout = QVBoxLayout(card)
         layout.setContentsMargins(20, 16, 20, 16)
         layout.setSpacing(10)
 
-        title = QLabel("Pipeline Steps")
+        hdr = QHBoxLayout()
+        title = QLabel(t("logs_title"))
         title.setObjectName("subheading")
-        layout.addWidget(title)
+        title.setStyleSheet(f"font-size: 14px; font-weight: 700; color: {C['text']}; background: transparent;")
+        clear_btn = QPushButton(t("clear_logs"))
+        clear_btn.setObjectName("secondary")
+        clear_btn.setFixedHeight(28)
+        clear_btn.clicked.connect(self._clear_logs)
+        self._translatable["logs_title"] = title
+        self._translatable["clear_logs"] = clear_btn
+        hdr.addWidget(title)
+        hdr.addStretch()
+        hdr.addWidget(clear_btn)
+        layout.addLayout(hdr)
 
-        self._step_buttons = []
-
-        steps = [
-            ("Step 1 — Prompt Generator", "Generate image prompts from script using Groq AI", self._run_step1),
-            ("Step 2 — Image Generator", "Generate images via HuggingFace (see instructions below)", self._run_step2),
-            ("Step 3 — AI Mapper", "Map generated images to timestamps", self._run_step3),
-            ("Step 4 — Video Builder", "Assemble final video from images + audio", self._run_step4),
-        ]
-
-        for i, (label, desc, fn) in enumerate(steps):
-            row = QHBoxLayout()
-            row.setSpacing(12)
-
-            info = QVBoxLayout()
-            info.setSpacing(2)
-            lbl = QLabel(label)
-            lbl.setStyleSheet(f"color: {COLORS['text']}; font-weight: bold;")
-            d = QLabel(desc)
-            d.setStyleSheet(f"color: {COLORS['text_sec']}; font-size: 11px;")
-            info.addWidget(lbl)
-            info.addWidget(d)
-
-            btn = QPushButton("Run")
-            btn.setObjectName("primary")
-            btn.setFixedWidth(90)
-            btn.clicked.connect(fn)
-            self._step_buttons.append(btn)
-
-            row.addLayout(info)
-            row.addStretch()
-            row.addWidget(btn)
-            layout.addLayout(row)
-
-            if i < len(steps) - 1:
-                sep = QFrame()
-                sep.setFrameShape(QFrame.HLine)
-                sep.setStyleSheet(f"color: {COLORS['border']};")
-                layout.addWidget(sep)
-
-        sep2 = QFrame()
-        sep2.setFrameShape(QFrame.HLine)
-        sep2.setStyleSheet(f"color: {COLORS['accent']}44;")
-        layout.addWidget(sep2)
-
-        full_row = QHBoxLayout()
-        full_info = QVBoxLayout()
-        full_info.setSpacing(2)
-        fl = QLabel("Full Pipeline")
-        fl.setStyleSheet(f"color: {COLORS['accent']}; font-weight: bold; font-size: 14px;")
-        fd = QLabel("Run all steps sequentially (Step 1 → 3 → 4, skipping Step 2)")
-        fd.setStyleSheet(f"color: {COLORS['text_sec']}; font-size: 11px;")
-        full_info.addWidget(fl)
-        full_info.addWidget(fd)
-
-        self._full_btn = QPushButton("Run Full Pipeline")
-        self._full_btn.setObjectName("success")
-        self._full_btn.setFixedWidth(160)
-        self._full_btn.clicked.connect(self._run_full)
-
-        full_row.addLayout(full_info)
-        full_row.addStretch()
-        full_row.addWidget(self._full_btn)
-        layout.addLayout(full_row)
-
-        return card
-
-    def _options_card(self):
-        card = QWidget()
-        card.setObjectName("card")
-        layout = QVBoxLayout(card)
-        layout.setContentsMargins(20, 14, 20, 14)
-        layout.setSpacing(10)
-
-        title = QLabel("Step 1 Options")
-        title.setObjectName("subheading")
-        layout.addWidget(title)
-
-        row1 = QHBoxLayout()
-        self._reset_check = QCheckBox("Reset (clear previous prompts and start fresh)")
-        self._reset_check.setStyleSheet(f"color: {COLORS['text']};")
-        row1.addWidget(self._reset_check)
-        layout.addLayout(row1)
-
-        row2 = QHBoxLayout()
-        limit_check = QCheckBox("Limit scenes:")
-        limit_check.setStyleSheet(f"color: {COLORS['text']};")
-        self._limit_spin = QSpinBox()
-        self._limit_spin.setRange(1, 500)
-        self._limit_spin.setValue(5)
-        self._limit_spin.setFixedWidth(80)
-        self._limit_spin.setEnabled(False)
-        limit_check.toggled.connect(self._limit_spin.setEnabled)
-        self._limit_enabled = limit_check
-        row2.addWidget(limit_check)
-        row2.addWidget(self._limit_spin)
-        row2.addWidget(QLabel("scenes only (useful for testing)"))
-        row2.addStretch()
-        layout.addLayout(row2)
-
-        note = QLabel(
-            "Note: Step 2 (Image Generation) must be done externally using the generated prompts. "
-            "See Outputs Viewer → prompts_output.txt for the prompts to use with HuggingFace or any AI image tool."
+        self._log_view = QPlainTextEdit()
+        self._log_view.setReadOnly(True)
+        self._log_view.setMinimumHeight(200)
+        self._log_view.setMaximumHeight(300)
+        self._log_view.setStyleSheet(
+            f"background: {C['surface2']}; color: {C['text_sec']}; "
+            f"font-family: 'Consolas', 'Courier New', monospace; font-size: 12px; "
+            f"border-radius: 8px; padding: 8px; border: 1px solid {C['border']};"
         )
-        note.setWordWrap(True)
-        note.setStyleSheet(f"color: {COLORS['warning']}; font-size: 11px;")
-        layout.addWidget(note)
-
+        layout.addWidget(self._log_view)
         return card
 
-    def _log(self, msg):
-        self._log_view.appendPlainText(str(msg))
-        self._log_view.ensureCursorVisible()
+    def _append_log(self, msg: str):
+        self._log_view.appendPlainText(msg)
+        self._log_view.verticalScrollBar().setValue(
+            self._log_view.verticalScrollBar().maximum()
+        )
 
     def _clear_logs(self):
         self._log_view.clear()
 
-    def _update_progress(self, current, total):
-        if total > 0:
-            self._progress_bar.setMaximum(total)
-            self._progress_bar.setValue(current)
+    def _set_running(self, running: bool, step_num: str = None):
+        self._run_all_btn.setEnabled(not running)
+        for refs in self._step_cards:
+            if "run_btn" in refs:
+                refs["run_btn"].setEnabled(not running)
+        if step_num:
+            key = f"pbar_{step_num}"
+            pbar = self._step_progress.get(key)
+            if pbar:
+                if running:
+                    pbar.setVisible(True)
+                    pbar.setRange(0, 0)
+                else:
+                    pbar.setRange(0, 100)
+                    pbar.setValue(100)
 
-    def _set_running(self, running):
-        for btn in self._step_buttons:
-            btn.setEnabled(not running)
-        self._full_btn.setEnabled(not running)
-        self._progress_bar.setVisible(running)
-        if not running:
-            self._progress_bar.setValue(0)
+    def _on_progress(self, cur: int, total: int, step_num: str = "1"):
+        key = f"pbar_{step_num}"
+        pbar = self._step_progress.get(key)
+        if pbar and total > 0:
+            pbar.setRange(0, 100)
+            pbar.setValue(int(cur / total * 100))
 
-    def _validate(self, require_audio=False, require_images=False, require_mapping=False, require_prompts=False):
-        config = load_config()
-        errors = []
-
-        if not config.get("groq_api_key") and require_prompts is not False:
-            errors.append("Groq API key is missing (go to Project Settings)")
-
-        if require_audio:
-            audio = config.get("audio_path", "")
-            if not audio or not Path(audio).exists():
-                errors.append("Audio file not found (set it in Project Settings)")
-
-        if require_prompts:
-            base = Path(config.get("base_path", "."))
-            if not (base / "output" / "prompts.json").exists():
-                errors.append("prompts.json not found — run Step 1 first")
-
-        if require_images:
-            imgs_folder = config.get("images_folder", "")
-            base = Path(config.get("base_path", "."))
-            has_images = (
-                (imgs_folder and Path(imgs_folder).exists() and any(
-                    f.suffix.lower() in (".jpg", ".jpeg", ".png", ".webp")
-                    for f in Path(imgs_folder).iterdir() if f.is_file()
-                )) or
-                any(
-                    (base / "output" / "images").exists(),
-                    (base / "assets" / "images").exists(),
-                )
-            )
-
-        if require_mapping:
-            base = Path(config.get("base_path", "."))
-            if not (base / "mapping.json").exists():
-                errors.append("mapping.json not found — run Step 3 first")
-
-        script = config.get("script_path", "")
-        if not script or not Path(script).exists():
-            errors.append("Script file not found (set it in Project Settings)")
-
-        return errors, config
-
-    def _run_task(self, task_fn):
-        if self._thread and self._thread.isRunning():
-            return
-
-        self._set_running(True)
-        self._worker = _Worker(task_fn)
-        self._thread = _RunThread(self._worker)
-        self._worker.log.connect(self._log)
-        self._worker.progress.connect(self._update_progress)
-        self._worker.finished.connect(self._on_finished)
-        self._thread.start()
-
-    def _on_finished(self, success, error_msg):
-        self._set_running(False)
+    def _on_finished(self, success: bool, err: str, step_num: str = "1", step_idx: int = 0):
+        self._set_running(False, step_num)
+        refs = self._step_cards[step_idx]
+        status_lbl = refs.get("status_lbl")
+        C = get_colors()
         if success:
-            self._log("\n✓ Step completed successfully!")
+            msg = t("done_success")
+            color = C["success"]
         else:
-            self._log(f"\n✗ Error:\n{error_msg}")
+            msg = t("done_error")
+            color = C["error"]
+            self._append_log(err)
+        if status_lbl:
+            status_lbl.setText(msg)
+            status_lbl.setStyleSheet(f"color: {color}; font-size: 12px; font-weight: 600; background: transparent;")
+            status_lbl.setVisible(True)
+        self._append_log(msg)
+
+    def _validate(self) -> list[str]:
+        cfg = load_config()
+        return validate_config(cfg)
 
     def _run_step1(self):
-        errors, config = self._validate()
+        errors = self._validate()
         if errors:
-            QMessageBox.critical(self, "Configuration Error", "\n".join(errors))
+            QMessageBox.warning(self, t("config_errors"), "\n".join(errors))
             return
 
-        self._log("=== Step 1: Prompt Generator ===")
-
-        limit = self._limit_spin.value() if self._limit_enabled.isChecked() else None
+        cfg = load_config()
+        style = load_style()
         reset = self._reset_check.isChecked()
+        limit = self._limit_spin.value() if self._limit_check.isChecked() else None
+
+        self._append_log("▶ " + t("step1_title"))
+        self._set_running(True, "1")
 
         def task(log, progress):
-            from app.core.prompt_generator import generate_prompts
-            style = load_style()
-            tmpl_path = BASE_DIR / "prompts_template.txt"
-            template = tmpl_path.read_text(encoding="utf-8") if tmpl_path.exists() else ""
-            generate_prompts(config, style, template, limit=limit, reset=reset, log=log, progress=progress)
+            from app.core.prompt_generator import run_prompt_generation
+            run_prompt_generation(cfg, style, reset=reset, limit=limit, log=log, progress=progress)
 
-        self._run_task(task)
-
-    def _run_step2(self):
-        self._log(
-            "=== Step 2: Image Generation ===\n"
-            "Image generation uses HuggingFace FLUX.1-schnell and must be done externally.\n\n"
-            "Instructions:\n"
-            "1. Go to Outputs Viewer → prompts_output.txt to see all generated prompts.\n"
-            "2. Use each prompt with HuggingFace Inference API or any AI image generator.\n"
-            "3. Name images as: scene_001.png, scene_002.png, etc.\n"
-            "4. Place images in your configured 'AI-Generated Images Folder' (Project Settings).\n"
-            "5. Then run Step 3 (AI Mapper) to continue.\n\n"
-            "API Code Example (Python):\n"
-            '  from huggingface_hub import InferenceClient\n'
-            '  client = InferenceClient(token="your_hf_token")\n'
-            '  image = client.text_to_image(prompt, model="black-forest-labs/FLUX.1-schnell")\n'
-            '  image.save("output/images/scene_001.png")\n'
-        )
+        self._worker = _Worker(task)
+        self._thread = _RunThread(self._worker)
+        self._worker.log.connect(self._append_log)
+        self._worker.progress.connect(lambda c, t_: self._on_progress(c, t_, "1"))
+        self._worker.finished.connect(lambda ok, err: self._on_finished(ok, err, "1", 0))
+        self._thread.start()
 
     def _run_step3(self):
-        self._log("=== Step 3: AI Mapper ===")
-        _, config = self._validate()
+        errors = self._validate()
+        if errors:
+            QMessageBox.warning(self, t("config_errors"), "\n".join(errors))
+            return
+
+        cfg = load_config()
+        style = load_style()
+        self._append_log("▶ " + t("step3_title"))
+        self._set_running(True, "3")
 
         def task(log, progress):
             from app.core.ai_mapper import run_ai_mapper
-            run_ai_mapper(config, log=log, progress=progress)
+            run_ai_mapper(cfg, style, log=log, progress=progress)
 
-        self._run_task(task)
+        self._worker = _Worker(task)
+        self._thread = _RunThread(self._worker)
+        self._worker.log.connect(self._append_log)
+        self._worker.progress.connect(lambda c, t_: self._on_progress(c, t_, "3"))
+        self._worker.finished.connect(lambda ok, err: self._on_finished(ok, err, "3", 2))
+        self._thread.start()
 
     def _run_step4(self):
-        self._log("=== Step 4: Video Builder ===")
-        _, config = self._validate(require_audio=True)
+        errors = self._validate()
+        if errors:
+            QMessageBox.warning(self, t("config_errors"), "\n".join(errors))
+            return
+
+        cfg = load_config()
+        self._append_log("▶ " + t("step4_title"))
+        self._set_running(True, "4")
 
         def task(log, progress):
-            from app.core.video_builder import build_video
-            build_video(config, log=log, progress=progress)
+            from app.core.video_builder import run_video_builder
+            run_video_builder(cfg, log=log, progress=progress)
 
-        self._run_task(task)
+        self._worker = _Worker(task)
+        self._thread = _RunThread(self._worker)
+        self._worker.log.connect(self._append_log)
+        self._worker.progress.connect(lambda c, t_: self._on_progress(c, t_, "4"))
+        self._worker.finished.connect(lambda ok, err: self._on_finished(ok, err, "4", 3))
+        self._thread.start()
 
-    def _run_full(self):
-        self._log("=== Running Full Pipeline (Step 1 → 3 → 4) ===")
-        _, config = self._validate(require_audio=True)
-        limit = self._limit_spin.value() if self._limit_enabled.isChecked() else None
+    def _run_all(self):
+        errors = self._validate()
+        if errors:
+            QMessageBox.warning(self, t("config_errors"), "\n".join(errors))
+            return
+
+        cfg = load_config()
+        style = load_style()
         reset = self._reset_check.isChecked()
+        limit = self._limit_spin.value() if self._limit_check.isChecked() else None
+
+        self._append_log("⚡ " + t("run_all"))
+        self._set_running(True, "1")
 
         def task(log, progress):
-            from app.core.prompt_generator import generate_prompts
+            from app.core.prompt_generator import run_prompt_generation
             from app.core.ai_mapper import run_ai_mapper
-            from app.core.video_builder import build_video
+            from app.core.video_builder import run_video_builder
+            log("── Step 1 ──")
+            run_prompt_generation(cfg, style, reset=reset, limit=limit, log=log, progress=progress)
+            log("── Step 3 ──")
+            run_ai_mapper(cfg, style, log=log, progress=progress)
+            log("── Step 4 ──")
+            run_video_builder(cfg, log=log, progress=progress)
 
-            style = load_style()
-            tmpl_path = BASE_DIR / "prompts_template.txt"
-            template = tmpl_path.read_text(encoding="utf-8") if tmpl_path.exists() else ""
+        self._worker = _Worker(task)
+        self._thread = _RunThread(self._worker)
+        self._worker.log.connect(self._append_log)
+        self._worker.progress.connect(lambda c, t_: self._on_progress(c, t_, "1"))
+        self._worker.finished.connect(lambda ok, err: self._on_finished(ok, err, "4", 3))
+        self._thread.start()
 
-            log("\n--- Step 1: Generating prompts ---")
-            generate_prompts(config, style, template, limit=limit, reset=reset, log=log, progress=progress)
-            log("\n--- Step 3: Mapping images ---")
-            run_ai_mapper(config, log=log, progress=progress)
-            log("\n--- Step 4: Building video ---")
-            build_video(config, log=log, progress=progress)
-
-        self._run_task(task)
+    def _open_output(self):
+        cfg = load_config()
+        folder = cfg.get("output_folder", str(Path(BASE_DIR) / "output"))
+        path = Path(folder)
+        path.mkdir(parents=True, exist_ok=True)
+        if sys.platform == "win32":
+            subprocess.Popen(["explorer", str(path)])
+        elif sys.platform == "darwin":
+            subprocess.Popen(["open", str(path)])
+        else:
+            subprocess.Popen(["xdg-open", str(path)])
 
     def refresh(self):
         pass
+
+    def retranslate(self):
+        C = get_colors()
+        for key, widget in self._translatable.items():
+            if isinstance(widget, QPushButton):
+                if key == "run_all":
+                    widget.setText("  ⚡  " + t("run_all"))
+                elif key == "open_output_folder":
+                    widget.setText(t(key))
+                else:
+                    widget.setText(t(key))
+            elif isinstance(widget, QCheckBox):
+                widget.setText(t(key))
+            else:
+                widget.setText(t(key))
+
+        for i, refs in enumerate(self._step_cards):
+            step = refs["step_def"]
+            refs["title_lbl"].setText(t(step["title_key"]))
+            refs["desc_lbl"].setText(t(step["desc_key"]))
+            refs["in_lbl"].setText(t(step["input_key"]))
+            refs["out_lbl"].setText(t(step["output_key"]))
+            if "note_lbl" in refs:
+                refs["note_lbl"].setText(t(step["note_key"]))
+            if "run_btn" in refs:
+                refs["run_btn"].setText("  ▶  " + t("run_step"))

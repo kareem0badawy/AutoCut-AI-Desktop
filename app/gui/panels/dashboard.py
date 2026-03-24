@@ -1,17 +1,25 @@
+import subprocess
+import sys
 from pathlib import Path
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QScrollArea, QFrame,
+    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+    QScrollArea, QFrame, QGridLayout,
 )
 
-from app.gui.theme import COLORS
-from app.core.config_manager import load_config
+from app.i18n import lang_manager, t
+from app.gui.theme import get_colors
+from app.gui.widgets import DropZone, make_separator, make_badge
+from app.core.config_manager import load_config, save_config, BASE_DIR
 
 
 class DashboardPanel(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self._zones: dict[str, DropZone] = {}
+        self._status_rows: dict[str, tuple] = {}
+        self._translatable: dict[str, QLabel | QPushButton] = {}
         self._build_ui()
 
     def _build_ui(self):
@@ -21,21 +29,13 @@ class DashboardPanel(QWidget):
 
         container = QWidget()
         layout = QVBoxLayout(container)
-        layout.setContentsMargins(40, 40, 40, 40)
-        layout.setSpacing(30)
+        layout.setContentsMargins(40, 36, 40, 40)
+        layout.setSpacing(28)
 
-        title = QLabel("AutoCut")
-        title.setObjectName("heading")
-        sub = QLabel("AI-Powered Video Generator")
-        sub.setStyleSheet(f"color: {COLORS['text_sec']}; font-size: 14px;")
-
-        layout.addWidget(title)
-        layout.addWidget(sub)
-        layout.addSpacing(10)
-
-        layout.addWidget(self._pipeline_card())
-        layout.addWidget(self._status_card())
-        layout.addWidget(self._how_to_use_card())
+        layout.addWidget(self._hero_section())
+        layout.addWidget(self._files_section())
+        layout.addWidget(self._status_section())
+        layout.addWidget(self._how_section())
         layout.addStretch()
 
         scroll.setWidget(container)
@@ -43,152 +43,266 @@ class DashboardPanel(QWidget):
         main.setContentsMargins(0, 0, 0, 0)
         main.addWidget(scroll)
 
-    def _pipeline_card(self):
+    def _hero_section(self) -> QWidget:
+        w = QWidget()
+        layout = QVBoxLayout(w)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(6)
+
+        title = QLabel(t("dashboard_title"))
+        title.setObjectName("heading")
+        sub = QLabel(t("dashboard_subtitle"))
+        sub.setStyleSheet(f"color: {get_colors()['text_sec']}; font-size: 14px; background: transparent;")
+        sub.setWordWrap(True)
+
+        self._translatable["dashboard_title"] = title
+        self._translatable["dashboard_subtitle"] = sub
+        layout.addWidget(title)
+        layout.addWidget(sub)
+        return w
+
+    def _files_section(self) -> QWidget:
+        C = get_colors()
         card = QWidget()
         card.setObjectName("card")
         layout = QVBoxLayout(card)
-        layout.setContentsMargins(24, 20, 24, 20)
+        layout.setContentsMargins(24, 20, 24, 24)
         layout.setSpacing(16)
 
-        title = QLabel("Pipeline Overview")
+        hdr = QHBoxLayout()
+        icon = QLabel("📂")
+        icon.setStyleSheet("font-size: 18px; background: transparent;")
+        title = QLabel(t("files_section"))
         title.setObjectName("subheading")
-        layout.addWidget(title)
+        title.setStyleSheet(f"font-size: 16px; font-weight: 700; color: {C['text']}; background: transparent;")
+        sub = QLabel(t("files_subtitle"))
+        sub.setStyleSheet(f"font-size: 12px; color: {C['text_sec']}; background: transparent;")
+        self._translatable["files_section"] = title
+        self._translatable["files_subtitle"] = sub
 
-        steps = [
-            ("1", "Prompt Generator", "Converts your script into detailed AI image prompts using Groq LLM", COLORS['accent']),
-            ("2", "Image Generator", "Generates images from prompts via HuggingFace FLUX.1-schnell", "#ab47bc"),
-            ("3", "AI Mapper", "Maps generated images to correct timestamps in the script", COLORS['warning']),
-            ("4", "Video Builder", "Assembles images + audio into the final video with transitions", COLORS['success']),
-        ]
+        hdr.addWidget(icon)
+        hdr.addWidget(title)
+        hdr.addStretch()
+        layout.addLayout(hdr)
+        layout.addWidget(sub)
+        layout.addSpacing(4)
 
-        for num, name, desc, color in steps:
-            row = QHBoxLayout()
-            row.setSpacing(14)
+        grid = QGridLayout()
+        grid.setSpacing(14)
 
-            badge = QLabel(num)
-            badge.setFixedSize(32, 32)
-            badge.setAlignment(Qt.AlignCenter)
-            badge.setStyleSheet(
-                f"background-color: {color}22; color: {color}; border: 1px solid {color}55;"
-                f"border-radius: 16px; font-weight: bold; font-size: 13px;"
-            )
+        cfg = load_config()
 
-            info = QVBoxLayout()
-            info.setSpacing(2)
-            n = QLabel(name)
-            n.setStyleSheet(f"color: {COLORS['text']}; font-weight: bold; font-size: 13px;")
-            d = QLabel(desc)
-            d.setStyleSheet(f"color: {COLORS['text_sec']}; font-size: 12px;")
-            info.addWidget(n)
-            info.addWidget(d)
+        self._zones["script"] = DropZone(
+            t("drop_script"), t("drop_script_sub"), "📝",
+            accept_folders=False,
+            file_filter="Text Files (*.txt);;All Files (*)"
+        )
+        self._zones["audio"] = DropZone(
+            t("drop_audio"), t("drop_audio_sub"), "🎵",
+            accept_folders=False,
+            file_filter="Audio Files (*.mp3 *.wav *.m4a *.aac);;All Files (*)"
+        )
+        self._zones["images"] = DropZone(
+            t("drop_images"), t("drop_images_sub"), "🖼️",
+            accept_folders=True
+        )
+        self._zones["output"] = DropZone(
+            t("drop_output"), t("drop_output_sub"), "📤",
+            accept_folders=True
+        )
 
-            row.addWidget(badge, 0, Qt.AlignTop)
-            row.addLayout(info)
-            layout.addLayout(row)
+        if cfg.get("script_path"):
+            self._zones["script"].set_path(cfg["script_path"])
+        if cfg.get("audio_path"):
+            self._zones["audio"].set_path(cfg["audio_path"])
+        if cfg.get("images_folder"):
+            self._zones["images"].set_path(cfg["images_folder"])
+        if cfg.get("output_folder"):
+            self._zones["output"].set_path(cfg["output_folder"])
 
+        for key, zone in self._zones.items():
+            zone.file_selected.connect(lambda path, k=key: self._on_file_selected(k, path))
+
+        grid.addWidget(self._zones["script"],  0, 0)
+        grid.addWidget(self._zones["audio"],   0, 1)
+        grid.addWidget(self._zones["images"],  1, 0)
+        grid.addWidget(self._zones["output"],  1, 1)
+
+        layout.addLayout(grid)
         return card
 
-    def _status_card(self):
-        card = QWidget()
-        card.setObjectName("card")
-        layout = QVBoxLayout(card)
-        layout.setContentsMargins(24, 20, 24, 20)
-        layout.setSpacing(12)
-
-        title = QLabel("Project Status")
-        title.setObjectName("subheading")
-        layout.addWidget(title)
-
-        config = load_config()
-        base = Path(config.get("base_path", "."))
-
-        checks = [
-            ("config.json", (base / "config.json").exists()),
-            ("style_config.json", (base / "style_config.json").exists()),
-            ("script.txt", Path(config.get("script_path", "")).exists()),
-            ("Audio file", Path(config.get("audio_path", "")).exists()),
-            ("prompts.json", (base / "output" / "prompts.json").exists()),
-            ("Images folder", Path(config.get("images_folder", "")).exists()),
-            ("mapping.json", (base / "mapping.json").exists()),
-            ("final_video.mp4", (Path(config.get("output_folder", base / "assets" / "output")) / "final_video.mp4").exists()),
-        ]
-
-        grid = QWidget()
-        grid_layout = QHBoxLayout(grid)
-        grid_layout.setContentsMargins(0, 0, 0, 0)
-        grid_layout.setSpacing(8)
-
-        col1 = QVBoxLayout()
-        col2 = QVBoxLayout()
-        col1.setSpacing(6)
-        col2.setSpacing(6)
-
-        for i, (name, status) in enumerate(checks):
-            icon = "✓" if status else "○"
-            color = COLORS['success'] if status else COLORS['text_dim']
-            label = QLabel(f"{icon}  {name}")
-            label.setStyleSheet(f"color: {color}; font-size: 12px;")
-            if i % 2 == 0:
-                col1.addWidget(label)
-            else:
-                col2.addWidget(label)
-
-        grid_layout.addLayout(col1)
-        grid_layout.addLayout(col2)
-        grid_layout.addStretch()
-        layout.addWidget(grid)
-
-        return card
-
-    def _how_to_use_card(self):
+    def _status_section(self) -> QWidget:
+        C = get_colors()
         card = QWidget()
         card.setObjectName("card")
         layout = QVBoxLayout(card)
         layout.setContentsMargins(24, 20, 24, 20)
         layout.setSpacing(10)
 
-        title = QLabel("How to Use AutoCut")
+        hdr = QHBoxLayout()
+        icon = QLabel("📋")
+        icon.setStyleSheet("font-size: 18px; background: transparent;")
+        title = QLabel(t("status_section"))
         title.setObjectName("subheading")
-        layout.addWidget(title)
+        title.setStyleSheet(f"font-size: 16px; font-weight: 700; color: {C['text']}; background: transparent;")
+        self._translatable["status_section"] = title
+        hdr.addWidget(icon)
+        hdr.addWidget(title)
+        hdr.addStretch()
+        layout.addLayout(hdr)
+        layout.addWidget(make_separator(C))
 
-        steps = [
-            ("Step 1 — Configure Settings",
-             "Go to Project Settings → enter your Groq and HuggingFace API keys, set your video resolution, FPS, and timing. "
-             "Select your script file and audio file."),
-            ("Step 2 — Set Visual Style",
-             "Go to Style Settings → customize the image style, mood, and negative prompts. "
-             "The prompts template controls how the AI generates image descriptions."),
-            ("Step 3 — Generate Prompts",
-             "Go to Pipeline Runner → click Run Step 1. The app will read your script and use "
-             "Groq AI to generate detailed image prompts for each scene."),
-            ("Step 4 — Generate Images (External)",
-             "Use the generated prompts from output/prompts_output.txt to generate images with "
-             "HuggingFace or any AI image tool. Place the images in the configured images folder."),
-            ("Step 5 — Map & Build",
-             "Click Run Step 3 to map your images to timestamps, then Run Step 4 to build "
-             "the final video. You can also use Run Full Pipeline to run all steps at once."),
-            ("Step 6 — View Output",
-             "Go to Outputs Viewer to preview prompts, mapping, and the final video path."),
-        ]
-
-        for i, (title_text, desc) in enumerate(steps, 1):
-            row = QVBoxLayout()
-            row.setSpacing(2)
-            t = QLabel(title_text)
-            t.setStyleSheet(f"color: {COLORS['accent']}; font-weight: bold; font-size: 12px;")
-            d = QLabel(desc)
-            d.setWordWrap(True)
-            d.setStyleSheet(f"color: {COLORS['text_sec']}; font-size: 12px; padding-left: 8px;")
-            row.addWidget(t)
-            row.addWidget(d)
+        cfg = load_config()
+        checks = self._get_checks(cfg)
+        self._status_rows = {}
+        for key, (label, exists) in checks.items():
+            row = QHBoxLayout()
+            row.setSpacing(8)
+            lbl = QLabel(label)
+            lbl.setStyleSheet(f"color: {C['text_sec']}; font-size: 12px; background: transparent;")
+            badge = make_badge(t("status_ok") if exists else t("status_missing"),
+                               "success" if exists else "error", C)
+            row.addWidget(lbl)
+            row.addStretch()
+            row.addWidget(badge)
+            self._status_rows[key] = (lbl, badge)
             layout.addLayout(row)
-            if i < len(steps):
-                sep = QFrame()
-                sep.setFrameShape(QFrame.HLine)
-                sep.setStyleSheet(f"color: {COLORS['border']};")
-                layout.addWidget(sep)
 
         return card
 
+    def _how_section(self) -> QWidget:
+        C = get_colors()
+        card = QWidget()
+        card.setObjectName("card")
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(24, 20, 24, 20)
+        layout.setSpacing(16)
+
+        hdr = QHBoxLayout()
+        icon = QLabel("💡")
+        icon.setStyleSheet("font-size: 18px; background: transparent;")
+        title = QLabel(t("how_section"))
+        title.setObjectName("subheading")
+        title.setStyleSheet(f"font-size: 16px; font-weight: 700; color: {C['text']}; background: transparent;")
+        self._translatable["how_section"] = title
+        hdr.addWidget(icon)
+        hdr.addWidget(title)
+        hdr.addStretch()
+        layout.addLayout(hdr)
+        layout.addWidget(make_separator(C))
+
+        how_steps = [
+            ("how_step1", "how_step1_desc", "1"),
+            ("how_step2", "how_step2_desc", "2"),
+            ("how_step3", "how_step3_desc", "3"),
+            ("how_step4", "how_step4_desc", "4"),
+        ]
+        self._how_labels = []
+        for step_key, desc_key, num in how_steps:
+            row = QHBoxLayout()
+            row.setSpacing(14)
+
+            num_lbl = QLabel(num)
+            num_lbl.setFixedSize(30, 30)
+            num_lbl.setAlignment(Qt.AlignCenter)
+            num_lbl.setStyleSheet(
+                f"background: {C['accent']}; color: white; border-radius: 15px; "
+                f"font-weight: bold; font-size: 13px;"
+            )
+
+            text_col = QVBoxLayout()
+            text_col.setSpacing(2)
+            step_lbl = QLabel(t(step_key))
+            step_lbl.setStyleSheet(f"font-weight: 600; font-size: 13px; color: {C['text']}; background: transparent;")
+            desc_lbl = QLabel(t(desc_key))
+            desc_lbl.setStyleSheet(f"font-size: 12px; color: {C['text_sec']}; background: transparent;")
+            desc_lbl.setWordWrap(True)
+            text_col.addWidget(step_lbl)
+            text_col.addWidget(desc_lbl)
+
+            row.addWidget(num_lbl)
+            row.addLayout(text_col, 1)
+            layout.addLayout(row)
+            self._how_labels.append((step_lbl, desc_lbl, step_key, desc_key))
+
+        return card
+
+    def _get_checks(self, cfg) -> dict:
+        base = Path(BASE_DIR)
+        out = Path(cfg.get("output_folder", base / "output"))
+        return {
+            "config":   (t("check_config"),  (base / "config.json").exists()),
+            "style":    (t("check_style"),   (base / "style_config.json").exists()),
+            "script":   (t("check_script"),  cfg.get("script_path", "") != "" and Path(cfg.get("script_path", "x")).exists()),
+            "audio":    (t("check_audio"),   cfg.get("audio_path", "") != "" and Path(cfg.get("audio_path", "x")).exists()),
+            "prompts":  (t("check_prompts"), (out / "prompts.json").exists()),
+            "images":   (t("check_images"),  cfg.get("images_folder", "") != "" and Path(cfg.get("images_folder", "x")).exists()),
+            "mapping":  (t("check_mapping"), (out / "mapping.json").exists()),
+            "video":    (t("check_video"),   (out / "final_video.mp4").exists()),
+        }
+
+    def _on_file_selected(self, key: str, path: str):
+        field_map = {
+            "script":  "script_path",
+            "audio":   "audio_path",
+            "images":  "images_folder",
+            "output":  "output_folder",
+        }
+        cfg = load_config()
+        cfg[field_map[key]] = path
+        save_config(cfg)
+        self._refresh_status()
+
+    def _refresh_status(self):
+        C = get_colors()
+        cfg = load_config()
+        checks = self._get_checks(cfg)
+        for key, (label, exists) in checks.items():
+            if key in self._status_rows:
+                lbl, badge = self._status_rows[key]
+                lbl.setText(label)
+                txt = t("status_ok") if exists else t("status_missing")
+                kind = "success" if exists else "error"
+                colors = {
+                    "success": (C['success_bg'], C['success']),
+                    "error":   (C['error_bg'],   C['error']),
+                }
+                bg, fg = colors[kind]
+                badge.setText(txt)
+                badge.setStyleSheet(
+                    f"background: {bg}; color: {fg}; border-radius: 5px; "
+                    f"padding: 2px 8px; font-size: 11px; font-weight: 600;"
+                )
+
     def refresh(self):
-        pass
+        self._refresh_status()
+        cfg = load_config()
+        if cfg.get("script_path"):
+            self._zones["script"].set_path(cfg["script_path"])
+        if cfg.get("audio_path"):
+            self._zones["audio"].set_path(cfg["audio_path"])
+        if cfg.get("images_folder"):
+            self._zones["images"].set_path(cfg["images_folder"])
+        if cfg.get("output_folder"):
+            self._zones["output"].set_path(cfg["output_folder"])
+
+    def retranslate(self):
+        C = get_colors()
+        for key, widget in self._translatable.items():
+            widget.setText(t(key))
+
+        zone_keys = [
+            ("script", "drop_script", "drop_script_sub"),
+            ("audio",  "drop_audio",  "drop_audio_sub"),
+            ("images", "drop_images", "drop_images_sub"),
+            ("output", "drop_output", "drop_output_sub"),
+        ]
+        for k, title_key, sub_key in zone_keys:
+            if k in self._zones:
+                self._zones[k].retranslate(t(title_key), t(sub_key))
+
+        for step_lbl, desc_lbl, step_key, desc_key in self._how_labels:
+            step_lbl.setText(t(step_key))
+            desc_lbl.setText(t(desc_key))
+
+        self._refresh_status()

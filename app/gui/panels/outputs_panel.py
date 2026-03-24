@@ -1,249 +1,263 @@
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
     QFrame, QTabWidget, QPlainTextEdit, QTreeWidget, QTreeWidgetItem,
-    QScrollArea, QMessageBox,
+    QScrollArea,
 )
 
-from app.gui.theme import COLORS
+from app.i18n import lang_manager, t
+from app.gui.theme import get_colors
+from app.gui.widgets import make_separator, make_badge
 from app.core.config_manager import load_config, BASE_DIR
 
 
 class OutputsPanel(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self._translatable: dict[str, QLabel | QPushButton] = {}
         self._build_ui()
 
     def _build_ui(self):
+        C = get_colors()
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(40, 40, 40, 40)
+        layout.setContentsMargins(40, 36, 40, 40)
         layout.setSpacing(20)
 
-        title = QLabel("Outputs Viewer")
+        hdr_row = QHBoxLayout()
+        title = QLabel(t("outputs_title"))
         title.setObjectName("heading")
-        layout.addWidget(title)
+        self._translatable["outputs_title"] = title
 
-        desc = QLabel("View generated prompts, scene mapping, and video output.")
-        desc.setStyleSheet(f"color: {COLORS['text_sec']}; font-size: 12px;")
+        self._refresh_btn = QPushButton(t("refresh_all"))
+        self._refresh_btn.setObjectName("secondary")
+        self._refresh_btn.setFixedHeight(34)
+        self._refresh_btn.clicked.connect(self.refresh)
+        self._translatable["refresh_all"] = self._refresh_btn
+
+        hdr_row.addWidget(title)
+        hdr_row.addStretch()
+        hdr_row.addWidget(self._refresh_btn)
+        layout.addLayout(hdr_row)
+
+        desc = QLabel(t("outputs_desc"))
+        desc.setStyleSheet(f"color: {C['text_sec']}; font-size: 13px; background: transparent;")
+        self._translatable["outputs_desc"] = desc
         layout.addWidget(desc)
 
-        header_row = QHBoxLayout()
-        refresh_btn = QPushButton("Refresh All")
-        refresh_btn.setObjectName("secondary")
-        refresh_btn.clicked.connect(self.refresh)
-        header_row.addStretch()
-        header_row.addWidget(refresh_btn)
-        layout.addLayout(header_row)
+        self._tabs = QTabWidget()
+        self._tabs.setDocumentMode(True)
 
-        tabs = QTabWidget()
-        tabs.addTab(self._prompts_tab(), "Prompts")
-        tabs.addTab(self._mapping_tab(), "Mapping")
-        tabs.addTab(self._video_tab(), "Final Video")
-        layout.addWidget(tabs, 1)
+        self._tab_prompts = self._build_prompts_tab()
+        self._tab_mapping = self._build_mapping_tab()
+        self._tab_video = self._build_video_tab()
 
-    def _prompts_tab(self):
+        self._tabs.addTab(self._tab_prompts, t("tab_prompts"))
+        self._tabs.addTab(self._tab_mapping, t("tab_mapping"))
+        self._tabs.addTab(self._tab_video,   t("tab_video"))
+
+        layout.addWidget(self._tabs, 1)
+
+    def _build_prompts_tab(self) -> QWidget:
+        C = get_colors()
         w = QWidget()
         layout = QVBoxLayout(w)
-        layout.setContentsMargins(0, 12, 0, 0)
-        layout.setSpacing(8)
+        layout.setContentsMargins(16, 16, 16, 16)
+        layout.setSpacing(10)
 
-        row = QHBoxLayout()
-        self._prompts_status = QLabel()
-        row.addWidget(self._prompts_status)
-        row.addStretch()
-        open_btn = QPushButton("Open prompts_output.txt")
-        open_btn.setObjectName("secondary")
-        open_btn.clicked.connect(self._open_prompts_txt)
-        row.addWidget(open_btn)
-        layout.addLayout(row)
+        hdr = QHBoxLayout()
+        self._prompts_badge = QLabel(t("not_generated"))
+        self._prompts_badge.setStyleSheet(
+            f"color: {C['text_sec']}; font-size: 12px; background: transparent;"
+        )
+        self._open_txt_btn = QPushButton(t("open_txt"))
+        self._open_txt_btn.setObjectName("secondary")
+        self._open_txt_btn.setFixedHeight(30)
+        self._open_txt_btn.clicked.connect(self._open_prompts_txt)
+        self._translatable["open_txt"] = self._open_txt_btn
+        hdr.addWidget(self._prompts_badge)
+        hdr.addStretch()
+        hdr.addWidget(self._open_txt_btn)
+        layout.addLayout(hdr)
 
         self._prompts_view = QPlainTextEdit()
         self._prompts_view.setReadOnly(True)
         self._prompts_view.setStyleSheet(
-            f"background: #0a0a0a; color: {COLORS['text']}; font-family: monospace; font-size: 11px;"
+            f"background: {C['surface2']}; color: {C['text_sec']}; "
+            f"font-family: 'Consolas', monospace; font-size: 12px; "
+            f"border-radius: 8px; border: 1px solid {C['border']};"
         )
-        layout.addWidget(self._prompts_view, 1)
-
-        self._load_prompts()
+        layout.addWidget(self._prompts_view)
         return w
 
-    def _mapping_tab(self):
+    def _build_mapping_tab(self) -> QWidget:
+        C = get_colors()
         w = QWidget()
         layout = QVBoxLayout(w)
-        layout.setContentsMargins(0, 12, 0, 0)
-        layout.setSpacing(8)
+        layout.setContentsMargins(16, 16, 16, 16)
+        layout.setSpacing(10)
 
-        row = QHBoxLayout()
-        self._mapping_status = QLabel()
-        row.addWidget(self._mapping_status)
-        row.addStretch()
-        layout.addLayout(row)
+        self._mapping_badge = QLabel(t("mapping_not_found"))
+        self._mapping_badge.setStyleSheet(
+            f"color: {C['text_sec']}; font-size: 12px; background: transparent;"
+        )
+        layout.addWidget(self._mapping_badge)
 
         self._mapping_tree = QTreeWidget()
-        self._mapping_tree.setHeaderLabels(["Scene", "Start", "End", "Image", "Label"])
-        self._mapping_tree.setColumnWidth(0, 60)
-        self._mapping_tree.setColumnWidth(1, 60)
-        self._mapping_tree.setColumnWidth(2, 60)
-        self._mapping_tree.setColumnWidth(3, 350)
-        self._mapping_tree.setStyleSheet(
-            f"background: {COLORS['surface2']}; color: {COLORS['text']}; "
-            f"border: 1px solid {COLORS['border']}; border-radius: 6px;"
-        )
-        layout.addWidget(self._mapping_tree, 1)
-
-        self._load_mapping()
+        self._mapping_tree.setColumnCount(5)
+        self._mapping_tree.setHeaderLabels([
+            t("col_scene"), t("col_start"), t("col_end"), t("col_image"), t("col_label")
+        ])
+        self._mapping_tree.setAlternatingRowColors(True)
+        self._mapping_tree.setRootIsDecorated(False)
+        layout.addWidget(self._mapping_tree)
         return w
 
-    def _video_tab(self):
+    def _build_video_tab(self) -> QWidget:
+        C = get_colors()
         w = QWidget()
         layout = QVBoxLayout(w)
-        layout.setContentsMargins(0, 20, 0, 0)
+        layout.setContentsMargins(24, 24, 24, 24)
         layout.setSpacing(16)
+        layout.setAlignment(Qt.AlignTop)
 
-        self._video_info = QLabel()
-        self._video_info.setWordWrap(True)
-        self._video_info.setAlignment(Qt.AlignCenter)
-        layout.addWidget(self._video_info)
+        self._video_status_lbl = QLabel(t("video_not_ready"))
+        self._video_status_lbl.setStyleSheet(
+            f"font-size: 18px; font-weight: 700; color: {C['text']}; background: transparent;"
+        )
+        self._video_hint_lbl = QLabel(t("video_run_step4"))
+        self._video_hint_lbl.setStyleSheet(
+            f"font-size: 13px; color: {C['text_sec']}; background: transparent;"
+        )
 
-        row = QHBoxLayout()
-        open_folder_btn = QPushButton("Open Output Folder")
-        open_folder_btn.setObjectName("secondary")
-        open_folder_btn.clicked.connect(self._open_output_folder)
-        row.addWidget(open_folder_btn)
-        row.addStretch()
-        layout.addLayout(row)
+        self._video_size_lbl = QLabel("")
+        self._video_size_lbl.setStyleSheet(
+            f"font-size: 12px; color: {C['text_dim']}; background: transparent;"
+        )
+        self._video_path_lbl = QLabel("")
+        self._video_path_lbl.setStyleSheet(
+            f"font-size: 12px; color: {C['text_dim']}; background: transparent;"
+        )
+        self._video_path_lbl.setWordWrap(True)
 
-        layout.addStretch()
+        self._open_folder_btn = QPushButton(t("open_folder"))
+        self._open_folder_btn.setObjectName("export_btn")
+        self._open_folder_btn.setFixedHeight(48)
+        self._open_folder_btn.setFixedWidth(220)
+        self._open_folder_btn.setEnabled(False)
+        self._open_folder_btn.clicked.connect(self._open_output_folder)
+        self._translatable["open_folder"] = self._open_folder_btn
 
-        self._load_video_info()
+        layout.addWidget(self._video_status_lbl)
+        layout.addWidget(self._video_hint_lbl)
+        layout.addSpacing(8)
+        layout.addWidget(self._video_size_lbl)
+        layout.addWidget(self._video_path_lbl)
+        layout.addSpacing(16)
+        layout.addWidget(self._open_folder_btn)
         return w
 
-    def _load_prompts(self):
-        config = load_config()
-        base = Path(config.get("base_path", "."))
+    def refresh(self):
+        C = get_colors()
+        cfg = load_config()
+        base = Path(BASE_DIR)
+        out = Path(cfg.get("output_folder", base / "output"))
 
-        txt_path = base / "output" / "prompts_output.txt"
-        json_path = base / "output" / "prompts.json"
-
-        if txt_path.exists():
+        prompts_json = out / "prompts.json"
+        if prompts_json.exists():
             try:
-                with open(txt_path, "r", encoding="utf-8") as f:
-                    content = f.read()
-                self._prompts_view.setPlainText(content)
-                scene_count = 0
-                if json_path.exists():
-                    with open(json_path, "r", encoding="utf-8") as f:
-                        data = json.load(f)
-                    scene_count = len(data)
-                self._prompts_status.setText(f"{scene_count} scenes generated")
-                self._prompts_status.setStyleSheet(f"color: {COLORS['success']}; font-size: 12px;")
+                data = json.loads(prompts_json.read_text(encoding="utf-8"))
+                n = len(data) if isinstance(data, list) else len(data.get("scenes", []))
+                self._prompts_badge.setText(t("scenes_count", n=n))
+                self._prompts_view.setPlainText(
+                    json.dumps(data, ensure_ascii=False, indent=2)
+                )
             except Exception as e:
-                self._prompts_view.setPlainText(f"Error reading file: {e}")
-                self._prompts_status.setText("Error reading file")
-                self._prompts_status.setStyleSheet(f"color: {COLORS['error']}; font-size: 12px;")
+                self._prompts_badge.setText(str(e))
         else:
-            self._prompts_view.setPlainText("No prompts generated yet.\nRun Step 1 in the Pipeline Runner.")
-            self._prompts_status.setText("Not generated")
-            self._prompts_status.setStyleSheet(f"color: {COLORS['text_dim']}; font-size: 12px;")
+            self._prompts_badge.setText(t("not_generated"))
+            self._prompts_view.setPlainText("")
 
-    def _load_mapping(self):
-        config = load_config()
-        base = Path(config.get("base_path", "."))
-        mapping_path = base / "mapping.json"
+        mapping_json = out / "mapping.json"
         self._mapping_tree.clear()
-
-        if not mapping_path.exists():
-            self._mapping_status.setText("mapping.json not found — run Step 3 first")
-            self._mapping_status.setStyleSheet(f"color: {COLORS['text_dim']}; font-size: 12px;")
-            return
-
-        try:
-            with open(mapping_path, "r", encoding="utf-8") as f:
-                mapping = json.load(f)
-
-            self._mapping_status.setText(f"{len(mapping)} scenes mapped")
-            self._mapping_status.setStyleSheet(f"color: {COLORS['success']}; font-size: 12px;")
-
-            for scene in mapping:
-                images = scene.get("images", [])
-                img_str = images[0] if images else "[no image]"
-                img_color = COLORS['text'] if images else COLORS['error']
-
-                item = QTreeWidgetItem([
-                    str(scene.get("scene_number", "?")),
-                    scene.get("start", ""),
-                    scene.get("end", ""),
-                    img_str,
-                    scene.get("label_text", ""),
+        if mapping_json.exists():
+            try:
+                data = json.loads(mapping_json.read_text(encoding="utf-8"))
+                scenes = data if isinstance(data, list) else data.get("scenes", [])
+                self._mapping_badge.setText(t("scenes_mapped", n=len(scenes)))
+                self._mapping_tree.setHeaderLabels([
+                    t("col_scene"), t("col_start"), t("col_end"), t("col_image"), t("col_label")
                 ])
-                if not images:
-                    for col in range(5):
-                        item.setForeground(col, __import__('PySide6.QtGui', fromlist=['QColor']).QColor(COLORS['error']))
-                self._mapping_tree.addTopLevelItem(item)
-
-        except Exception as e:
-            self._mapping_status.setText(f"Error: {e}")
-            self._mapping_status.setStyleSheet(f"color: {COLORS['error']}; font-size: 12px;")
-
-    def _load_video_info(self):
-        config = load_config()
-        output_folder = config.get("output_folder", "")
-        base = Path(config.get("base_path", "."))
-
-        if output_folder:
-            video_path = Path(output_folder) / "final_video.mp4"
+                for i, scene in enumerate(scenes):
+                    item = QTreeWidgetItem([
+                        str(i + 1),
+                        str(scene.get("start", "")),
+                        str(scene.get("end", "")),
+                        str(Path(scene.get("image_path", scene.get("image", ""))).name),
+                        str(scene.get("label", scene.get("text", ""))),
+                    ])
+                    self._mapping_tree.addTopLevelItem(item)
+                for col in range(5):
+                    self._mapping_tree.resizeColumnToContents(col)
+            except Exception as e:
+                self._mapping_badge.setText(str(e))
         else:
-            video_path = base / "assets" / "output" / "final_video.mp4"
+            self._mapping_badge.setText(t("mapping_not_found"))
 
+        video_path = out / "final_video.mp4"
         if video_path.exists():
-            size_mb = video_path.stat().st_size / (1024 * 1024)
-            self._video_info.setText(
-                f"<b style='color:{COLORS['success']}; font-size:16px;'>✓ Video Ready</b><br><br>"
-                f"<span style='color:{COLORS['text_sec']};'>File: {video_path.name}</span><br>"
-                f"<span style='color:{COLORS['text_sec']};'>Path: {video_path}</span><br>"
-                f"<span style='color:{COLORS['text_sec']};'>Size: {size_mb:.1f} MB</span>"
+            size_mb = video_path.stat().st_size / 1_048_576
+            self._video_status_lbl.setText(t("video_ready"))
+            self._video_status_lbl.setStyleSheet(
+                f"font-size: 18px; font-weight: 700; color: {C['success']}; background: transparent;"
             )
+            self._video_hint_lbl.setText("")
+            self._video_size_lbl.setText(f"{t('video_size')}: {size_mb:.1f} MB")
+            self._video_path_lbl.setText(f"{t('video_path')}: {video_path}")
+            self._open_folder_btn.setEnabled(True)
         else:
-            self._video_info.setText(
-                f"<b style='color:{COLORS['text_sec']}; font-size:14px;'>No video generated yet</b><br><br>"
-                f"<span style='color:{COLORS['text_dim']};'>Run Step 4 (Video Builder) in the Pipeline Runner.</span><br>"
-                f"<span style='color:{COLORS['text_dim']};'>Expected path: {video_path}</span>"
+            self._video_status_lbl.setText(t("video_not_ready"))
+            self._video_status_lbl.setStyleSheet(
+                f"font-size: 18px; font-weight: 700; color: {C['text']}; background: transparent;"
             )
+            self._video_hint_lbl.setText(t("video_run_step4"))
+            self._video_size_lbl.setText("")
+            self._video_path_lbl.setText("")
+            self._open_folder_btn.setEnabled(False)
 
     def _open_prompts_txt(self):
-        config = load_config()
-        base = Path(config.get("base_path", "."))
-        txt_path = base / "output" / "prompts_output.txt"
-        if txt_path.exists():
-            import subprocess, sys
-            if sys.platform == "linux":
-                subprocess.Popen(["xdg-open", str(txt_path)])
-            elif sys.platform == "darwin":
-                subprocess.Popen(["open", str(txt_path)])
+        cfg = load_config()
+        out = Path(cfg.get("output_folder", Path(BASE_DIR) / "output"))
+        txt = out / "prompts_output.txt"
+        if txt.exists():
+            if sys.platform == "win32":
+                subprocess.Popen(["notepad", str(txt)])
             else:
-                subprocess.Popen(["notepad", str(txt_path)])
-        else:
-            QMessageBox.warning(self, "Not Found", "prompts_output.txt not found. Run Step 1 first.")
+                subprocess.Popen(["xdg-open", str(txt)])
 
     def _open_output_folder(self):
-        config = load_config()
-        output_folder = config.get("output_folder", "")
-        base = Path(config.get("base_path", "."))
-        folder = Path(output_folder) if output_folder else base / "assets" / "output"
-        folder.mkdir(parents=True, exist_ok=True)
-
-        import subprocess, sys
-        if sys.platform == "linux":
-            subprocess.Popen(["xdg-open", str(folder)])
+        cfg = load_config()
+        folder = cfg.get("output_folder", str(Path(BASE_DIR) / "output"))
+        p = Path(folder)
+        p.mkdir(parents=True, exist_ok=True)
+        if sys.platform == "win32":
+            subprocess.Popen(["explorer", str(p)])
         elif sys.platform == "darwin":
-            subprocess.Popen(["open", str(folder)])
+            subprocess.Popen(["open", str(p)])
         else:
-            subprocess.Popen(["explorer", str(folder)])
+            subprocess.Popen(["xdg-open", str(p)])
 
-    def refresh(self):
-        self._load_prompts()
-        self._load_mapping()
-        self._load_video_info()
+    def retranslate(self):
+        for key, widget in self._translatable.items():
+            widget.setText(t(key))
+        self._tabs.setTabText(0, t("tab_prompts"))
+        self._tabs.setTabText(1, t("tab_mapping"))
+        self._tabs.setTabText(2, t("tab_video"))
+        self._mapping_tree.setHeaderLabels([
+            t("col_scene"), t("col_start"), t("col_end"), t("col_image"), t("col_label")
+        ])
+        self.refresh()

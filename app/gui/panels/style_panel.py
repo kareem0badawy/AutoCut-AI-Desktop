@@ -1,17 +1,20 @@
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton,
-    QScrollArea, QFrame, QTextEdit, QComboBox, QGroupBox, QMessageBox,
-    QSplitter, QPlainTextEdit,
+    QScrollArea, QFrame, QTextEdit, QComboBox, QMessageBox, QPlainTextEdit,
 )
 
-from app.gui.theme import COLORS
+from app.i18n import lang_manager, t
+from app.gui.theme import get_colors
+from app.gui.widgets import make_separator
 from app.core.config_manager import load_style, save_style, load_config, BASE_DIR
 
 
 class StylePanel(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self._fields = {}
+        self._translatable: dict[str, QLabel | QPushButton] = {}
         self._build_ui()
         self._load()
 
@@ -22,33 +25,39 @@ class StylePanel(QWidget):
 
         container = QWidget()
         layout = QVBoxLayout(container)
-        layout.setContentsMargins(40, 40, 40, 40)
+        layout.setContentsMargins(40, 36, 40, 40)
         layout.setSpacing(24)
 
-        title = QLabel("Style Settings")
+        C = get_colors()
+
+        title = QLabel(t("style_title"))
         title.setObjectName("heading")
+        self._translatable["style_title"] = title
         layout.addWidget(title)
 
-        desc = QLabel(
-            "Control the visual identity of your AI-generated images. "
-            "Settings are saved to style_config.json."
-        )
-        desc.setStyleSheet(f"color: {COLORS['text_sec']}; font-size: 12px;")
+        desc = QLabel(t("style_desc"))
+        desc.setStyleSheet(f"color: {C['text_sec']}; font-size: 13px; background: transparent;")
         desc.setWordWrap(True)
+        self._translatable["style_desc"] = desc
         layout.addWidget(desc)
 
-        layout.addWidget(self._style_group())
-        layout.addWidget(self._template_group())
+        layout.addWidget(self._style_card())
+        layout.addWidget(self._template_card())
 
         btn_row = QHBoxLayout()
-        save_btn = QPushButton("Save Style")
-        save_btn.setObjectName("primary")
-        save_btn.clicked.connect(self._save)
-        reset_btn = QPushButton("Reset to Defaults")
-        reset_btn.setObjectName("secondary")
-        reset_btn.clicked.connect(self._reset)
-        btn_row.addWidget(save_btn)
-        btn_row.addWidget(reset_btn)
+        self._save_btn = QPushButton(t("save_style"))
+        self._save_btn.setObjectName("primary")
+        self._save_btn.setFixedHeight(40)
+        self._save_btn.setFixedWidth(160)
+        self._save_btn.clicked.connect(self._save)
+        self._reset_btn = QPushButton(t("reset_defaults"))
+        self._reset_btn.setObjectName("secondary")
+        self._reset_btn.setFixedHeight(40)
+        self._reset_btn.clicked.connect(self._reset)
+        self._translatable["save_style"] = self._save_btn
+        self._translatable["reset_defaults"] = self._reset_btn
+        btn_row.addWidget(self._save_btn)
+        btn_row.addWidget(self._reset_btn)
         btn_row.addStretch()
         layout.addLayout(btn_row)
         layout.addStretch()
@@ -58,134 +67,163 @@ class StylePanel(QWidget):
         main.setContentsMargins(0, 0, 0, 0)
         main.addWidget(scroll)
 
-    def _style_group(self):
-        group = QGroupBox("Visual Style Configuration")
-        layout = QVBoxLayout(group)
-        layout.setSpacing(16)
+    def _style_card(self) -> QWidget:
+        C = get_colors()
+        card = QWidget()
+        card.setObjectName("card")
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(24, 20, 24, 20)
+        layout.setSpacing(14)
 
-        self._style_lock = self._multiline_field(layout, "Style Lock (applied to every scene)",
-            "Describe the consistent visual style applied to all generated images")
-        self._negative_prompt = self._multiline_field(layout, "Negative Prompt",
-            "Elements to exclude from all generated images")
-        self._mood = self._single_field(layout, "Mood", "dramatic, historical, documentary, somber")
-        self._label_style = self._single_field(layout, "Label Style", "bold rubber stamp uppercase text")
+        hdr = QHBoxLayout()
+        icon = QLabel("🎨")
+        icon.setStyleSheet("font-size: 18px; background: transparent;")
+        title = QLabel(t("style_lock"))
+        title.setObjectName("subheading")
+        title.setStyleSheet(f"font-size: 16px; font-weight: 700; color: {C['text']}; background: transparent;")
+        self._translatable["style_lock"] = title
+        hdr.addWidget(icon)
+        hdr.addWidget(title)
+        hdr.addStretch()
+        layout.addLayout(hdr)
+        layout.addWidget(make_separator(C))
 
-        ar_row = QHBoxLayout()
-        ar_label = QLabel("Aspect Ratio")
-        ar_label.setObjectName("label")
-        ar_label.setFixedWidth(180)
-        self._aspect_ratio = QComboBox()
-        self._aspect_ratio.addItems(["16:9", "9:16", "1:1", "4:3", "3:4"])
-        self._aspect_ratio.setFixedWidth(160)
-        ar_row.addWidget(ar_label)
-        ar_row.addWidget(self._aspect_ratio)
-        ar_row.addStretch()
-        layout.addLayout(ar_row)
+        fields = [
+            ("style_lock", "style_lock_val", "line"),
+            ("negative_prompt", "neg_prompt", "line"),
+            ("mood", "mood", "line"),
+            ("label_style", "label_style", "combo", ["Arabic white text", "English white text", "No label"]),
+            ("aspect_ratio", "aspect_ratio", "combo", ["16:9", "9:16", "1:1", "4:3"]),
+        ]
+        for row in fields:
+            cfg_key = row[0]
+            label_key = row[1]
+            kind = row[2]
+            opts = row[3] if len(row) > 3 else []
 
-        return group
+            col = QVBoxLayout()
+            col.setSpacing(5)
+            lbl = QLabel(t(label_key))
+            lbl.setStyleSheet(f"font-size: 12px; font-weight: 600; color: {C['text_sec']}; background: transparent;")
+            self._translatable[label_key] = lbl
 
-    def _template_group(self):
-        group = QGroupBox("Prompts Template")
-        layout = QVBoxLayout(group)
-        layout.setSpacing(8)
+            if kind == "line":
+                w = QLineEdit()
+                w.setFixedHeight(36)
+            else:
+                w = QComboBox()
+                for o in opts:
+                    w.addItem(o)
+                w.setFixedHeight(36)
 
-        note = QLabel(
-            "This template is sent to the AI to generate scene descriptions. "
-            "It uses {placeholders} for dynamic values. Edit carefully."
-        )
-        note.setStyleSheet(f"color: {COLORS['warning']}; font-size: 11px;")
+            self._fields[cfg_key] = w
+            col.addWidget(lbl)
+            col.addWidget(w)
+            layout.addLayout(col)
+
+        return card
+
+    def _template_card(self) -> QWidget:
+        C = get_colors()
+        card = QWidget()
+        card.setObjectName("card")
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(24, 20, 24, 20)
+        layout.setSpacing(14)
+
+        hdr = QHBoxLayout()
+        icon = QLabel("📝")
+        icon.setStyleSheet("font-size: 18px; background: transparent;")
+        title = QLabel(t("template_section"))
+        title.setObjectName("subheading")
+        title.setStyleSheet(f"font-size: 16px; font-weight: 700; color: {C['text']}; background: transparent;")
+        self._translatable["template_section"] = title
+        hdr.addWidget(icon)
+        hdr.addWidget(title)
+        hdr.addStretch()
+
+        self._load_tmpl_btn = QPushButton(t("load_template"))
+        self._load_tmpl_btn.setObjectName("secondary")
+        self._load_tmpl_btn.setFixedHeight(30)
+        self._load_tmpl_btn.clicked.connect(self._load_template_file)
+        self._translatable["load_template"] = self._load_tmpl_btn
+        hdr.addWidget(self._load_tmpl_btn)
+
+        layout.addLayout(hdr)
+
+        note = QLabel(t("template_note"))
+        note.setStyleSheet(f"font-size: 11px; color: {C['text_dim']}; background: transparent; font-style: italic;")
         note.setWordWrap(True)
+        self._translatable["template_note"] = note
         layout.addWidget(note)
 
         self._template_edit = QPlainTextEdit()
-        self._template_edit.setMinimumHeight(300)
-        self._template_edit.setPlaceholderText("Prompts template content...")
+        self._template_edit.setMinimumHeight(200)
+        self._template_edit.setStyleSheet(
+            f"background: {C['surface2']}; color: {C['text_sec']}; "
+            f"font-family: 'Consolas', monospace; font-size: 12px; "
+            f"border-radius: 8px; border: 1px solid {C['border']};"
+        )
+        self._fields["template"] = self._template_edit
         layout.addWidget(self._template_edit)
 
-        row = QHBoxLayout()
-        load_btn = QPushButton("Load Template from File")
-        load_btn.setObjectName("secondary")
-        load_btn.clicked.connect(self._load_template)
-        save_tmpl_btn = QPushButton("Save Template to File")
-        save_tmpl_btn.setObjectName("secondary")
-        save_tmpl_btn.clicked.connect(self._save_template)
-        row.addWidget(load_btn)
-        row.addWidget(save_tmpl_btn)
-        row.addStretch()
-        layout.addLayout(row)
-
-        return group
-
-    def _multiline_field(self, layout, label_text, placeholder=""):
-        lbl = QLabel(label_text)
-        lbl.setObjectName("label")
-        layout.addWidget(lbl)
-        edit = QTextEdit()
-        edit.setPlaceholderText(placeholder)
-        edit.setMaximumHeight(100)
-        layout.addWidget(edit)
-        return edit
-
-    def _single_field(self, layout, label_text, placeholder=""):
-        row = QHBoxLayout()
-        lbl = QLabel(label_text)
-        lbl.setObjectName("label")
-        lbl.setFixedWidth(180)
-        edit = QLineEdit()
-        edit.setPlaceholderText(placeholder)
-        row.addWidget(lbl)
-        row.addWidget(edit)
-        layout.addLayout(row)
-        return edit
+        return card
 
     def _load(self):
         style = load_style()
-        self._style_lock.setPlainText(style.get("style_lock", ""))
-        self._negative_prompt.setPlainText(style.get("negative_prompt", ""))
-        self._mood.setText(style.get("mood", ""))
-        self._label_style.setText(style.get("label_style", ""))
-        idx = self._aspect_ratio.findText(style.get("aspect_ratio", "16:9"))
-        if idx >= 0:
-            self._aspect_ratio.setCurrentIndex(idx)
+        for key, widget in self._fields.items():
+            if key == "template":
+                widget.setPlainText(style.get("template", ""))
+                continue
+            val = style.get(key, "")
+            if isinstance(widget, QLineEdit):
+                widget.setText(str(val))
+            elif isinstance(widget, QComboBox):
+                idx = widget.findText(str(val))
+                if idx >= 0:
+                    widget.setCurrentIndex(idx)
 
-        tmpl_path = BASE_DIR / "prompts_template.txt"
-        if tmpl_path.exists():
-            with open(tmpl_path, "r", encoding="utf-8") as f:
-                self._template_edit.setPlainText(f.read())
+    def _load_template_file(self):
+        from PySide6.QtWidgets import QFileDialog
+        from pathlib import Path
+        path, _ = QFileDialog.getOpenFileName(self, t("load_template"), str(Path.home()), "Text Files (*.txt *.md);;All (*)")
+        if path:
+            try:
+                self._template_edit.setPlainText(Path(path).read_text(encoding="utf-8"))
+            except Exception as e:
+                QMessageBox.warning(self, "Error", str(e))
 
     def _save(self):
-        style = {
-            "style_lock": self._style_lock.toPlainText().strip(),
-            "negative_prompt": self._negative_prompt.toPlainText().strip(),
-            "mood": self._mood.text().strip(),
-            "label_style": self._label_style.text().strip(),
-            "aspect_ratio": self._aspect_ratio.currentText(),
-        }
+        style = load_style()
+        for key, widget in self._fields.items():
+            if key == "template":
+                style[key] = widget.toPlainText()
+            elif isinstance(widget, QLineEdit):
+                style[key] = widget.text().strip()
+            elif isinstance(widget, QComboBox):
+                style[key] = widget.currentText()
         save_style(style)
-        self._save_template()
-        QMessageBox.information(self, "Saved", "Style settings saved to style_config.json")
-
-    def _save_template(self):
-        tmpl_path = BASE_DIR / "prompts_template.txt"
-        with open(tmpl_path, "w", encoding="utf-8") as f:
-            f.write(self._template_edit.toPlainText())
-
-    def _load_template(self):
-        tmpl_path = BASE_DIR / "prompts_template.txt"
-        if tmpl_path.exists():
-            with open(tmpl_path, "r", encoding="utf-8") as f:
-                self._template_edit.setPlainText(f.read())
+        QMessageBox.information(self, t("saved_ok"), t("style_saved"))
 
     def _reset(self):
-        from app.core.config_manager import DEFAULT_STYLE
-        reply = QMessageBox.question(self, "Reset Style",
-            "Reset all style settings to defaults?",
-            QMessageBox.Yes | QMessageBox.No)
-        if reply == QMessageBox.Yes:
-            self._style_lock.setPlainText(DEFAULT_STYLE["style_lock"])
-            self._negative_prompt.setPlainText(DEFAULT_STYLE["negative_prompt"])
-            self._mood.setText(DEFAULT_STYLE["mood"])
-            self._label_style.setText(DEFAULT_STYLE["label_style"])
+        if QMessageBox.question(self, t("reset_defaults"), t("reset_confirm")) == QMessageBox.Yes:
+            from app.core.config_manager import DEFAULT_STYLE
+            for key, widget in self._fields.items():
+                if key == "template":
+                    widget.setPlainText(DEFAULT_STYLE.get("template", ""))
+                    continue
+                val = DEFAULT_STYLE.get(key, "")
+                if isinstance(widget, QLineEdit):
+                    widget.setText(str(val))
+                elif isinstance(widget, QComboBox):
+                    idx = widget.findText(str(val))
+                    if idx >= 0:
+                        widget.setCurrentIndex(idx)
 
     def refresh(self):
         self._load()
+
+    def retranslate(self):
+        for key, widget in self._translatable.items():
+            if hasattr(widget, "setText"):
+                widget.setText(t(key))

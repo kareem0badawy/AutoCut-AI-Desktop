@@ -7,7 +7,9 @@ from PySide6.QtWidgets import (
     QMessageBox, QGroupBox,
 )
 
-from app.gui.theme import COLORS
+from app.i18n import lang_manager, t
+from app.gui.theme import get_colors
+from app.gui.widgets import make_separator
 from app.core.config_manager import load_config, save_config
 
 
@@ -17,6 +19,7 @@ class SettingsPanel(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self._fields = {}
+        self._translatable: dict[str, QLabel | QPushButton | QGroupBox] = {}
         self._build_ui()
         self._load()
 
@@ -27,31 +30,43 @@ class SettingsPanel(QWidget):
 
         container = QWidget()
         layout = QVBoxLayout(container)
-        layout.setContentsMargins(40, 40, 40, 40)
+        layout.setContentsMargins(40, 36, 40, 40)
         layout.setSpacing(24)
 
-        title = QLabel("Project Settings")
+        C = get_colors()
+
+        title = QLabel(t("settings_title"))
         title.setObjectName("heading")
+        self._translatable["settings_title"] = title
         layout.addWidget(title)
 
-        desc = QLabel("Configure your API keys, file paths, and video parameters. All settings are saved to config.json.")
-        desc.setStyleSheet(f"color: {COLORS['text_sec']}; font-size: 12px;")
+        desc = QLabel(t("settings_desc"))
+        desc.setStyleSheet(f"color: {C['text_sec']}; font-size: 13px; background: transparent;")
         desc.setWordWrap(True)
+        self._translatable["settings_desc"] = desc
         layout.addWidget(desc)
 
-        layout.addWidget(self._api_group())
-        layout.addWidget(self._paths_group())
-        layout.addWidget(self._video_group())
+        layout.addWidget(self._api_card())
+        layout.addWidget(self._paths_card())
+        layout.addWidget(self._video_card())
 
         btn_row = QHBoxLayout()
-        save_btn = QPushButton("Save Settings")
-        save_btn.setObjectName("primary")
-        save_btn.clicked.connect(self._save)
-        reset_btn = QPushButton("Reset to Defaults")
-        reset_btn.setObjectName("secondary")
-        reset_btn.clicked.connect(self._reset)
-        btn_row.addWidget(save_btn)
-        btn_row.addWidget(reset_btn)
+        self._save_btn = QPushButton(t("save_settings"))
+        self._save_btn.setObjectName("primary")
+        self._save_btn.setFixedHeight(40)
+        self._save_btn.setFixedWidth(160)
+        self._save_btn.clicked.connect(self._save)
+
+        self._reset_btn = QPushButton(t("reset_defaults"))
+        self._reset_btn.setObjectName("secondary")
+        self._reset_btn.setFixedHeight(40)
+        self._reset_btn.clicked.connect(self._reset)
+
+        self._translatable["save_settings"] = self._save_btn
+        self._translatable["reset_defaults"] = self._reset_btn
+
+        btn_row.addWidget(self._save_btn)
+        btn_row.addWidget(self._reset_btn)
         btn_row.addStretch()
         layout.addLayout(btn_row)
         layout.addStretch()
@@ -61,253 +76,279 @@ class SettingsPanel(QWidget):
         main.setContentsMargins(0, 0, 0, 0)
         main.addWidget(scroll)
 
-    def _api_group(self):
-        group = QGroupBox("API Keys")
-        layout = QVBoxLayout(group)
-        layout.setSpacing(12)
+    def _api_card(self) -> QWidget:
+        C = get_colors()
+        card = QWidget()
+        card.setObjectName("card")
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(24, 20, 24, 20)
+        layout.setSpacing(14)
 
-        note = QLabel("Your API keys are stored locally in config.json and never shared.")
-        note.setStyleSheet(f"color: {COLORS['warning']}; font-size: 11px;")
+        hdr = QHBoxLayout()
+        icon = QLabel("🔑")
+        icon.setStyleSheet("font-size: 18px; background: transparent;")
+        title = QLabel(t("api_section"))
+        title.setObjectName("subheading")
+        title.setStyleSheet(f"font-size: 16px; font-weight: 700; color: {C['text']}; background: transparent;")
+        self._translatable["api_section"] = title
+
+        note = QLabel(t("api_note"))
+        note.setStyleSheet(
+            f"font-size: 11px; color: {C['text_dim']}; background: {C['surface2']}; "
+            f"border-radius: 6px; padding: 4px 10px;"
+        )
+        note.setWordWrap(True)
+        self._translatable["api_note"] = note
+
+        hdr.addWidget(icon)
+        hdr.addWidget(title)
+        hdr.addStretch()
+        layout.addLayout(hdr)
         layout.addWidget(note)
+        layout.addWidget(make_separator(C))
 
-        self._fields["groq_api_key"] = self._field_row(layout, "Groq API Key", "gsk_...", password=True,
-            tooltip="Get your free API key at console.groq.com")
-        self._fields["hf_api_key"] = self._field_row(layout, "HuggingFace API Key", "hf_...", password=True,
-            tooltip="Get your token at huggingface.co/settings/tokens")
-        self._fields["gemini_api_key"] = self._field_row(layout, "Gemini API Key (optional)", "AIza...", password=True,
-            tooltip="Optional — for future Gemini features")
-        return group
+        for key, label_key in [("groq_api_key", "groq_key"), ("hf_api_key", "hf_key"), ("gemini_api_key", "gemini_key")]:
+            layout.addLayout(self._api_row(key, label_key, C))
 
-    def _paths_group(self):
-        group = QGroupBox("File Paths")
-        layout = QVBoxLayout(group)
-        layout.setSpacing(12)
+        return card
 
-        self._fields["script_path"] = self._file_row(layout, "Script File (.txt)", "Select script file",
-            filter="Text Files (*.txt)")
-        self._fields["audio_path"] = self._file_row(layout, "Audio File", "Select audio file",
-            filter="Audio Files (*.mp3 *.wav *.m4a)")
-        self._fields["images_folder"] = self._folder_row(layout, "AI-Generated Images Folder",
-            "Folder containing generated scene images")
-        self._fields["output_folder"] = self._folder_row(layout, "Output Folder",
-            "Where the final video will be saved")
-        return group
+    def _api_row(self, cfg_key: str, label_key: str, C: dict) -> QHBoxLayout:
+        row = QVBoxLayout()
+        row.setSpacing(5)
 
-    def _video_group(self):
-        group = QGroupBox("Video Parameters")
-        layout = QVBoxLayout(group)
-        layout.setSpacing(12)
+        lbl = QLabel(t(label_key))
+        lbl.setStyleSheet(f"font-size: 12px; font-weight: 600; color: {C['text_sec']}; background: transparent;")
+        self._translatable[label_key] = lbl
 
-        res_layout = QHBoxLayout()
-        res_label = QLabel("Output Resolution")
-        res_label.setObjectName("label")
-        res_combo = QComboBox()
-        res_combo.addItems(["1920x1080", "1280x720", "3840x2160", "1080x1920"])
-        res_combo.setFixedWidth(200)
-        self._fields["output_resolution"] = res_combo
-        res_layout.addWidget(res_label)
-        res_layout.addWidget(res_combo)
-        res_layout.addStretch()
-        layout.addLayout(res_layout)
+        line_row = QHBoxLayout()
+        field = QLineEdit()
+        field.setEchoMode(QLineEdit.Password)
+        field.setPlaceholderText("sk-...")
+        field.setFixedHeight(36)
 
-        fps_layout = QHBoxLayout()
-        fps_label = QLabel("FPS (Frames per second)")
-        fps_label.setObjectName("label")
-        fps_spin = QSpinBox()
-        fps_spin.setRange(1, 60)
-        fps_spin.setValue(24)
-        fps_spin.setFixedWidth(100)
-        self._fields["fps"] = fps_spin
-        fps_layout.addWidget(fps_label)
-        fps_layout.addWidget(fps_spin)
-        fps_layout.addStretch()
-        layout.addLayout(fps_layout)
+        show_btn = QPushButton(t("show"))
+        show_btn.setObjectName("secondary")
+        show_btn.setFixedHeight(36)
+        show_btn.setFixedWidth(72)
 
-        spi_layout = QHBoxLayout()
-        spi_label = QLabel("Seconds per Image")
-        spi_label.setObjectName("label")
-        spi_spin = QSpinBox()
-        spi_spin.setRange(1, 60)
-        spi_spin.setValue(7)
-        spi_spin.setFixedWidth(100)
-        self._fields["seconds_per_image"] = spi_spin
-        spi_layout.addWidget(spi_label)
-        spi_layout.addWidget(spi_spin)
-        spi_layout.addStretch()
-        layout.addLayout(spi_layout)
+        def toggle(checked=False, f=field, b=show_btn):
+            if f.echoMode() == QLineEdit.Password:
+                f.setEchoMode(QLineEdit.Normal)
+                b.setText(t("hide"))
+            else:
+                f.setEchoMode(QLineEdit.Password)
+                b.setText(t("show"))
 
-        dur_layout = QHBoxLayout()
-        dur_label = QLabel("Audio Duration (minutes.seconds  e.g. 4.30)")
-        dur_label.setObjectName("label")
-        dur_edit = QLineEdit()
-        dur_edit.setPlaceholderText("4.30")
-        dur_edit.setFixedWidth(120)
-        self._fields["audio_duration"] = dur_edit
-        dur_layout.addWidget(dur_label)
-        dur_layout.addWidget(dur_edit)
-        dur_layout.addStretch()
-        layout.addLayout(dur_layout)
+        show_btn.clicked.connect(toggle)
+        self._translatable[f"show_{cfg_key}"] = show_btn
 
-        batch_layout = QHBoxLayout()
-        batch_label = QLabel("Scenes per Batch")
-        batch_label.setObjectName("label")
-        batch_spin = QSpinBox()
-        batch_spin.setRange(1, 50)
-        batch_spin.setValue(10)
-        batch_spin.setFixedWidth(100)
-        self._fields["scenes_per_batch"] = batch_spin
-        batch_layout.addWidget(batch_label)
-        batch_layout.addWidget(batch_spin)
-        batch_layout.addStretch()
-        layout.addLayout(batch_layout)
+        line_row.addWidget(field, 1)
+        line_row.addWidget(show_btn)
+        self._fields[cfg_key] = field
+        row.addWidget(lbl)
+        row.addLayout(line_row)
 
-        trans_layout = QHBoxLayout()
-        trans_label = QLabel("Transition Duration (seconds)")
-        trans_label.setObjectName("label")
-        trans_spin = QDoubleSpinBox()
-        trans_spin.setRange(0.0, 3.0)
-        trans_spin.setSingleStep(0.1)
-        trans_spin.setValue(0.5)
-        trans_spin.setFixedWidth(100)
-        self._fields["transition_duration"] = trans_spin
-        trans_layout.addWidget(trans_label)
-        trans_layout.addWidget(trans_spin)
-        trans_layout.addStretch()
-        layout.addLayout(trans_layout)
+        wrapper = QWidget()
+        wrapper.setLayout(row)
+        h = QHBoxLayout()
+        h.setContentsMargins(0, 0, 0, 0)
+        h.addWidget(wrapper)
+        return h
 
-        return group
+    def _paths_card(self) -> QWidget:
+        C = get_colors()
+        card = QWidget()
+        card.setObjectName("card")
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(24, 20, 24, 20)
+        layout.setSpacing(14)
 
-    def _field_row(self, layout, label_text, placeholder="", password=False, tooltip=""):
+        hdr = QHBoxLayout()
+        icon = QLabel("📁")
+        icon.setStyleSheet("font-size: 18px; background: transparent;")
+        title = QLabel(t("paths_section"))
+        title.setObjectName("subheading")
+        title.setStyleSheet(f"font-size: 16px; font-weight: 700; color: {C['text']}; background: transparent;")
+        self._translatable["paths_section"] = title
+        hdr.addWidget(icon)
+        hdr.addWidget(title)
+        hdr.addStretch()
+        layout.addLayout(hdr)
+        layout.addWidget(make_separator(C))
+
+        paths = [
+            ("script_path", "script_path", False),
+            ("audio_path", "audio_path", False),
+            ("images_folder", "images_folder", True),
+            ("output_folder", "output_folder", True),
+        ]
+        for cfg_key, label_key, is_folder in paths:
+            layout.addLayout(self._path_row(cfg_key, label_key, is_folder, C))
+
+        return card
+
+    def _path_row(self, cfg_key: str, label_key: str, is_folder: bool, C: dict) -> QVBoxLayout:
+        col = QVBoxLayout()
+        col.setSpacing(5)
+
+        lbl = QLabel(t(label_key))
+        lbl.setStyleSheet(f"font-size: 12px; font-weight: 600; color: {C['text_sec']}; background: transparent;")
+        self._translatable[label_key] = lbl
+
         row = QHBoxLayout()
-        label = QLabel(label_text)
-        label.setObjectName("label")
-        label.setFixedWidth(200)
-        edit = QLineEdit()
-        edit.setPlaceholderText(placeholder)
-        if password:
-            edit.setEchoMode(QLineEdit.Password)
-        if tooltip:
-            edit.setToolTip(tooltip)
+        field = QLineEdit()
+        field.setFixedHeight(36)
+        field.setPlaceholderText("...")
 
-        toggle = None
-        if password:
-            toggle = QPushButton("Show")
-            toggle.setObjectName("secondary")
-            toggle.setFixedWidth(60)
-            toggle.setFixedHeight(32)
-            toggle.clicked.connect(lambda checked, e=edit, b=toggle: self._toggle_password(e, b))
+        browse_btn = QPushButton(t("browse"))
+        browse_btn.setObjectName("secondary")
+        browse_btn.setFixedHeight(36)
+        browse_btn.setFixedWidth(90)
 
-        row.addWidget(label)
-        row.addWidget(edit)
-        if toggle:
-            row.addWidget(toggle)
-        layout.addLayout(row)
-        return edit
+        def pick(checked=False, f=field, folder=is_folder):
+            if folder:
+                p = QFileDialog.getExistingDirectory(self, "", f.text() or str(Path.home()))
+            else:
+                p, _ = QFileDialog.getOpenFileName(self, "", f.text() or str(Path.home()))
+            if p:
+                f.setText(p)
 
-    def _toggle_password(self, edit, btn):
-        if edit.echoMode() == QLineEdit.Password:
-            edit.setEchoMode(QLineEdit.Normal)
-            btn.setText("Hide")
-        else:
-            edit.setEchoMode(QLineEdit.Password)
-            btn.setText("Show")
+        browse_btn.clicked.connect(pick)
+        self._translatable[f"browse_{cfg_key}"] = browse_btn
+        self._fields[cfg_key] = field
+        row.addWidget(field, 1)
+        row.addWidget(browse_btn)
+        col.addWidget(lbl)
+        col.addLayout(row)
+        return col
 
-    def _file_row(self, layout, label_text, placeholder="", filter="All Files (*)"):
-        row = QHBoxLayout()
-        label = QLabel(label_text)
-        label.setObjectName("label")
-        label.setFixedWidth(200)
-        edit = QLineEdit()
-        edit.setPlaceholderText(placeholder)
-        browse = QPushButton("Browse")
-        browse.setObjectName("secondary")
-        browse.setFixedWidth(80)
-        browse.clicked.connect(lambda: self._browse_file(edit, filter))
-        row.addWidget(label)
-        row.addWidget(edit)
-        row.addWidget(browse)
-        layout.addLayout(row)
-        return edit
+    def _video_card(self) -> QWidget:
+        C = get_colors()
+        card = QWidget()
+        card.setObjectName("card")
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(24, 20, 24, 20)
+        layout.setSpacing(14)
 
-    def _folder_row(self, layout, label_text, placeholder=""):
-        row = QHBoxLayout()
-        label = QLabel(label_text)
-        label.setObjectName("label")
-        label.setFixedWidth(200)
-        edit = QLineEdit()
-        edit.setPlaceholderText(placeholder)
-        browse = QPushButton("Browse")
-        browse.setObjectName("secondary")
-        browse.setFixedWidth(80)
-        browse.clicked.connect(lambda: self._browse_folder(edit))
-        row.addWidget(label)
-        row.addWidget(edit)
-        row.addWidget(browse)
-        layout.addLayout(row)
-        return edit
+        hdr = QHBoxLayout()
+        icon = QLabel("🎬")
+        icon.setStyleSheet("font-size: 18px; background: transparent;")
+        title = QLabel(t("video_section"))
+        title.setObjectName("subheading")
+        title.setStyleSheet(f"font-size: 16px; font-weight: 700; color: {C['text']}; background: transparent;")
+        self._translatable["video_section"] = title
+        hdr.addWidget(icon)
+        hdr.addWidget(title)
+        hdr.addStretch()
+        layout.addLayout(hdr)
+        layout.addWidget(make_separator(C))
 
-    def _browse_file(self, edit, filter):
-        path, _ = QFileDialog.getOpenFileName(self, "Select File", str(Path.home()), filter)
-        if path:
-            edit.setText(path)
+        rows = [
+            ("output_resolution", "resolution", "combo", ["1920x1080", "1280x720", "3840x2160", "720x1280"]),
+            ("fps", "fps_label", "spin", (1, 120)),
+            ("seconds_per_image", "spi_label", "dspin", (0.1, 60.0)),
+            ("audio_duration", "duration_label", "line", []),
+            ("scenes_per_batch", "batch_label", "spin", (1, 50)),
+            ("transition_duration", "transition_label", "dspin", (0.0, 10.0)),
+        ]
+        for cfg_key, label_key, kind, opts in rows:
+            col = QVBoxLayout()
+            col.setSpacing(5)
+            lbl = QLabel(t(label_key))
+            lbl.setStyleSheet(f"font-size: 12px; font-weight: 600; color: {C['text_sec']}; background: transparent;")
+            self._translatable[label_key] = lbl
 
-    def _browse_folder(self, edit):
-        path = QFileDialog.getExistingDirectory(self, "Select Folder", str(Path.home()))
-        if path:
-            edit.setText(path)
+            if kind == "combo":
+                w = QComboBox()
+                for o in opts:
+                    w.addItem(o)
+                w.setFixedHeight(36)
+            elif kind == "spin":
+                w = QSpinBox()
+                w.setRange(opts[0], opts[1])
+                w.setFixedHeight(36)
+            elif kind == "line":
+                w = QLineEdit()
+                w.setFixedHeight(36)
+            else:
+                w = QDoubleSpinBox()
+                w.setRange(opts[0], opts[1])
+                w.setSingleStep(0.1)
+                w.setDecimals(2)
+                w.setFixedHeight(36)
 
-    def _get_field_value(self, key, widget):
-        if isinstance(widget, QLineEdit):
-            return widget.text().strip()
-        elif isinstance(widget, QSpinBox):
-            return widget.value()
-        elif isinstance(widget, QDoubleSpinBox):
-            return widget.value()
-        elif isinstance(widget, QComboBox):
-            return widget.currentText()
-        return ""
+            self._fields[cfg_key] = w
+            col.addWidget(lbl)
+            col.addWidget(w)
+            layout.addLayout(col)
 
-    def _set_field_value(self, key, widget, value):
-        if isinstance(widget, QLineEdit):
-            widget.setText(str(value) if value else "")
-        elif isinstance(widget, QSpinBox):
-            try:
-                widget.setValue(int(value))
-            except (ValueError, TypeError):
-                pass
-        elif isinstance(widget, QDoubleSpinBox):
-            try:
-                widget.setValue(float(value))
-            except (ValueError, TypeError):
-                pass
-        elif isinstance(widget, QComboBox):
-            idx = widget.findText(str(value))
-            if idx >= 0:
-                widget.setCurrentIndex(idx)
+        return card
 
     def _load(self):
-        config = load_config()
+        cfg = load_config()
         for key, widget in self._fields.items():
-            self._set_field_value(key, widget, config.get(key, ""))
+            val = cfg.get(key, "")
+            if isinstance(widget, QLineEdit):
+                widget.setText(str(val))
+            elif isinstance(widget, QComboBox):
+                idx = widget.findText(str(val))
+                if idx >= 0:
+                    widget.setCurrentIndex(idx)
+            elif isinstance(widget, (QSpinBox,)):
+                try:
+                    widget.setValue(int(val))
+                except Exception:
+                    pass
+            elif isinstance(widget, QDoubleSpinBox):
+                try:
+                    widget.setValue(float(val))
+                except Exception:
+                    pass
 
     def _save(self):
-        config = load_config()
+        cfg = load_config()
         for key, widget in self._fields.items():
-            config[key] = self._get_field_value(key, widget)
-        base = Path(__file__).resolve().parent.parent.parent.parent
-        config["base_path"] = str(base)
-        save_config(config)
-        QMessageBox.information(self, "Saved", "Settings saved to config.json")
+            if isinstance(widget, QLineEdit):
+                cfg[key] = widget.text().strip()
+            elif isinstance(widget, QComboBox):
+                cfg[key] = widget.currentText()
+            elif isinstance(widget, (QSpinBox,)):
+                cfg[key] = widget.value()
+            elif isinstance(widget, QDoubleSpinBox):
+                cfg[key] = widget.value()
+        save_config(cfg)
+        QMessageBox.information(self, t("saved_ok"), t("saved_msg"))
         self.settings_saved.emit()
 
     def _reset(self):
-        from app.core.config_manager import DEFAULT_CONFIG
-        reply = QMessageBox.question(self, "Reset Settings",
-            "Reset all settings to defaults? (API keys will be cleared)",
-            QMessageBox.Yes | QMessageBox.No)
-        if reply == QMessageBox.Yes:
+        if QMessageBox.question(self, t("reset_defaults"), t("reset_confirm")) == QMessageBox.Yes:
+            from app.core.config_manager import DEFAULT_CONFIG
             for key, widget in self._fields.items():
-                self._set_field_value(key, widget, DEFAULT_CONFIG.get(key, ""))
+                val = DEFAULT_CONFIG.get(key, "")
+                if isinstance(widget, QLineEdit):
+                    widget.setText(str(val))
+                elif isinstance(widget, QComboBox):
+                    idx = widget.findText(str(val))
+                    if idx >= 0:
+                        widget.setCurrentIndex(idx)
+                elif isinstance(widget, (QSpinBox,)):
+                    try:
+                        widget.setValue(int(val))
+                    except Exception:
+                        pass
+                elif isinstance(widget, QDoubleSpinBox):
+                    try:
+                        widget.setValue(float(val))
+                    except Exception:
+                        pass
 
     def refresh(self):
         self._load()
+
+    def retranslate(self):
+        for key, widget in self._translatable.items():
+            if isinstance(widget, (QPushButton, QCheckBox)) or hasattr(widget, "setText"):
+                try:
+                    widget.setText(t(key))
+                except Exception:
+                    pass
