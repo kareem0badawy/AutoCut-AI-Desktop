@@ -20,6 +20,29 @@ def _setup_linux():
     os.environ["QT_XCB_NO_XI2"] = "1"
 
 
+def _install_exception_hook(app):
+    import traceback
+    from PySide6.QtWidgets import QMessageBox
+
+    def handle_exception(exc_type, exc_value, exc_tb):
+        if issubclass(exc_type, KeyboardInterrupt):
+            sys.__excepthook__(exc_type, exc_value, exc_tb)
+            return
+        msg = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
+        print(f"[AutoCut UNHANDLED] {msg}")
+        try:
+            box = QMessageBox()
+            box.setWindowTitle("AutoCut — خطأ غير متوقع")
+            box.setIcon(QMessageBox.Critical)
+            box.setText("حدث خطأ غير متوقع. البرنامج سيستمر في العمل.")
+            box.setDetailedText(msg)
+            box.exec()
+        except Exception:
+            pass
+
+    sys.excepthook = handle_exception
+
+
 def main():
     if sys.platform == "linux":
         _setup_linux()
@@ -30,6 +53,7 @@ def main():
 
     app = QApplication(sys.argv)
     app.setFont(QFont("Segoe UI", 10))
+    _install_exception_hook(app)
 
     window = MainWindow()
     window.show()

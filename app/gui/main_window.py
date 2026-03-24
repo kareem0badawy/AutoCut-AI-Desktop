@@ -159,43 +159,73 @@ class MainWindow(QMainWindow):
         return sidebar
 
     def _set_active(self, index):
-        for i, btn in enumerate(self._nav_buttons):
-            btn.setProperty("active", "true" if i == index else "false")
-            btn.style().unpolish(btn)
-            btn.style().polish(btn)
-        self._stack.setCurrentIndex(index)
-        self._current_index = index
-        panel = self._panels[index]
-        if hasattr(panel, "refresh"):
-            panel.refresh()
+        try:
+            for i, btn in enumerate(self._nav_buttons):
+                btn.setProperty("active", "true" if i == index else "false")
+                btn.style().unpolish(btn)
+                btn.style().polish(btn)
+            self._stack.setCurrentIndex(index)
+            self._current_index = index
+            panel = self._panels[index]
+            if hasattr(panel, "refresh"):
+                try:
+                    panel.refresh()
+                except Exception as e:
+                    import traceback
+                    print(f"[AutoCut] refresh error on panel {index}: {e}\n{traceback.format_exc()}")
+        except Exception as e:
+            import traceback
+            print(f"[AutoCut] _set_active error: {e}\n{traceback.format_exc()}")
 
     def _toggle_lang(self):
-        new_lang = "en" if lang_manager.lang == "ar" else "ar"
-        lang_manager.set_lang(new_lang)
+        try:
+            new_lang = "en" if lang_manager.lang == "ar" else "ar"
+            lang_manager.set_lang(new_lang)
+        except Exception as e:
+            print(f"[AutoCut] lang toggle error: {e}")
 
     def _toggle_theme(self):
-        new_theme = "light" if lang_manager.theme == "dark" else "dark"
-        lang_manager.set_theme(new_theme)
+        try:
+            new_theme = "light" if lang_manager.theme == "dark" else "dark"
+            lang_manager.set_theme(new_theme)
+        except Exception as e:
+            print(f"[AutoCut] theme toggle error: {e}")
 
     def _on_lang_changed(self, lang: str):
-        app = QApplication.instance()
-        if lang == "ar":
-            app.setLayoutDirection(Qt.RightToLeft)
-        else:
-            app.setLayoutDirection(Qt.LeftToRight)
-        self._apply_theme()
-        self._retranslate_sidebar()
-        for panel in self._panels:
-            if hasattr(panel, "retranslate"):
-                panel.retranslate()
+        try:
+            app = QApplication.instance()
+            if lang == "ar":
+                app.setLayoutDirection(Qt.RightToLeft)
+            else:
+                app.setLayoutDirection(Qt.LeftToRight)
+            self._apply_theme()
+            self._retranslate_sidebar()
+            for panel in self._panels:
+                if hasattr(panel, "retranslate"):
+                    try:
+                        panel.retranslate()
+                    except Exception as e:
+                        import traceback
+                        print(f"[AutoCut] retranslate error: {e}\n{traceback.format_exc()}")
+        except Exception as e:
+            import traceback
+            print(f"[AutoCut] _on_lang_changed error: {e}\n{traceback.format_exc()}")
 
     def _on_theme_changed(self, theme: str):
-        self._apply_theme()
-        icon = t("theme_dark") if theme == "dark" else t("theme_light")
-        self._theme_btn.setText(icon)
-        for panel in self._panels:
-            if hasattr(panel, "retranslate"):
-                panel.retranslate()
+        try:
+            self._apply_theme()
+            icon = t("theme_dark") if theme == "dark" else t("theme_light")
+            self._theme_btn.setText(icon)
+            for panel in self._panels:
+                if hasattr(panel, "retranslate"):
+                    try:
+                        panel.retranslate()
+                    except Exception as e:
+                        import traceback
+                        print(f"[AutoCut] retranslate error: {e}\n{traceback.format_exc()}")
+        except Exception as e:
+            import traceback
+            print(f"[AutoCut] _on_theme_changed error: {e}\n{traceback.format_exc()}")
 
     def _retranslate_sidebar(self):
         self._sidebar_labels["logo"].setText(t("app_name"))
