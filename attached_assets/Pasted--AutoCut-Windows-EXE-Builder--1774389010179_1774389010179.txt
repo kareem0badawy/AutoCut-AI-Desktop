@@ -1,0 +1,223 @@
+
+============================================
+  AutoCut - Windows EXE Builder
+============================================
+
+[OK] Python found.
+
+[*] Installing Python dependencies...
+
+[notice] A new release of pip is available: 25.2 -> 26.0.1
+[notice] To update, run: python.exe -m pip install --upgrade pip
+
+[*] Fixing NumPy version for build compatibility...
+
+[notice] A new release of pip is available: 25.2 -> 26.0.1
+[notice] To update, run: python.exe -m pip install --upgrade pip
+[OK] NumPy pinned to 1.x for build.
+
+[notice] A new release of pip is available: 25.2 -> 26.0.1
+[notice] To update, run: python.exe -m pip install --upgrade pip
+[OK] All build tools ready.
+
+[*] Generating application icon...
+autocut.ico created (11,431 bytes)
+
+[*] Building EXE -- this takes 3-7 minutes...
+
+195 INFO: PyInstaller: 6.18.0, contrib hooks: 2025.11
+205 INFO: Python: 3.10.10
+215 INFO: Platform: Windows-10-10.0.26200-SP0
+215 INFO: Python environment: C:\Users\Kareem\AppData\Local\Programs\Python\Python310
+221 INFO: Removing temporary files and cleaning cache in C:\Users\Kareem\AppData\Local\pyinstaller
+221 INFO: Module search paths (PYTHONPATH):
+['C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\pyinstaller.exe',
+ 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\python310.zip',
+ 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\DLLs',
+ 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib',
+ 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310',
+ 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages',
+ 'J:\\Coding\\Desktop\\AutoCut']
+1541 INFO: checking Analysis
+1545 INFO: Building Analysis because Analysis-00.toc is non existent
+1545 INFO: Looking for Python shared library...
+1545 INFO: Using Python shared library: C:\Users\Kareem\AppData\Local\Programs\Python\Python310\python310.dll
+1545 INFO: Running Analysis Analysis-00.toc
+1545 INFO: Target bytecode optimization level: 0
+1545 INFO: Initializing module dependency graph...
+1547 INFO: Initializing module graph hook caches...
+1575 INFO: Analyzing modules for base_library.zip ...
+2327 INFO: Processing standard module hook 'hook-heapq.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+2577 INFO: Processing standard module hook 'hook-encodings.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+4228 INFO: Processing standard module hook 'hook-pickle.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+5578 INFO: Caching module dependency graph...
+5645 INFO: Analyzing J:\Coding\Desktop\AutoCut\main.py
+5665 INFO: Processing standard module hook 'hook-_ctypes.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+5675 INFO: Processing standard module hook 'hook-PySide6.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+5964 INFO: Processing standard module hook 'hook-shiboken6.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+6197 INFO: Processing standard module hook 'hook-PySide6.QtNetwork.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+8706 INFO: Processing standard module hook 'hook-PySide6.QtCore.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+12320 INFO: Processing standard module hook 'hook-PySide6.QtWidgets.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+16282 INFO: Processing standard module hook 'hook-PySide6.QtGui.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+36725 INFO: Processing pre-safe-import-module hook 'hook-typing_extensions.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+36727 INFO: SetuptoolsInfo: initializing cached setuptools info...
+43174 INFO: Processing standard module hook 'hook-multiprocessing.util.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+43368 INFO: Processing standard module hook 'hook-xml.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+43971 INFO: Processing standard module hook 'hook-pydantic.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\pydantic\experimental\__init__.py:7: PydanticExperimentalWarning: This module is experimental, its contents are subject to change and deprecation.
+  warnings.warn(
+44730 INFO: Processing standard module hook 'hook-platform.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+45358 INFO: Processing standard module hook 'hook-pygments.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+47768 INFO: Processing standard module hook 'hook-sysconfig.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+48335 INFO: Processing standard module hook 'hook-zoneinfo.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+49825 INFO: Processing standard module hook 'hook-pkg_resources.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+50254 INFO: Processing pre-safe-import-module hook 'hook-packaging.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+50349 INFO: Processing pre-safe-import-module hook 'hook-jaraco.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+50351 INFO: Setuptools: 'jaraco' appears to be a full setuptools-vendored copy - creating alias to 'setuptools._vendor.jaraco'!
+50357 INFO: Processing standard module hook 'hook-setuptools.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+50371 INFO: Processing pre-safe-import-module hook 'hook-distutils.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+50373 INFO: Processing pre-find-module-path hook 'hook-distutils.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_find_module_path'
+51039 INFO: Processing standard module hook 'hook-distutils.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+51064 INFO: Processing standard module hook 'hook-distutils.util.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+51107 INFO: Processing standard module hook 'hook-_osx_support.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+51179 INFO: Processing pre-safe-import-module hook 'hook-jaraco.text.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+51181 INFO: Setuptools: 'jaraco.text' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.jaraco.text'!
+51192 INFO: Processing standard module hook 'hook-setuptools._vendor.jaraco.text.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+51196 INFO: Processing pre-safe-import-module hook 'hook-importlib_resources.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+51198 INFO: Processing pre-safe-import-module hook 'hook-jaraco.functools.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+51199 INFO: Setuptools: 'jaraco.functools' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.jaraco.functools'!
+51208 INFO: Processing pre-safe-import-module hook 'hook-more_itertools.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+51346 INFO: Processing pre-safe-import-module hook 'hook-jaraco.context.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+51347 INFO: Setuptools: 'jaraco.context' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.jaraco.context'!
+51642 INFO: Processing pre-safe-import-module hook 'hook-backports.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+51643 INFO: Setuptools: 'backports' appears to be a full setuptools-vendored copy - creating alias to 'setuptools._vendor.backports'!
+51810 INFO: Processing pre-safe-import-module hook 'hook-importlib_metadata.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+51811 INFO: Setuptools: 'importlib_metadata' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.importlib_metadata'!
+51834 INFO: Processing standard module hook 'hook-setuptools._vendor.importlib_metadata.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+51838 INFO: Processing pre-safe-import-module hook 'hook-zipp.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+51840 INFO: Setuptools: 'zipp' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.zipp'!
+52068 INFO: Processing pre-safe-import-module hook 'hook-tomli.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+52069 INFO: Setuptools: 'tomli' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.tomli'!
+52739 INFO: Processing pre-safe-import-module hook 'hook-wheel.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+52898 INFO: Processing pre-safe-import-module hook 'hook-platformdirs.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+52908 INFO: Processing standard module hook 'hook-platformdirs.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+54678 INFO: Processing standard module hook 'hook-xml.etree.cElementTree.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+55288 INFO: Processing standard module hook 'hook-difflib.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+56464 INFO: Processing standard module hook 'hook-numpy.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+57224 INFO: Processing standard module hook 'hook-psutil.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+59681 INFO: Processing standard module hook 'hook-certifi.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+59797 INFO: Processing standard module hook 'hook-anyio.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+61869 INFO: Processing standard module hook 'hook-imageio.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+63146 INFO: Processing standard module hook 'hook-imageio_ffmpeg.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+63343 INFO: Processing standard module hook 'hook-urllib3.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+63637 INFO: Processing standard module hook 'hook-charset_normalizer.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+63785 INFO: Processing standard module hook 'hook-cryptography.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+65254 INFO: hook-cryptography: cryptography does not seem to be using dynamically linked OpenSSL.
+65768 INFO: Processing standard module hook 'hook-moviepy.video.fx.all.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+66906 INFO: Processing standard module hook 'hook-moviepy.audio.fx.all.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\moviepy\video\io\sliders.py:61: SyntaxWarning: "is" with a literal. Did you mean "=="?
+  if event.key is 'enter':
+67670 INFO: Processing standard module hook 'hook-PIL.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+67776 INFO: Processing standard module hook 'hook-PIL.Image.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+68235 INFO: Processing standard module hook 'hook-PIL.ImageFilter.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+68652 INFO: Analyzing hidden import 'PIL.ImageDraw'
+68732 INFO: Analyzing hidden import 'pydub'
+68856 INFO: Analyzing hidden import 'google.generativeai'
+68890 INFO: Processing standard module hook 'hook-google.api_core.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+69472 INFO: Processing standard module hook 'hook-grpc.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+70537 INFO: Processing standard module hook 'hook-pycparser.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+74179 INFO: Processing standard module hook 'hook-httplib2.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+74528 INFO: Processing standard module hook 'hook-jinja2.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+75160 INFO: Processing standard module hook 'hook-googleapiclient.model.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+75883 INFO: Analyzing hidden import 'huggingface_hub'
+77688 INFO: Processing standard module hook 'hook-fsspec.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+78845 INFO: Processing pre-safe-import-module hook 'hook-tensorflow.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\pre_safe_import_module'
+79080 INFO: Processing module hooks (post-graph stage)...
+84781 INFO: Processing standard module hook 'hook-PIL.SpiderImagePlugin.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+93581 INFO: Processing standard module hook 'hook-tzdata.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+94615 INFO: Performing binary vs. data reclassification (1337 entries)
+109721 INFO: Looking for ctypes DLLs
+109781 INFO: Analyzing run-time hooks ...
+109797 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+109817 INFO: Including run-time hook 'pyi_rth_pyside6.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+109833 INFO: Processing pre-find-module-path hook 'hook-_pyi_rth_utils.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_find_module_path'
+109850 INFO: Processing standard module hook 'hook-_pyi_rth_utils.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+109878 INFO: Including run-time hook 'pyi_rth_pkgutil.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+109895 INFO: Including run-time hook 'pyi_rth_multiprocessing.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+109911 INFO: Including run-time hook 'pyi_rth_cryptography_openssl.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\rthooks'
+109924 INFO: Including run-time hook 'pyi_rth_setuptools.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+109938 INFO: Including run-time hook 'pyi_rth_pkgres.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+110071 INFO: Creating base_library.zip...
+110132 INFO: Looking for dynamic libraries
+C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\building\build_main.py:227: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  __import__(package)
+C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\building\build_main.py:227: UserWarning: The numpy.array_api submodule is still experimental. See NEP 47.
+  __import__(package)
+C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\pydantic\experimental\__init__.py:7: PydanticExperimentalWarning: This module is experimental, its contents are subject to change and deprecation.
+  warnings.warn(
+C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\google\api_core\_python_version_support.py:275: FutureWarning: You are using a Python version (3.10.10) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\building\build_main.py:227: FutureWarning:
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  __import__(package)
+120823 INFO: Extra DLL search directories (AddDllDirectory): ['C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages\\shiboken6', 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\numpy.libs', 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages\\cv2\\../../x64/vc17/bin', 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\scipy.libs']
+120823 INFO: Extra DLL search directories (PATH): ['C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages\\cv2\\../../x64/vc17/bin', 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages\\PySide6']
+124718 INFO: Warnings written to J:\Coding\Desktop\AutoCut\build\autocut\warn-autocut.txt
+125228 INFO: Graph cross-reference written to J:\Coding\Desktop\AutoCut\build\autocut\xref-autocut.html
+125532 INFO: checking PYZ
+125532 INFO: Building PYZ because PYZ-00.toc is non existent
+125532 INFO: Building PYZ (ZlibArchive) J:\Coding\Desktop\AutoCut\build\autocut\PYZ-00.pyz
+127691 INFO: Building PYZ (ZlibArchive) J:\Coding\Desktop\AutoCut\build\autocut\PYZ-00.pyz completed successfully.
+127807 INFO: checking PKG
+127807 INFO: Building PKG because PKG-00.toc is non existent
+127808 INFO: Building PKG (CArchive) AutoCut.pkg
+127975 INFO: Building PKG (CArchive) AutoCut.pkg completed successfully.
+127977 INFO: Bootloader C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\runw.exe
+127978 INFO: checking EXE
+127978 INFO: Building EXE because EXE-00.toc is non existent
+127978 INFO: Building EXE from EXE-00.toc
+127980 INFO: Copying bootloader EXE to J:\Coding\Desktop\AutoCut\build\autocut\AutoCut.exe
+128124 INFO: Copying icon to EXE
+128223 INFO: Copying 0 resources to EXE
+128223 INFO: Embedding manifest in EXE
+128294 INFO: Appending PKG archive to EXE
+128389 INFO: Fixing EXE headers
+128867 INFO: Building EXE from EXE-00.toc completed successfully.
+128891 INFO: checking COLLECT
+128891 INFO: Building COLLECT because COLLECT-00.toc is non existent
+128892 INFO: Building COLLECT COLLECT-00.toc
+133055 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+133119 INFO: Build complete! The results are available in: J:\Coding\Desktop\AutoCut\dist
+
+[*] Copying data files to dist...
+[OK] Data files copied.
+
+[*] Creating Desktop shortcut...
+^ : The term '^' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the
+spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:44
++ $ws = New-Object -ComObject WScript.Shell; ^
++                                            ~
+    + CategoryInfo          : ObjectNotFound: (^:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+'$s' is not recognized as an internal or external command,
+operable program or batch file.
+[WARN] Shortcut not created. Run dist\AutoCut\AutoCut.exe manually.
+
+============================================
+  BUILD COMPLETE!
+============================================
+
+  EXE: dist\AutoCut\AutoCut.exe
+  Icon on Desktop: AutoCut.lnk
+
+  To share the app, zip the 'dist\AutoCut' folder.
+
+Press any key to continue . . .

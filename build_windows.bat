@@ -76,7 +76,7 @@ if exist assets             xcopy /e /i /y assets      dist\AutoCut\assets\ >nul
 if exist output             xcopy /e /i /y output      dist\AutoCut\output\ >nul
 echo [OK] Data files copied.
 
-REM Create Desktop shortcut
+REM Create Desktop shortcut via a temp PS1 file
 echo.
 echo [*] Creating Desktop shortcut...
 set "TARGET=%CD%\dist\AutoCut\AutoCut.exe"
@@ -84,19 +84,22 @@ set "ICON=%CD%\autocut.ico"
 set "WORKDIR=%CD%\dist\AutoCut"
 set "SHORTCUT=%USERPROFILE%\Desktop\AutoCut.lnk"
 
-powershell -NoProfile -Command ^
-  "$ws = New-Object -ComObject WScript.Shell; ^
-   $s = $ws.CreateShortcut('%SHORTCUT%'); ^
-   $s.TargetPath = '%TARGET%'; ^
-   $s.IconLocation = '%ICON%'; ^
-   $s.WorkingDirectory = '%WORKDIR%'; ^
-   $s.Description = 'AutoCut AI Video Generator'; ^
-   $s.Save()" 2>nul
+echo $ws = New-Object -ComObject WScript.Shell > "%TEMP%\make_shortcut.ps1"
+echo $s = $ws.CreateShortcut('%SHORTCUT%') >> "%TEMP%\make_shortcut.ps1"
+echo $s.TargetPath = '%TARGET%' >> "%TEMP%\make_shortcut.ps1"
+echo $s.IconLocation = '%ICON%' >> "%TEMP%\make_shortcut.ps1"
+echo $s.WorkingDirectory = '%WORKDIR%' >> "%TEMP%\make_shortcut.ps1"
+echo $s.Description = 'AutoCut AI Video Generator' >> "%TEMP%\make_shortcut.ps1"
+echo $s.Save() >> "%TEMP%\make_shortcut.ps1"
 
-if not errorlevel 1 (
-    echo [OK] Desktop shortcut created.
+powershell -NoProfile -ExecutionPolicy Bypass -File "%TEMP%\make_shortcut.ps1" 2>nul
+del "%TEMP%\make_shortcut.ps1" 2>nul
+
+if exist "%SHORTCUT%" (
+    echo [OK] Desktop shortcut created: AutoCut.lnk
 ) else (
-    echo [WARN] Shortcut not created. Run dist\AutoCut\AutoCut.exe manually.
+    echo [WARN] Shortcut not created automatically.
+    echo        Navigate to dist\AutoCut\ and run AutoCut.exe
 )
 
 echo.
