@@ -18,7 +18,7 @@ from app.logger import logger
 
 
 class _Worker(QObject):
-    log = Signal(str)
+    log      = Signal(str)
     progress = Signal(int, int)
     finished = Signal(bool, str)
 
@@ -35,16 +35,6 @@ class _Worker(QObject):
             self.finished.emit(True, "")
         except Exception as e:
             self.finished.emit(False, f"{type(e).__name__}: {e}\n\n{traceback.format_exc()}")
-
-
-class _RunThread(QThread):
-    def __init__(self, worker):
-        super().__init__()
-        self._worker = worker
-        self._worker.moveToThread(self)
-
-    def run(self):
-        self._worker.run()
 
 
 class PipelinePanel(QWidget):
@@ -464,6 +454,47 @@ class PipelinePanel(QWidget):
         cfg = load_config()
         return validate_config(cfg)
 
+    def _start_task(self, fn, step_num: str, step_idx: int,
+                    finish_step_num: str = None):
+        """
+        Proper Qt threading pattern:
+          - Worker lives in a QThread; signals are queued across threads.
+          - After finished: thread.quit() → deleteLater() on both objects.
+          - This prevents the segfault/crash that happens when the C++ QThread
+            object is garbage-collected while PySide6 still holds signal connections.
+
+        step_num       : which progress-bar to animate while running
+        finish_step_num: which step to mark done in _on_finished (defaults to step_num)
+        step_idx       : which step card's status label to update on finish
+        """
+        fsn = finish_step_num if finish_step_num is not None else step_num
+
+        worker = _Worker(fn)
+        thread = QThread()
+        worker.moveToThread(thread)
+
+        thread.started.connect(worker.run)
+
+        worker.log.connect(self._append_log)
+        worker.progress.connect(
+            lambda c, total, sn=step_num: self._on_progress(c, total, sn)
+        )
+        worker.finished.connect(
+            lambda ok, err, sn=fsn, si=step_idx: self._on_finished(ok, err, sn, si)
+        )
+        worker.finished.connect(lambda: thread.quit())
+        worker.finished.connect(worker.deleteLater)
+        thread.finished.connect(thread.deleteLater)
+        thread.finished.connect(self._clear_thread_refs)
+
+        self._thread = thread
+        self._worker = worker
+        thread.start()
+
+    def _clear_thread_refs(self):
+        self._thread = None
+        self._worker = None
+
     def _run_step1(self):
         try:
             errors = self._validate()
@@ -485,12 +516,7 @@ class PipelinePanel(QWidget):
                 from app.core.prompt_generator import run_prompt_generation
                 run_prompt_generation(cfg, style, reset=reset, limit=limit, log=log, progress=progress)
 
-            self._worker = _Worker(task)
-            self._thread = _RunThread(self._worker)
-            self._worker.log.connect(self._append_log)
-            self._worker.progress.connect(lambda c, t_: self._on_progress(c, t_, "1"))
-            self._worker.finished.connect(lambda ok, err: self._on_finished(ok, err, "1", 0))
-            self._thread.start()
+            self._start_task(task, step_num="1", step_idx=0)
         except Exception as e:
             logger.critical(f"_run_step1 CRASH: {e}\n{traceback.format_exc()}")
             self._set_running(False, "1")
@@ -512,12 +538,7 @@ class PipelinePanel(QWidget):
                 from app.core.ai_mapper import run_ai_mapper
                 run_ai_mapper(cfg, log=log, progress=progress)
 
-            self._worker = _Worker(task)
-            self._thread = _RunThread(self._worker)
-            self._worker.log.connect(self._append_log)
-            self._worker.progress.connect(lambda c, t_: self._on_progress(c, t_, "3"))
-            self._worker.finished.connect(lambda ok, err: self._on_finished(ok, err, "3", 2))
-            self._thread.start()
+            self._start_task(task, step_num="3", step_idx=2)
         except Exception as e:
             logger.critical(f"_run_step3 CRASH: {e}\n{traceback.format_exc()}")
             self._set_running(False, "3")
@@ -539,12 +560,7 @@ class PipelinePanel(QWidget):
                 from app.core.video_builder import run_video_builder
                 run_video_builder(cfg, log=log, progress=progress)
 
-            self._worker = _Worker(task)
-            self._thread = _RunThread(self._worker)
-            self._worker.log.connect(self._append_log)
-            self._worker.progress.connect(lambda c, t_: self._on_progress(c, t_, "4"))
-            self._worker.finished.connect(lambda ok, err: self._on_finished(ok, err, "4", 3))
-            self._thread.start()
+            self._start_task(task, step_num="4", step_idx=3)
         except Exception as e:
             logger.critical(f"_run_step4 CRASH: {e}\n{traceback.format_exc()}")
             self._set_running(False, "4")
@@ -577,12 +593,7 @@ class PipelinePanel(QWidget):
                 log("── Step 4 ──")
                 run_video_builder(cfg, log=log, progress=progress)
 
-            self._worker = _Worker(task)
-            self._thread = _RunThread(self._worker)
-            self._worker.log.connect(self._append_log)
-            self._worker.progress.connect(lambda c, t_: self._on_progress(c, t_, "1"))
-            self._worker.finished.connect(lambda ok, err: self._on_finished(ok, err, "4", 3))
-            self._thread.start()
+            self._start_task(task, step_num="1", step_idx=3, finish_step_num="4")
         except Exception as e:
             logger.critical(f"_run_all CRASH: {e}\n{traceback.format_exc()}")
             self._set_running(False, "1")
