@@ -1,0 +1,1421 @@
+============================================
+  AutoCut - Windows EXE Builder
+============================================
+
+[OK] Python found.
+
+[*] Installing Python dependencies...
+
+[notice] A new release of pip is available: 25.2 -> 26.0.1
+[notice] To update, run: python.exe -m pip install --upgrade pip
+
+[notice] A new release of pip is available: 25.2 -> 26.0.1
+[notice] To update, run: python.exe -m pip install --upgrade pip
+[OK] All dependencies ready.
+
+[*] Generating application icon...
+autocut.ico created (11,431 bytes)
+
+[*] Building EXE ΓÇö this takes 3-7 minutes...
+
+276 INFO: PyInstaller: 6.18.0, contrib hooks: 2025.11
+276 INFO: Python: 3.10.10
+290 INFO: Platform: Windows-10-10.0.26200-SP0
+292 INFO: Python environment: C:\Users\Kareem\AppData\Local\Programs\Python\Python310
+292 INFO: Removing temporary files and cleaning cache in C:\Users\Kareem\AppData\Local\pyinstaller
+292 INFO: Module search paths (PYTHONPATH):
+['C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\pyinstaller.exe',
+ 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\python310.zip',
+ 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\DLLs',
+ 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib',
+ 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310',
+ 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages',
+ 'J:\\Coding\\Desktop\\AutoCut']
+2130 INFO: checking Analysis
+2130 INFO: Building Analysis because Analysis-00.toc is non existent
+2130 INFO: Looking for Python shared library...
+2130 INFO: Using Python shared library: C:\Users\Kareem\AppData\Local\Programs\Python\Python310\python310.dll
+2130 INFO: Running Analysis Analysis-00.toc
+2130 INFO: Target bytecode optimization level: 0
+2130 INFO: Initializing module dependency graph...
+2138 INFO: Initializing module graph hook caches...
+2303 INFO: Analyzing modules for base_library.zip ...
+3458 INFO: Processing standard module hook 'hook-heapq.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+3609 INFO: Processing standard module hook 'hook-encodings.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+6641 INFO: Processing standard module hook 'hook-pickle.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+10619 INFO: Caching module dependency graph...
+10683 INFO: Analyzing J:\Coding\Desktop\AutoCut\main.py
+10714 INFO: Processing standard module hook 'hook-_ctypes.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+10747 INFO: Processing standard module hook 'hook-PySide6.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+11412 INFO: Processing standard module hook 'hook-shiboken6.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+11680 INFO: Processing standard module hook 'hook-PySide6.QtNetwork.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+14366 INFO: Processing standard module hook 'hook-PySide6.QtCore.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+17267 INFO: Processing standard module hook 'hook-PySide6.QtWidgets.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+20879 INFO: Processing standard module hook 'hook-PySide6.QtGui.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+44015 INFO: Processing pre-safe-import-module hook 'hook-typing_extensions.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+44027 INFO: SetuptoolsInfo: initializing cached setuptools info...
+50770 INFO: Processing standard module hook 'hook-multiprocessing.util.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+51131 INFO: Processing standard module hook 'hook-xml.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+52541 INFO: Processing standard module hook 'hook-pydantic.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\pydantic\experimental\__init__.py:7: PydanticExperimentalWarning: This module is experimental, its contents are subject to change and deprecation.
+  warnings.warn(
+53633 INFO: Processing standard module hook 'hook-platform.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+55068 INFO: Processing standard module hook 'hook-pygments.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+59072 INFO: Processing standard module hook 'hook-sysconfig.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+60819 INFO: Processing standard module hook 'hook-zoneinfo.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+63967 INFO: Processing standard module hook 'hook-pkg_resources.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+64390 INFO: Processing pre-safe-import-module hook 'hook-packaging.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+64675 INFO: Processing pre-safe-import-module hook 'hook-jaraco.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+64677 INFO: Setuptools: 'jaraco' appears to be a full setuptools-vendored copy - creating alias to 'setuptools._vendor.jaraco'!
+64699 INFO: Processing standard module hook 'hook-setuptools.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+64769 INFO: Processing pre-safe-import-module hook 'hook-distutils.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+64772 INFO: Processing pre-find-module-path hook 'hook-distutils.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_find_module_path'
+65426 INFO: Processing standard module hook 'hook-distutils.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+65484 INFO: Processing standard module hook 'hook-distutils.util.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+65635 INFO: Processing standard module hook 'hook-_osx_support.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+65834 INFO: Processing pre-safe-import-module hook 'hook-jaraco.text.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+65836 INFO: Setuptools: 'jaraco.text' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.jaraco.text'!
+65868 INFO: Processing standard module hook 'hook-setuptools._vendor.jaraco.text.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+65872 INFO: Processing pre-safe-import-module hook 'hook-importlib_resources.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+65874 INFO: Processing pre-safe-import-module hook 'hook-jaraco.functools.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+65876 INFO: Setuptools: 'jaraco.functools' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.jaraco.functools'!
+65903 INFO: Processing pre-safe-import-module hook 'hook-more_itertools.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+66076 INFO: Processing pre-safe-import-module hook 'hook-jaraco.context.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+66077 INFO: Setuptools: 'jaraco.context' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.jaraco.context'!
+66546 INFO: Processing pre-safe-import-module hook 'hook-backports.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+66548 INFO: Setuptools: 'backports' appears to be a full setuptools-vendored copy - creating alias to 'setuptools._vendor.backports'!
+66902 INFO: Processing pre-safe-import-module hook 'hook-importlib_metadata.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+66904 INFO: Setuptools: 'importlib_metadata' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.importlib_metadata'!
+66946 INFO: Processing standard module hook 'hook-setuptools._vendor.importlib_metadata.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+66951 INFO: Processing pre-safe-import-module hook 'hook-zipp.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+66953 INFO: Setuptools: 'zipp' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.zipp'!
+67648 INFO: Processing pre-safe-import-module hook 'hook-tomli.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+67649 INFO: Setuptools: 'tomli' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.tomli'!
+68899 INFO: Processing pre-safe-import-module hook 'hook-wheel.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+69403 INFO: Processing pre-safe-import-module hook 'hook-platformdirs.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+69428 INFO: Processing standard module hook 'hook-platformdirs.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+71746 INFO: Processing standard module hook 'hook-xml.etree.cElementTree.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+72562 INFO: Processing standard module hook 'hook-difflib.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+75485 INFO: Processing standard module hook 'hook-numpy.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+78215 INFO: Processing standard module hook 'hook-psutil.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+80930 INFO: Processing standard module hook 'hook-charset_normalizer.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+83607 INFO: Processing standard module hook 'hook-certifi.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+84032 INFO: Processing standard module hook 'hook-anyio.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+88978 INFO: Processing standard module hook 'hook-imageio.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+90608 INFO: Processing standard module hook 'hook-pandas.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+92827 INFO: Processing standard module hook 'hook-dateutil.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+93118 INFO: Processing pre-safe-import-module hook 'hook-six.moves.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+93565 INFO: Processing standard module hook 'hook-pytz.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+95667 INFO: Processing standard module hook 'hook-pandas.io.formats.style.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+95970 WARNING: collect_data_files - skipping data collection for module 'pandas.io.formats' as it is not a package.
+96467 INFO: Processing standard module hook 'hook-numba.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+96674 INFO: Processing standard module hook 'hook-llvmlite.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+104887 INFO: Processing standard module hook 'hook-pycparser.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+107744 INFO: Processing pre-safe-import-module hook 'hook-win32com.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\pre_safe_import_module'
+109102 INFO: Processing standard module hook 'hook-jinja2.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+113901 INFO: Processing standard module hook 'hook-pandas.plotting.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+115550 INFO: Processing standard module hook 'hook-xml.dom.domreg.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+117569 INFO: Processing standard module hook 'hook-sqlite3.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+118055 INFO: Processing standard module hook 'hook-pandas.io.clipboard.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+118907 INFO: Processing standard module hook 'hook-imageio_ffmpeg.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+119483 INFO: Processing standard module hook 'hook-urllib3.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+120464 INFO: Processing standard module hook 'hook-cryptography.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+122172 INFO: hook-cryptography: cryptography does not seem to be using dynamically linked OpenSSL.
+123443 INFO: Processing standard module hook 'hook-moviepy.video.fx.all.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+128804 INFO: Processing standard module hook 'hook-moviepy.audio.fx.all.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\moviepy\video\io\sliders.py:61: SyntaxWarning: "is" with a literal. Did you mean "=="?
+  if event.key is 'enter':
+129661 INFO: Processing standard module hook 'hook-PIL.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+129799 INFO: Processing standard module hook 'hook-PIL.Image.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+130393 INFO: Processing standard module hook 'hook-PIL.ImageFilter.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\hooks'
+131192 INFO: Analyzing hidden import 'PIL.ImageDraw'
+131390 INFO: Analyzing hidden import 'pydub'
+131661 INFO: Analyzing hidden import 'google.generativeai'
+131837 INFO: Processing standard module hook 'hook-google.api_core.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+133210 INFO: Processing standard module hook 'hook-grpc.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+145014 INFO: Processing standard module hook 'hook-httplib2.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+146090 INFO: Processing standard module hook 'hook-googleapiclient.model.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+147567 INFO: Analyzing hidden import 'huggingface_hub'
+152571 INFO: Processing standard module hook 'hook-torch.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.0.2 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\isolated\_child.py", line 100, in <module>
+    while run_next_command(read_fh, write_fh):
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\isolated\_child.py", line 63, in run_next_command
+    output = function(*args, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\utils\hooks\__init__.py", line 665, in _collect_submodules
+    __import__(name)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\__init__.py", line 1382, in <module>
+    from .functional import *  # noqa: F403
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\functional.py", line 7, in <module>
+    import torch.nn.functional as F
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\__init__.py", line 1, in <module>
+    from .modules import *  # noqa: F403
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\modules\__init__.py", line 35, in <module>
+    from .transformer import TransformerEncoder, TransformerDecoder, \
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\modules\transformer.py", line 20, in <module>
+    device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\modules\transformer.py:20: UserWarning: Failed to initialize NumPy: _ARRAY_API not found (Triggered internally at ..\torch\csrc\utils\tensor_numpy.cpp:84.)
+  device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\utils\cpp_extension.py:28: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import packaging  # type: ignore[attr-defined]
+6820 WARNING: Failed to collect submodules for 'torch.testing._internal.optests' because importing 'torch.testing._internal.optests' raised: ModuleNotFoundError: No module named 'expecttest'
+[2026-03-24 23:38:57,636] torch.distributed.elastic.multiprocessing.redirects: [WARNING] NOTE: Redirects are currently not supported in Windows or MacOs.
+175507 INFO: hook-torch: this torch build does not depend on MKL...
+220440 INFO: Processing standard module hook 'hook-transformers.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.0.2 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\isolated\_child.py", line 100, in <module>
+    while run_next_command(read_fh, write_fh):
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\isolated\_child.py", line 63, in run_next_command
+    output = function(*args, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\utils\hooks\__init__.py", line 284, in _get_module_attribute
+    module = importlib.import_module(module_name)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\transformers\__init__.py", line 26, in <module>
+    from . import dependency_versions_check
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\transformers\dependency_versions_check.py", line 16, in <module>
+    from .utils.versions import require_version, require_version_core
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\transformers\utils\__init__.py", line 32, in <module>
+    from .generic import (
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\transformers\utils\generic.py", line 432, in <module>
+    import torch.utils._pytree as _torch_pytree
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\__init__.py", line 1382, in <module>
+    from .functional import *  # noqa: F403
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\functional.py", line 7, in <module>
+    import torch.nn.functional as F
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\__init__.py", line 1, in <module>
+    from .modules import *  # noqa: F403
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\modules\__init__.py", line 35, in <module>
+    from .transformer import TransformerEncoder, TransformerDecoder, \
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\modules\transformer.py", line 20, in <module>
+    device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\modules\transformer.py:20: UserWarning: Failed to initialize NumPy: _ARRAY_API not found (Triggered internally at ..\torch\csrc\utils\tensor_numpy.cpp:84.)
+  device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+225507 INFO: Processing pre-safe-import-module hook 'hook-tensorflow.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\pre_safe_import_module'
+229679 INFO: Processing standard module hook 'hook-fsspec.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+233694 INFO: Processing standard module hook 'hook-torchaudio.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.0.2 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\isolated\_child.py", line 100, in <module>
+    while run_next_command(read_fh, write_fh):
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\isolated\_child.py", line 63, in run_next_command
+    output = function(*args, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\utils\hooks\__init__.py", line 486, in _is_package
+    spec = importlib.util.find_spec(module_name)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\importlib\util.py", line 94, in find_spec
+    parent = __import__(parent_name, fromlist=['__path__'])
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torchaudio\__init__.py", line 1, in <module>
+    from . import (  # noqa: F401
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torchaudio\_extension\__init__.py", line 5, in <module>
+    from torchaudio._internal.module_utils import eval_env, fail_with_message, is_module_available, no_op
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torchaudio\_internal\__init__.py", line 4, in <module>
+    from torch.hub import download_url_to_file, load_state_dict_from_url
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\__init__.py", line 1382, in <module>
+    from .functional import *  # noqa: F403
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\functional.py", line 7, in <module>
+    import torch.nn.functional as F
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\__init__.py", line 1, in <module>
+    from .modules import *  # noqa: F403
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\modules\__init__.py", line 35, in <module>
+    from .transformer import TransformerEncoder, TransformerDecoder, \
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\modules\transformer.py", line 20, in <module>
+    device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\modules\transformer.py:20: UserWarning: Failed to initialize NumPy: _ARRAY_API not found (Triggered internally at ..\torch\csrc\utils\tensor_numpy.cpp:84.)
+  device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.0.2 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\isolated\_child.py", line 100, in <module>
+    while run_next_command(read_fh, write_fh):
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\isolated\_child.py", line 63, in run_next_command
+    output = function(*args, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\utils\hooks\__init__.py", line 665, in _collect_submodules
+    __import__(name)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torchaudio\__init__.py", line 1, in <module>
+    from . import (  # noqa: F401
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torchaudio\_extension\__init__.py", line 5, in <module>
+    from torchaudio._internal.module_utils import eval_env, fail_with_message, is_module_available, no_op
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torchaudio\_internal\__init__.py", line 4, in <module>
+    from torch.hub import download_url_to_file, load_state_dict_from_url
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\__init__.py", line 1382, in <module>
+    from .functional import *  # noqa: F403
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\functional.py", line 7, in <module>
+    import torch.nn.functional as F
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\__init__.py", line 1, in <module>
+    from .modules import *  # noqa: F403
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\modules\__init__.py", line 35, in <module>
+    from .transformer import TransformerEncoder, TransformerDecoder, \
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\modules\transformer.py", line 20, in <module>
+    device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\modules\transformer.py:20: UserWarning: Failed to initialize NumPy: _ARRAY_API not found (Triggered internally at ..\torch\csrc\utils\tensor_numpy.cpp:84.)
+  device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+244860 INFO: Processing standard module hook 'hook-soundfile.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+250040 INFO: Processing standard module hook 'hook-sklearn.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+252305 INFO: Processing standard module hook 'hook-sklearn.utils.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+253905 INFO: Processing standard module hook 'hook-sklearn.externals.array_api_compat.numpy.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+254087 INFO: Processing standard module hook 'hook-sklearn.externals.array_api_compat.cupy.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+254164 INFO: Processing standard module hook 'hook-sklearn.externals.array_api_compat.torch.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+254257 INFO: Processing standard module hook 'hook-sklearn.externals.array_api_compat.dask.array.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+254939 INFO: Processing standard module hook 'hook-sklearn.metrics.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+261724 INFO: Processing standard module hook 'hook-sklearn.metrics.cluster.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+262469 INFO: Processing standard module hook 'hook-sklearn.cluster.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+262620 INFO: Processing standard module hook 'hook-sklearn.metrics.pairwise.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+263157 INFO: Processing standard module hook 'hook-sklearn.neighbors.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+263424 INFO: Processing standard module hook 'hook-sklearn.linear_model.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+267193 INFO: Processing standard module hook 'hook-onnxruntime.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+280415 INFO: Processing standard module hook 'hook-regex.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+281691 INFO: Processing standard module hook 'hook-sudachipy.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+288187 INFO: Processing standard module hook 'hook-jieba.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+309084 INFO: Processing standard module hook 'hook-nltk.py' from 'C:\\Users\\Kareem\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+Traceback (most recent call last):
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\Scripts\pyinstaller.exe\__main__.py", line 6, in <module>
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\__main__.py", line 231, in _console_script_run
+    run()
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\__main__.py", line 215, in run
+    run_build(pyi_config, spec_file, **vars(args))
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\__main__.py", line 70, in run_build
+    PyInstaller.building.build_main.main(pyi_config, spec_file, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\building\build_main.py", line 1275, in main
+    build(specfile, distpath, workpath, clean_build)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\building\build_main.py", line 1213, in build
+    exec(code, spec_namespace)
+  File "autocut.spec", line 4, in <module>
+    a = Analysis(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\building\build_main.py", line 584, in __init__
+    self.__postinit__()
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\building\datastruct.py", line 184, in __postinit__
+    self.assemble()
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\building\build_main.py", line 719, in assemble
+    self.graph.add_hiddenimports(self.hiddenimports)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 770, in add_hiddenimports
+    nodes = self.import_hook(modnm)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2312, in _safe_import_hook
+    self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1305, in import_hook
+    for target_submodule in self._import_importable_package_submodules(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1554, in _import_importable_package_submodules
+    submodule = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2312, in _safe_import_hook
+    self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1305, in import_hook
+    for target_submodule in self._import_importable_package_submodules(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1554, in _import_importable_package_submodules
+    submodule = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2312, in _safe_import_hook
+    self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1305, in import_hook
+    for target_submodule in self._import_importable_package_submodules(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1554, in _import_importable_package_submodules
+    submodule = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2312, in _safe_import_hook
+    self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1305, in import_hook
+    for target_submodule in self._import_importable_package_submodules(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1554, in _import_importable_package_submodules
+    submodule = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2312, in _safe_import_hook
+    self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1305, in import_hook
+    for target_submodule in self._import_importable_package_submodules(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1554, in _import_importable_package_submodules
+    submodule = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2312, in _safe_import_hook
+    self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1305, in import_hook
+    for target_submodule in self._import_importable_package_submodules(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1554, in _import_importable_package_submodules
+    submodule = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2312, in _safe_import_hook
+    self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1305, in import_hook
+    for target_submodule in self._import_importable_package_submodules(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1554, in _import_importable_package_submodules
+    submodule = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2312, in _safe_import_hook
+    self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1305, in import_hook
+    for target_submodule in self._import_importable_package_submodules(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1554, in _import_importable_package_submodules
+    submodule = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2312, in _safe_import_hook
+    self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1305, in import_hook
+    for target_submodule in self._import_importable_package_submodules(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1554, in _import_importable_package_submodules
+    submodule = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2312, in _safe_import_hook
+    self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1305, in import_hook
+    for target_submodule in self._import_importable_package_submodules(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1554, in _import_importable_package_submodules
+    submodule = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2312, in _safe_import_hook
+    self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1305, in import_hook
+    for target_submodule in self._import_importable_package_submodules(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1554, in _import_importable_package_submodules
+    submodule = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2312, in _safe_import_hook
+    self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1305, in import_hook
+    for target_submodule in self._import_importable_package_submodules(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1554, in _import_importable_package_submodules
+    submodule = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2312, in _safe_import_hook
+    self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1305, in import_hook
+    for target_submodule in self._import_importable_package_submodules(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1554, in _import_importable_package_submodules
+    submodule = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1279, in import_hook
+    submodule = self._safe_import_module(head, mname, submodule)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2312, in _safe_import_hook
+    self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1305, in import_hook
+    for target_submodule in self._import_importable_package_submodules(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1554, in _import_importable_package_submodules
+    submodule = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 477, in _safe_import_hook
+    ret_modules = super()._safe_import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2103, in _safe_import_hook
+    target_modules = self.import_hook(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1266, in import_hook
+    target_package, target_module_partname = self._find_head_package(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1445, in _find_head_package
+    target_package = self._safe_import_module(
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 539, in _safe_import_module
+    return super()._safe_import_module(module_basename, module_name, parent_package)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 1826, in _safe_import_module
+    self._process_imports(n)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\lib\modulegraph\modulegraph.py", line 2654, in _process_imports
+    target_modules = self._safe_import_hook(*import_info, **kwargs)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 385, in _safe_import_hook
+    excluded_imports = self._find_all_excluded_imports(source_module.identifier)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\analysis.py", line 373, in _find_all_excluded_imports
+    excluded_imports.update(module_hook.excludedimports)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\imphook.py", line 343, in __getattr__
+    self._load_hook_module()
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\depend\imphook.py", line 422, in _load_hook_module
+    self._hook_module = importlib_load_source(self.hook_module_name, self.hook_filename)
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\PyInstaller\compat.py", line 559, in importlib_load_source
+    mod_loader.exec_module(mod)
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\_pyinstaller_hooks_contrib\stdhooks\hook-nltk.py", line 14, in <module>
+    import nltk
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\nltk\__init__.py", line 146, in <module>
+    from nltk.chunk import *
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\nltk\chunk\__init__.py", line 155, in <module>
+    from nltk.chunk.api import ChunkParserI
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\nltk\chunk\api.py", line 13, in <module>
+    from nltk.chunk.util import ChunkScore
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\nltk\chunk\util.py", line 12, in <module>
+    from nltk.tag.mapping import map_tag
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\nltk\tag\__init__.py", line 72, in <module>
+    from nltk.tag.sequential import (
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\nltk\tag\sequential.py", line 26, in <module>
+    from nltk.classify import NaiveBayesClassifier
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\nltk\classify\__init__.py", line 97, in <module>
+    from nltk.classify.scikitlearn import SklearnClassifier
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\nltk\classify\scikitlearn.py", line 38, in <module>
+    from sklearn.feature_extraction import DictVectorizer
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\__init__.py", line 73, in <module>
+    from .base import clone  # noqa: E402
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\base.py", line 19, in <module>
+    from .utils._metadata_requests import _MetadataRequester, _routing_enabled
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\utils\__init__.py", line 9, in <module>
+    from ._chunking import gen_batches, gen_even_slices
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\utils\_chunking.py", line 11, in <module>
+    from ._param_validation import Interval, validate_params
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\utils\_param_validation.py", line 17, in <module>
+    from .validation import _is_arraylike_not_scalar
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\utils\validation.py", line 21, in <module>
+    from ..utils._array_api import _asarray_with_order, _is_numpy_namespace, get_namespace
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\utils\_array_api.py", line 20, in <module>
+    from .fixes import parse_version
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\sklearn\utils\fixes.py", line 20, in <module>
+    import pandas as pd
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\pandas\__init__.py", line 22, in <module>
+    from pandas.compat import is_numpy_dev as _is_numpy_dev  # pyright: ignore # noqa:F401
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\pandas\compat\__init__.py", line 18, in <module>
+    from pandas.compat.numpy import (
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\pandas\compat\numpy\__init__.py", line 4, in <module>
+    from pandas.util.version import Version
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\pandas\util\__init__.py", line 2, in <module>
+    from pandas.util._decorators import (  # noqa:F401
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\pandas\util\_decorators.py", line 14, in <module>
+    from pandas._libs.properties import cache_readonly
+  File "C:\Users\Kareem\AppData\Local\Programs\Python\Python310\lib\site-packages\pandas\_libs\__init__.py", line 13, in <module>
+    from pandas._libs.interval import Interval
+  File "pandas\_libs\interval.pyx", line 1, in init pandas._libs.interval
+ValueError: numpy.dtype size changed, may indicate binary incompatibility. Expected 96 from C header, got 88 from PyObject
+
+[ERROR] Build failed. Check output above.
+Press any key to continue . . .
