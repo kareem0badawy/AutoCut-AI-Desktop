@@ -14,6 +14,7 @@ from app.i18n import lang_manager, t
 from app.gui.theme import get_colors
 from app.gui.widgets import make_separator, make_badge
 from app.core.config_manager import load_config, load_style, validate_config, BASE_DIR
+from app.logger import logger
 
 
 class _Worker(QObject):
@@ -405,149 +406,186 @@ class PipelinePanel(QWidget):
         self._log_view.clear()
 
     def _set_running(self, running: bool, step_num: str = None):
-        self._run_all_btn.setEnabled(not running)
-        for refs in self._step_cards:
-            if "run_btn" in refs:
-                refs["run_btn"].setEnabled(not running)
-        if step_num:
-            key = f"pbar_{step_num}"
-            pbar = self._step_progress.get(key)
-            if pbar:
-                if running:
-                    pbar.setVisible(True)
-                    pbar.setRange(0, 0)
-                else:
-                    pbar.setRange(0, 100)
-                    pbar.setValue(100)
+        try:
+            self._run_all_btn.setEnabled(not running)
+            for refs in self._step_cards:
+                if "run_btn" in refs:
+                    refs["run_btn"].setEnabled(not running)
+            if step_num:
+                key = f"pbar_{step_num}"
+                pbar = self._step_progress.get(key)
+                if pbar:
+                    if running:
+                        pbar.setVisible(True)
+                        pbar.setRange(0, 0)
+                    else:
+                        pbar.setRange(0, 100)
+                        pbar.setValue(100)
+        except Exception as e:
+            logger.error(f"_set_running error: {e}\n{traceback.format_exc()}")
 
     def _on_progress(self, cur: int, total: int, step_num: str = "1"):
-        key = f"pbar_{step_num}"
-        pbar = self._step_progress.get(key)
-        if pbar and total > 0:
-            pbar.setRange(0, 100)
-            pbar.setValue(int(cur / total * 100))
+        try:
+            key = f"pbar_{step_num}"
+            pbar = self._step_progress.get(key)
+            if pbar and total > 0:
+                pbar.setRange(0, 100)
+                pbar.setValue(int(cur / total * 100))
+        except Exception as e:
+            logger.error(f"_on_progress error: {e}")
 
     def _on_finished(self, success: bool, err: str, step_num: str = "1", step_idx: int = 0):
-        self._set_running(False, step_num)
-        refs = self._step_cards[step_idx]
-        status_lbl = refs.get("status_lbl")
-        C = get_colors()
-        if success:
-            msg = t("done_success")
-            color = C["success"]
-        else:
-            msg = t("done_error")
-            color = C["error"]
-            self._append_log(err)
-        if status_lbl:
-            status_lbl.setText(msg)
-            status_lbl.setStyleSheet(f"color: {color}; font-size: 12px; font-weight: 600; background: transparent;")
-            status_lbl.setVisible(True)
-        self._append_log(msg)
+        try:
+            self._set_running(False, step_num)
+            if 0 <= step_idx < len(self._step_cards):
+                refs = self._step_cards[step_idx]
+                status_lbl = refs.get("status_lbl")
+            else:
+                status_lbl = None
+            C = get_colors()
+            if success:
+                msg = t("done_success")
+                color = C["success"]
+                logger.info(f"Step {step_num} finished successfully")
+            else:
+                msg = t("done_error")
+                color = C["error"]
+                self._append_log(err)
+                logger.error(f"Step {step_num} failed:\n{err}")
+            if status_lbl:
+                status_lbl.setText(msg)
+                status_lbl.setStyleSheet(f"color: {color}; font-size: 12px; font-weight: 600; background: transparent;")
+                status_lbl.setVisible(True)
+            self._append_log(msg)
+        except Exception as e:
+            logger.critical(f"_on_finished CRASH: {e}\n{traceback.format_exc()}")
 
     def _validate(self) -> list[str]:
         cfg = load_config()
         return validate_config(cfg)
 
     def _run_step1(self):
-        errors = self._validate()
-        if errors:
-            QMessageBox.warning(self, t("config_errors"), "\n".join(errors))
-            return
+        try:
+            errors = self._validate()
+            if errors:
+                logger.warning(f"Step 1 validation failed: {errors}")
+                QMessageBox.warning(self, t("config_errors"), "\n".join(errors))
+                return
 
-        cfg = load_config()
-        style = load_style()
-        reset = self._reset_check.isChecked()
-        limit = self._limit_spin.value() if self._limit_check.isChecked() else None
+            cfg = load_config()
+            style = load_style()
+            reset = self._reset_check.isChecked()
+            limit = self._limit_spin.value() if self._limit_check.isChecked() else None
 
-        self._append_log("▶ " + t("step1_title"))
-        self._set_running(True, "1")
+            logger.info(f"Starting Step 1 — reset={reset}, limit={limit}")
+            self._append_log("▶ " + t("step1_title"))
+            self._set_running(True, "1")
 
-        def task(log, progress):
-            from app.core.prompt_generator import run_prompt_generation
-            run_prompt_generation(cfg, style, reset=reset, limit=limit, log=log, progress=progress)
+            def task(log, progress):
+                from app.core.prompt_generator import run_prompt_generation
+                run_prompt_generation(cfg, style, reset=reset, limit=limit, log=log, progress=progress)
 
-        self._worker = _Worker(task)
-        self._thread = _RunThread(self._worker)
-        self._worker.log.connect(self._append_log)
-        self._worker.progress.connect(lambda c, t_: self._on_progress(c, t_, "1"))
-        self._worker.finished.connect(lambda ok, err: self._on_finished(ok, err, "1", 0))
-        self._thread.start()
+            self._worker = _Worker(task)
+            self._thread = _RunThread(self._worker)
+            self._worker.log.connect(self._append_log)
+            self._worker.progress.connect(lambda c, t_: self._on_progress(c, t_, "1"))
+            self._worker.finished.connect(lambda ok, err: self._on_finished(ok, err, "1", 0))
+            self._thread.start()
+        except Exception as e:
+            logger.critical(f"_run_step1 CRASH: {e}\n{traceback.format_exc()}")
+            self._set_running(False, "1")
 
     def _run_step3(self):
-        errors = self._validate()
-        if errors:
-            QMessageBox.warning(self, t("config_errors"), "\n".join(errors))
-            return
+        try:
+            errors = self._validate()
+            if errors:
+                logger.warning(f"Step 3 validation failed: {errors}")
+                QMessageBox.warning(self, t("config_errors"), "\n".join(errors))
+                return
 
-        cfg = load_config()
-        style = load_style()
-        self._append_log("▶ " + t("step3_title"))
-        self._set_running(True, "3")
+            cfg = load_config()
+            logger.info("Starting Step 3 — AI Mapper")
+            self._append_log("▶ " + t("step3_title"))
+            self._set_running(True, "3")
 
-        def task(log, progress):
-            from app.core.ai_mapper import run_ai_mapper
-            run_ai_mapper(cfg, log=log, progress=progress)
+            def task(log, progress):
+                from app.core.ai_mapper import run_ai_mapper
+                run_ai_mapper(cfg, log=log, progress=progress)
 
-        self._worker = _Worker(task)
-        self._thread = _RunThread(self._worker)
-        self._worker.log.connect(self._append_log)
-        self._worker.progress.connect(lambda c, t_: self._on_progress(c, t_, "3"))
-        self._worker.finished.connect(lambda ok, err: self._on_finished(ok, err, "3", 2))
-        self._thread.start()
+            self._worker = _Worker(task)
+            self._thread = _RunThread(self._worker)
+            self._worker.log.connect(self._append_log)
+            self._worker.progress.connect(lambda c, t_: self._on_progress(c, t_, "3"))
+            self._worker.finished.connect(lambda ok, err: self._on_finished(ok, err, "3", 2))
+            self._thread.start()
+        except Exception as e:
+            logger.critical(f"_run_step3 CRASH: {e}\n{traceback.format_exc()}")
+            self._set_running(False, "3")
 
     def _run_step4(self):
-        errors = self._validate()
-        if errors:
-            QMessageBox.warning(self, t("config_errors"), "\n".join(errors))
-            return
+        try:
+            errors = self._validate()
+            if errors:
+                logger.warning(f"Step 4 validation failed: {errors}")
+                QMessageBox.warning(self, t("config_errors"), "\n".join(errors))
+                return
 
-        cfg = load_config()
-        self._append_log("▶ " + t("step4_title"))
-        self._set_running(True, "4")
+            cfg = load_config()
+            logger.info("Starting Step 4 — Video Builder")
+            self._append_log("▶ " + t("step4_title"))
+            self._set_running(True, "4")
 
-        def task(log, progress):
-            from app.core.video_builder import run_video_builder
-            run_video_builder(cfg, log=log, progress=progress)
+            def task(log, progress):
+                from app.core.video_builder import run_video_builder
+                run_video_builder(cfg, log=log, progress=progress)
 
-        self._worker = _Worker(task)
-        self._thread = _RunThread(self._worker)
-        self._worker.log.connect(self._append_log)
-        self._worker.progress.connect(lambda c, t_: self._on_progress(c, t_, "4"))
-        self._worker.finished.connect(lambda ok, err: self._on_finished(ok, err, "4", 3))
-        self._thread.start()
+            self._worker = _Worker(task)
+            self._thread = _RunThread(self._worker)
+            self._worker.log.connect(self._append_log)
+            self._worker.progress.connect(lambda c, t_: self._on_progress(c, t_, "4"))
+            self._worker.finished.connect(lambda ok, err: self._on_finished(ok, err, "4", 3))
+            self._thread.start()
+        except Exception as e:
+            logger.critical(f"_run_step4 CRASH: {e}\n{traceback.format_exc()}")
+            self._set_running(False, "4")
 
     def _run_all(self):
-        errors = self._validate()
-        if errors:
-            QMessageBox.warning(self, t("config_errors"), "\n".join(errors))
-            return
+        try:
+            errors = self._validate()
+            if errors:
+                logger.warning(f"Run-all validation failed: {errors}")
+                QMessageBox.warning(self, t("config_errors"), "\n".join(errors))
+                return
 
-        cfg = load_config()
-        style = load_style()
-        reset = self._reset_check.isChecked()
-        limit = self._limit_spin.value() if self._limit_check.isChecked() else None
+            cfg = load_config()
+            style = load_style()
+            reset = self._reset_check.isChecked()
+            limit = self._limit_spin.value() if self._limit_check.isChecked() else None
 
-        self._append_log("⚡ " + t("run_all"))
-        self._set_running(True, "1")
+            logger.info(f"Starting full pipeline — reset={reset}, limit={limit}")
+            self._append_log("⚡ " + t("run_all"))
+            self._set_running(True, "1")
 
-        def task(log, progress):
-            from app.core.prompt_generator import run_prompt_generation
-            from app.core.ai_mapper import run_ai_mapper
-            from app.core.video_builder import run_video_builder
-            log("── Step 1 ──")
-            run_prompt_generation(cfg, style, reset=reset, limit=limit, log=log, progress=progress)
-            log("── Step 3 ──")
-            run_ai_mapper(cfg, log=log, progress=progress)
-            log("── Step 4 ──")
-            run_video_builder(cfg, log=log, progress=progress)
+            def task(log, progress):
+                from app.core.prompt_generator import run_prompt_generation
+                from app.core.ai_mapper import run_ai_mapper
+                from app.core.video_builder import run_video_builder
+                log("── Step 1 ──")
+                run_prompt_generation(cfg, style, reset=reset, limit=limit, log=log, progress=progress)
+                log("── Step 3 ──")
+                run_ai_mapper(cfg, log=log, progress=progress)
+                log("── Step 4 ──")
+                run_video_builder(cfg, log=log, progress=progress)
 
-        self._worker = _Worker(task)
-        self._thread = _RunThread(self._worker)
-        self._worker.log.connect(self._append_log)
-        self._worker.progress.connect(lambda c, t_: self._on_progress(c, t_, "1"))
-        self._worker.finished.connect(lambda ok, err: self._on_finished(ok, err, "4", 3))
-        self._thread.start()
+            self._worker = _Worker(task)
+            self._thread = _RunThread(self._worker)
+            self._worker.log.connect(self._append_log)
+            self._worker.progress.connect(lambda c, t_: self._on_progress(c, t_, "1"))
+            self._worker.finished.connect(lambda ok, err: self._on_finished(ok, err, "4", 3))
+            self._thread.start()
+        except Exception as e:
+            logger.critical(f"_run_all CRASH: {e}\n{traceback.format_exc()}")
+            self._set_running(False, "1")
 
     def _open_output(self):
         cfg = load_config()

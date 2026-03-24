@@ -20,7 +20,7 @@ def _setup_linux():
     os.environ["QT_XCB_NO_XI2"] = "1"
 
 
-def _install_exception_hook(app):
+def _install_exception_hook(log):
     import traceback
     from PySide6.QtWidgets import QMessageBox
 
@@ -29,12 +29,12 @@ def _install_exception_hook(app):
             sys.__excepthook__(exc_type, exc_value, exc_tb)
             return
         msg = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
-        print(f"[AutoCut UNHANDLED] {msg}")
+        log.critical(f"UNHANDLED EXCEPTION:\n{msg}")
         try:
             box = QMessageBox()
-            box.setWindowTitle("AutoCut — خطأ غير متوقع")
+            box.setWindowTitle("AutoCut — خطأ")
             box.setIcon(QMessageBox.Critical)
-            box.setText("حدث خطأ غير متوقع. البرنامج سيستمر في العمل.")
+            box.setText("حدث خطأ غير متوقع. تم حفظ التفاصيل في autocut.log")
             box.setDetailedText(msg)
             box.exec()
         except Exception:
@@ -44,6 +44,12 @@ def _install_exception_hook(app):
 
 
 def main():
+    from app.logger import logger
+    logger.info("=" * 60)
+    logger.info("AutoCut starting up")
+    logger.info(f"Python {sys.version}")
+    logger.info(f"Platform: {sys.platform}")
+
     if sys.platform == "linux":
         _setup_linux()
 
@@ -51,14 +57,23 @@ def main():
     from PySide6.QtGui import QFont
     from app.gui.main_window import MainWindow
 
+    _install_exception_hook(logger)
+
     app = QApplication(sys.argv)
     app.setFont(QFont("Segoe UI", 10))
-    _install_exception_hook(app)
 
-    window = MainWindow()
-    window.show()
-
-    sys.exit(app.exec())
+    logger.info("Creating main window...")
+    try:
+        window = MainWindow()
+        window.show()
+        logger.info("Main window shown — entering event loop")
+        code = app.exec()
+        logger.info(f"Event loop exited with code {code}")
+        sys.exit(code)
+    except Exception as e:
+        import traceback
+        logger.critical(f"Fatal error during startup:\n{traceback.format_exc()}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
