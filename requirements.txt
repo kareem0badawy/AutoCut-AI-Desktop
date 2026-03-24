@@ -3,3 +3,11 @@ Pillow
 pydub
 google-generativeai
 customtkinter
+google-generativeai
+groq
+huggingface_hub
+moviepy
+numpy
+Pillow
+pydub
+requests
