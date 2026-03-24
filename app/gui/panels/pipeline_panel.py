@@ -3,7 +3,7 @@ import sys
 import traceback
 from pathlib import Path
 
-from PySide6.QtCore import Qt, QThread, Signal, QObject
+from PySide6.QtCore import Qt, QThread, Signal
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
     QScrollArea, QFrame, QProgressBar, QPlainTextEdit, QCheckBox,
@@ -17,10 +17,16 @@ from app.core.config_manager import load_config, load_style, validate_config, BA
 from app.logger import logger
 
 
-class _Worker(QObject):
+class _TaskThread(QThread):
+    """
+    QThread subclass pattern — safest for PySide6 on Windows.
+    Signals are defined on the thread object itself; no moveToThread needed.
+    Qt automatically uses QueuedConnection when signals cross thread boundaries,
+    so slot calls land safely on the main-thread event loop.
+    """
     log      = Signal(str)
     progress = Signal(int, int)
-    finished = Signal(bool, str)
+    done     = Signal(bool, str)
 
     def __init__(self, task_fn):
         super().__init__()
@@ -32,9 +38,9 @@ class _Worker(QObject):
                 log=lambda msg: self.log.emit(str(msg)),
                 progress=lambda cur, total: self.progress.emit(cur, total),
             )
-            self.finished.emit(True, "")
+            self.done.emit(True, "")
         except Exception as e:
-            self.finished.emit(False, f"{type(e).__name__}: {e}\n\n{traceback.format_exc()}")
+            self.done.emit(False, f"{type(e).__name__}: {e}\n\n{traceback.format_exc()}")
 
 
 class PipelinePanel(QWidget):
@@ -457,43 +463,28 @@ class PipelinePanel(QWidget):
     def _start_task(self, fn, step_num: str, step_idx: int,
                     finish_step_num: str = None):
         """
-        Proper Qt threading pattern:
-          - Worker lives in a QThread; signals are queued across threads.
-          - After finished: thread.quit() → deleteLater() on both objects.
-          - This prevents the segfault/crash that happens when the C++ QThread
-            object is garbage-collected while PySide6 still holds signal connections.
+        Uses _TaskThread (QThread subclass) — the safest pattern for PySide6 on Windows.
+        No moveToThread, no deleteLater races.  Qt queues cross-thread signal delivery
+        automatically, so all slots run on the main-thread event loop.
 
-        step_num       : which progress-bar to animate while running
-        finish_step_num: which step to mark done in _on_finished (defaults to step_num)
-        step_idx       : which step card's status label to update on finish
+        step_num        : progress-bar key to animate while running ("1","3","4")
+        finish_step_num : step key to mark done in _on_finished (defaults to step_num)
+        step_idx        : index into _step_cards for the status label
         """
         fsn = finish_step_num if finish_step_num is not None else step_num
 
-        worker = _Worker(fn)
-        thread = QThread()
-        worker.moveToThread(thread)
+        thread = _TaskThread(fn)
 
-        thread.started.connect(worker.run)
-
-        worker.log.connect(self._append_log)
-        worker.progress.connect(
+        thread.log.connect(self._append_log)
+        thread.progress.connect(
             lambda c, total, sn=step_num: self._on_progress(c, total, sn)
         )
-        worker.finished.connect(
+        thread.done.connect(
             lambda ok, err, sn=fsn, si=step_idx: self._on_finished(ok, err, sn, si)
         )
-        worker.finished.connect(lambda: thread.quit())
-        worker.finished.connect(worker.deleteLater)
-        thread.finished.connect(thread.deleteLater)
-        thread.finished.connect(self._clear_thread_refs)
 
-        self._thread = thread
-        self._worker = worker
+        self._thread = thread   # keep Python ref alive for the life of the task
         thread.start()
-
-    def _clear_thread_refs(self):
-        self._thread = None
-        self._worker = None
 
     def _run_step1(self):
         try:
