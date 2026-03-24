@@ -1,13 +1,9 @@
-﻿moviepy==1.0.3
+moviepy
 Pillow
 pydub
-google-generativeai
-customtkinter
 google-generativeai
 groq
 huggingface_hub
-moviepy
+PySide6
 numpy
-Pillow
-pydub
 requests

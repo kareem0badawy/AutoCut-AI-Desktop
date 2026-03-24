@@ -1,230 +1,184 @@
-# 🎬 AutoCut — AI-Powered Video Generator
+# AutoCut — AI-Powered Video Generator
 
-AutoCut بيحول أي سكريبت صوتي لفيديو كامل أوتوماتيك باستخدام الـ AI.  
-بيولد صور، بيربطها بالتايمينج الصح، وبيجمعهم مع الصوت في فيديو نهائي جاهز للنشر.
+AutoCut is a desktop application that converts audio scripts into complete AI-generated videos.
+It provides a modern dark-themed GUI to manage every step of the pipeline.
 
 ---
 
-## 🔄 الـ Pipeline
+## How to Run
+
+```bash
+bash start.sh
+```
+
+Or directly:
+```bash
+python main.py
+```
+
+---
+
+## Pipeline
 
 ```
 script.txt
     ↓
-[1] prompt_generator.py   →   output/prompts.json
+[1] Prompt Generator    →  output/prompts.json + output/prompts_output.txt
     ↓
-[2] image_generator.py    →   output/images/scene_*.png
+[2] Image Generation    →  (external — use HuggingFace or any AI image tool)
     ↓
-[3] ai_mapper.py          →   mapping.json
+[3] AI Mapper           →  mapping.json
     ↓
-[4] video_builder.py      →   assets/output/final_video.mp4
+[4] Video Builder       →  {output_folder}/final_video.mp4
 ```
 
 ---
 
-## 📁 هيكل المشروع
+## Project Structure
 
 ```
 AutoCut/
 │
-├── main.py                  # Entry point (قيد التطوير)
-├── prompt_generator.py      # بيولد prompts للصور من السكريبت
-├── image_generator.py       # بيولد الصور من الـ prompts عن طريق HuggingFace
-├── ai_mapper.py             # بيربط الصور بـ timestamps السكريبت
-├── video_builder.py         # بيجمع الصور والصوت في فيديو نهائي
-├── check_names.py           # أداة مساعدة لفحص أسماء الصور
+├── main.py                      # App entry point (launches GUI)
+├── start.sh                     # Shell wrapper (sets library paths)
+├── requirements.txt             # Python dependencies
 │
-├── config.json              # إعدادات المشروع والـ API Keys
-├── style_config.json        # ستايل وموود الصور المولدة
-├── mapping.json             # ناتج ai_mapper (ربط الصور بالـ timestamps)
-├── requirements.txt         # المكتبات المطلوبة
+├── app/                         # Main application package
+│   ├── core/                    # Backend logic (no UI dependencies)
+│   │   ├── config_manager.py    # Reads/writes config.json & style_config.json
+│   │   ├── prompt_generator.py  # Step 1: Groq LLM prompt generation
+│   │   ├── ai_mapper.py         # Step 3: Image-to-timestamp mapping
+│   │   └── video_builder.py     # Step 4: Final video assembly
+│   └── gui/                     # PySide6 desktop UI
+│       ├── main_window.py       # Main application window & navigation
+│       ├── theme.py             # Dark theme stylesheet
+│       └── panels/
+│           ├── dashboard.py     # Overview & status
+│           ├── settings_panel.py # API keys, paths, video config
+│           ├── style_panel.py   # Visual style & prompts template
+│           ├── pipeline_panel.py # Step runner with live logs
+│           ├── assets_panel.py  # Script, audio, images viewer
+│           └── outputs_panel.py # Prompts, mapping, video viewer
 │
-├── script.txt               # ملف السكريبت الصوتي (أنت بتضيفه)
+├── config.json                  # Project config (auto-created on first run)
+├── style_config.json            # Image style config (auto-created on first run)
+├── prompts_template.txt         # AI prompts template
+├── mapping.json                 # Image-timestamp mapping (generated)
 │
 ├── assets/
-│   ├── audio/               # ملف الصوت (mp3/wav/m4a)
-│   ├── images/              # صور جاهزة (بديل عن التوليد)
-│   └── output/              # الفيديو النهائي
+│   ├── audio/                   # Input audio files (mp3/wav/m4a)
+│   ├── images/                  # Pre-made images (optional)
+│   └── output/                  # Final video output
 │
-└── output/
-    ├── prompts.json         # الـ prompts المولدة
-    ├── prompts_output.txt   # نسخة نصية للـ prompts
-    └── images/              # الصور المولدة بالـ AI
+├── output/
+│   ├── prompts.json             # Generated scene prompts
+│   ├── prompts_output.txt       # Human-readable prompts
+│   └── images/                  # AI-generated images
+│
+└── _archive/                    # Archived/deprecated files
+    ├── image_generator.py       # (was duplicate of ai_mapper.py)
+    ├── check_names.py           # (absorbed into Assets Manager panel)
+    └── README.md                # Archive notes
 ```
 
 ---
 
-## ⚙️ الإعدادات — `config.json`
+## First-Time Setup
 
-| المفتاح | الوصف | مثال |
-|---|---|---|
-| `groq_api_key` | مفتاح Groq API (للـ LLM) | `gsk_...` |
-| `hf_api_key` | مفتاح HuggingFace (لتوليد الصور) | `hf_...` |
-| `gemini_api_key` | مفتاح Gemini (للاستخدام المستقبلي) | `AIza...` |
-| `base_path` | المسار الأساسي للمشروع | `J:/Coding/Desktop/AutoCut` |
-| `output_resolution` | دقة الفيديو النهائي | `1920x1080` |
-| `fps` | عدد الفريمات في الثانية | `24` |
-| `seconds_per_image` | كم ثانية كل صورة | `7` |
-| `audio_duration` | مدة الصوت (دقيقة.ثانية) | `4.30` |
-| `scenes_per_batch` | عدد المشاهد في كل batch عند توليد الـ prompts | `10` |
-| `transition_duration` | مدة الـ fade بين الصور | `0.5` |
-| `transition_type` | نوع الانتقال | `fade` |
+### 1. Open the App
+
+Run `bash start.sh`. The GUI will open showing the Dashboard.
+
+### 2. Configure API Keys (Project Settings)
+
+- **Groq API Key** — get it free at [console.groq.com](https://console.groq.com)
+- **HuggingFace API Key** — get it at [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)
+- Set your **script file** path (the text script for your video)
+- Set your **audio file** path (mp3/wav/m4a)
+- Configure **video resolution**, **FPS**, and **timing**
+
+### 3. Configure Style (Style Settings)
+
+- Edit the **Style Lock** — visual identity applied to every image
+- Set the **mood** and **negative prompts**
+- Optionally edit the **Prompts Template** used by the AI
+
+### 4. Run the Pipeline (Pipeline Runner)
+
+Click each step in order:
+
+| Step | Action |
+|------|--------|
+| **Step 1** | Generates image descriptions from your script |
+| **Step 2** | (External) Generate images with HuggingFace FLUX.1-schnell |
+| **Step 3** | Maps generated images to video timestamps |
+| **Step 4** | Builds the final video |
+
+Or click **Run Full Pipeline** to run steps 1 → 3 → 4 automatically.
 
 ---
 
-## 🎨 الستايل — `style_config.json`
+## config.json Fields
 
-بيتحكم في شكل الصور المولدة:
+| Field | Description | Example |
+|-------|-------------|---------|
+| `groq_api_key` | Groq API key (LLM) | `gsk_...` |
+| `hf_api_key` | HuggingFace token | `hf_...` |
+| `gemini_api_key` | Gemini key (optional) | `AIza...` |
+| `script_path` | Path to your script file | `/path/to/script.txt` |
+| `audio_path` | Path to your audio file | `/path/to/audio.mp3` |
+| `images_folder` | AI-generated images folder | `/path/to/images/` |
+| `output_folder` | Where the video is saved | `/path/to/output/` |
+| `output_resolution` | Video resolution | `1920x1080` |
+| `fps` | Frames per second | `24` |
+| `seconds_per_image` | Duration per image | `7` |
+| `audio_duration` | Audio length (min.sec) | `4.30` |
+| `scenes_per_batch` | Scenes per LLM batch | `10` |
+| `transition_duration` | Fade duration (seconds) | `0.5` |
 
-| المفتاح | الوصف |
-|---|---|
-| `style_lock` | الوصف الثابت لستايل الصور (Norman Rockwell vintage) |
-| `negative_prompt` | الأشياء اللي مش عايزها في الصور |
-| `label_style` | ستايل النصوص على الصور |
-| `aspect_ratio` | نسبة أبعاد الصورة `16:9` |
-| `mood` | موود الصور: dramatic, historical, documentary |
+All fields are editable live in the **Project Settings** panel.
 
 ---
 
-## 🚀 طريقة الاستخدام
+## Dependencies
 
-### 1. التثبيت
+```
+PySide6          — Desktop GUI framework
+moviepy          — Video assembly
+Pillow           — Image processing
+pydub            — Audio processing
+groq             — Groq API (Llama 3.3 70B)
+huggingface_hub  — HuggingFace API
+google-generativeai — Gemini (optional, future)
+numpy            — Array processing
+```
+
+---
+
+## PyInstaller Packaging (exe)
+
+The project is structured for easy packaging:
 
 ```bash
-pip install -r requirements.txt
-npm install -g docx
+pip install pyinstaller
+pyinstaller --onefile --windowed --name AutoCut main.py
 ```
 
-### 2. الإعداد
-
-- ضع ملف السكريبت في `script.txt`
-- ضع ملف الصوت في `assets/audio/`
-- عدّل `config.json` بـ API Keys الخاصة بيك والمسار الصح
-
-### 3. تشغيل الخطوات بالترتيب
-
+For full packaging with all assets:
 ```bash
-# الخطوة 1: توليد الـ prompts من السكريبت
-python prompt_generator.py
-
-# الخطوة 2: توليد الصور من الـ prompts
-python image_generator.py
-
-# الخطوة 3: ربط الصور بالـ timestamps
-python ai_mapper.py
-
-# الخطوة 4: بناء الفيديو النهائي
-python video_builder.py
+pyinstaller --onefile --windowed \
+  --add-data "prompts_template.txt:." \
+  --add-data "style_config.json:." \
+  --name AutoCut main.py
 ```
 
----
-
-## 📦 المكتبات المستخدمة
-
-| المكتبة | الاستخدام |
-|---|---|
-| `moviepy` | تجميع الفيديو والصوت |
-| `Pillow` | معالجة الصور |
-| `groq` | التواصل مع Groq API (Llama 3.3 70B) |
-| `huggingface_hub` | توليد الصور عن طريق FLUX.1-schnell |
-| `pydub` | معالجة الصوت |
-| `google-generativeai` | Gemini API (للاستخدام المستقبلي) |
+The modular `app/` structure ensures clean imports and no circular dependencies.
 
 ---
 
-## 🤖 الموديلات المستخدمة
+## Models Used
 
-| الموديل | الشركة | الاستخدام |
-|---|---|---|
-| `llama-3.3-70b-versatile` | Groq | توليد الـ prompts وربط الصور بالسكريبت |
-| `FLUX.1-schnell` | Black Forest Labs / HuggingFace | توليد الصور |
-
----
-
-## 🔧 ملاحظات تقنية
-
-- **`TEST_MODE`** في `image_generator.py`: لو `True` بيولد أول 5 صور بس للتجربة، غيّره لـ `False` للتشغيل الكامل
-- الصور المولدة بتتحفظ كـ `scene_001.png`, `scene_002.png` ...
-- لو صورة موجودة قبل كده بيعملها skip تلقائياً
-- الفيديو بيتقلص أو الصوت بيتقص عشان يتطابقوا في المدة
-
----
-
-## 📌 المتطلبات
-
-- Python 3.8+
-- Node.js (للـ docx)
-- حساب على Groq (مجاني)
-- حساب على HuggingFace (مجاني)
-- ملف صوتي mp3 / wav / m4a
-
----
-
-## 🗺️ خارطة الطريق
-
-- [ ] بناء `main.py` كـ entry point واحد للمشروع كله
-- [ ] إضافة واجهة رسومية (GUI) بـ `customtkinter`
-- [ ] دعم إضافة نصوص (captions) على الفيديو
-- [ ] دعم موسيقى خلفية
-- [ ] دعم transitions متعددة (zoom, slide, etc.)
-
----
-
-## 🖥️ كوماندز التشغيل
-
-### `prompt_generator.py`
-
-```powershell
-# تشغيل عادي — بيولد كل المشاهد
-python prompt_generator.py
-
-# توليد عدد محدد من المشاهد فقط (للتجربة أو توفير الكوتة)
-python prompt_generator.py --limit 5
-
-# مسح الملف القديم والبدء من الأول
-python prompt_generator.py --reset
-
-# reset + limit مع بعض
-python prompt_generator.py --reset --limit 10
-```
-
-> لو الكود اتوقف في النص، شغّله تاني بدون أي flags — هيكمل أوتوماتيك من آخر نقطة.
-
----
-
-### `image_generator.py`
-
-```powershell
-# توليد كل الصور (TEST_MODE = False في الكود)
-python image_generator.py
-```
-
-> لو عايز تجرب أول 5 صور بس، غيّر `TEST_MODE = True` في الكود.
-
----
-
-### `ai_mapper.py`
-
-```powershell
-# ربط الصور الموجودة بـ timestamps السكريبت
-python ai_mapper.py
-```
-
----
-
-### `video_builder.py`
-
-```powershell
-# بناء الفيديو النهائي
-python video_builder.py
-```
-
----
-
-### تشغيل الـ Pipeline كامل بالترتيب
-
-```powershell
-python prompt_generator.py
-python image_generator.py
-python ai_mapper.py
-python video_builder.py
-```
+| Model | Provider | Use |
+|-------|----------|-----|
+| `llama-3.3-70b-versatile` | Groq | Prompt generation & scene mapping |
+| `FLUX.1-schnell` | Black Forest Labs / HuggingFace | Image generation (external) |

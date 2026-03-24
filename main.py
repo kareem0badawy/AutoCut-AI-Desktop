@@ -1,58 +1,41 @@
-import os
 import sys
-import subprocess
+import os
+import ctypes
+
+XCB_CURSOR_PATH = "/nix/store/92nrp8f5bcyxy57w30wxj5ncvygz1wnx-xcb-util-cursor-0.1.5/lib/libxcb-cursor.so.0"
 
 
-def print_header():
-    print("=" * 50)
-    print("       AutoCut — AI-Powered Video Generator")
-    print("=" * 50)
-    print()
+def _preload_xcb_cursor():
+    if os.path.exists(XCB_CURSOR_PATH):
+        try:
+            ctypes.CDLL(XCB_CURSOR_PATH)
+        except OSError:
+            pass
 
-
-def check_config():
-    if not os.path.exists("config.json"):
-        print("[ERROR] config.json not found.")
-        print("Please create config.json with your API keys and settings.")
-        print("See README.md for the required fields.")
-        return False
-    return True
-
-
-def run_step(script, description, args=None):
-    print(f"\n>>> {description}")
-    print("-" * 40)
-    cmd = [sys.executable, script]
-    if args:
-        cmd.extend(args)
-    result = subprocess.run(cmd)
-    if result.returncode != 0:
-        print(f"\n[ERROR] Step failed: {script}")
-        return False
-    return True
+    lib_dir = os.path.dirname(XCB_CURSOR_PATH)
+    existing = os.environ.get("LD_LIBRARY_PATH", "")
+    paths = [lib_dir] + [p for p in existing.split(":") if p]
+    os.environ["LD_LIBRARY_PATH"] = ":".join(paths)
 
 
 def main():
-    print_header()
+    _preload_xcb_cursor()
 
-    if not check_config():
-        sys.exit(1)
+    if "DISPLAY" not in os.environ:
+        os.environ["DISPLAY"] = ":0"
+    os.environ["QT_XCB_NO_XI2"] = "1"
 
-    steps = [
-        ("prompt_generator.py", "Step 1: Generating image prompts from script"),
-        ("image_generator.py", "Step 2: Generating images from prompts"),
-        ("ai_mapper.py",       "Step 3: Mapping images to timestamps"),
-        ("video_builder.py",   "Step 4: Building final video"),
-    ]
+    from PySide6.QtWidgets import QApplication
+    from PySide6.QtGui import QFont
+    from app.gui.main_window import MainWindow
 
-    for script, description in steps:
-        if not run_step(script, description):
-            print("\nPipeline stopped due to an error.")
-            sys.exit(1)
+    app = QApplication(sys.argv)
+    app.setFont(QFont("Segoe UI", 10))
 
-    print("\n" + "=" * 50)
-    print("Pipeline complete! Check assets/output/final_video.mp4")
-    print("=" * 50)
+    window = MainWindow()
+    window.show()
+
+    sys.exit(app.exec())
 
 
 if __name__ == "__main__":
