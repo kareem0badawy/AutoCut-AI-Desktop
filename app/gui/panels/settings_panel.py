@@ -347,7 +347,7 @@ class SettingsPanel(QWidget):
 
     def retranslate(self):
         for key, widget in self._translatable.items():
-            if isinstance(widget, (QPushButton, QCheckBox)) or hasattr(widget, "setText"):
+            if hasattr(widget, "setText"):
                 try:
                     widget.setText(t(key))
                 except Exception:

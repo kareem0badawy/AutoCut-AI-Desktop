@@ -487,7 +487,7 @@ class PipelinePanel(QWidget):
 
         def task(log, progress):
             from app.core.ai_mapper import run_ai_mapper
-            run_ai_mapper(cfg, style, log=log, progress=progress)
+            run_ai_mapper(cfg, log=log, progress=progress)
 
         self._worker = _Worker(task)
         self._thread = _RunThread(self._worker)
@@ -538,7 +538,7 @@ class PipelinePanel(QWidget):
             log("── Step 1 ──")
             run_prompt_generation(cfg, style, reset=reset, limit=limit, log=log, progress=progress)
             log("── Step 3 ──")
-            run_ai_mapper(cfg, style, log=log, progress=progress)
+            run_ai_mapper(cfg, log=log, progress=progress)
             log("── Step 4 ──")
             run_video_builder(cfg, log=log, progress=progress)
 

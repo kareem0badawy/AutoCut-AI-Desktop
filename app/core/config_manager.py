@@ -23,11 +23,44 @@ DEFAULT_CONFIG = {
 }
 
 DEFAULT_STYLE = {
-    "style_lock": "vintage documentary collage illustration, scrapbook collage style with torn paper borders, archival documents and financial ledgers layered in background, paper labels and stamps, muted vintage colors with warm amber and brown tones, antique highlights, cinematic lighting, fully colored vintage illustration, hand-colored historical print style, textured parchment paper background, historical documentary style, NOT black and white",
-    "negative_prompt": "black and white, monochrome, pure black background, white background, clean border, hyperrealistic skin, photographic face, CGI, anime, flat design, oversaturated, watermark, modern style, digital art, 3D render",
-    "label_style": "bold rubber stamp uppercase text",
+    "style_lock": "cinematic documentary illustration, rich colors, dramatic lighting, detailed composition, high quality, professional look",
+    "negative_prompt": "black and white, monochrome, pure black background, white background, watermark, text overlay, CGI, anime, flat design, oversaturated, blurry",
+    "label_style": "bold clean text",
     "aspect_ratio": "16:9",
-    "mood": "dramatic, historical, documentary, somber"
+    "mood": "dramatic, cinematic, documentary",
+    "template": """You are an AI video director. I will give you a script chunk and you must generate EXACTLY {scenes_in_batch} scene descriptions for a video.
+
+SCRIPT CHUNK (Batch {batch_num}/{total_batches}):
+{script_chunk}
+
+VISUAL STYLE: {style_lock}
+MOOD: {mood}
+NEGATIVE PROMPT (avoid these): {negative_prompt}
+SECONDS PER IMAGE: {seconds_per_image}
+
+PREVIOUS SCENES (for continuity):
+{previous_scenes}
+
+IMPORTANT RULES:
+1. Generate EXACTLY {scenes_in_batch} scenes as a JSON array.
+2. The script may be in Arabic or any language — read and understand it fully.
+3. "main_prompt" MUST be in English (for image generation AI tools).
+4. "label_text" should reflect the key idea from the script in its original language.
+5. "scene_description" is a brief English summary of what the scene shows visually.
+6. Make each scene visually distinct and cinematically interesting.
+7. Return ONLY the JSON array, no explanation text.
+
+Return ONLY this JSON format:
+[
+  {{
+    "scene_number": 1,
+    "scene_description": "Brief English description of what this scene shows",
+    "main_prompt": "Detailed English image generation prompt with style and mood",
+    "label_text": "Short key phrase from the script (in script's language)",
+    "secondary_labels": ["tag1", "tag2"],
+    "negative_prompt": "{negative_prompt}"
+  }}
+]"""
 }
 
 

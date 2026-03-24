@@ -220,3 +220,12 @@ def _parse_duration(duration_str: str) -> int:
     minutes = int(parts[0]) if parts and parts[0] else 0
     seconds = int(parts[1]) if len(parts) > 1 and parts[1] else 0
     return minutes * 60 + seconds
+
+
+def run_prompt_generation(config: dict, style: dict, reset: bool = False, limit=None,
+                          log=print, progress=None):
+    template = style.get("template", "")
+    if not template:
+        from app.core.config_manager import DEFAULT_STYLE
+        template = DEFAULT_STYLE.get("template", "")
+    generate_prompts(config, style, template, limit=limit, reset=reset, log=log, progress=progress)

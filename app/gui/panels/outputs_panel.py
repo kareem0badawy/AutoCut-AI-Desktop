@@ -165,7 +165,7 @@ class OutputsPanel(QWidget):
         C = get_colors()
         cfg = load_config()
         base = Path(BASE_DIR)
-        out = Path(cfg.get("output_folder", base / "output"))
+        out = base / "output"
 
         prompts_json = out / "prompts.json"
         if prompts_json.exists():
@@ -182,7 +182,7 @@ class OutputsPanel(QWidget):
             self._prompts_badge.setText(t("not_generated"))
             self._prompts_view.setPlainText("")
 
-        mapping_json = out / "mapping.json"
+        mapping_json = base / "mapping.json"
         self._mapping_tree.clear()
         if mapping_json.exists():
             try:
@@ -208,7 +208,9 @@ class OutputsPanel(QWidget):
         else:
             self._mapping_badge.setText(t("mapping_not_found"))
 
-        video_path = out / "final_video.mp4"
+        video_path = Path(cfg.get("output_folder", base / "assets" / "output")) / "final_video.mp4"
+        if not video_path.exists():
+            video_path = base / "assets" / "output" / "final_video.mp4"
         if video_path.exists():
             size_mb = video_path.stat().st_size / 1_048_576
             self._video_status_lbl.setText(t("video_ready"))

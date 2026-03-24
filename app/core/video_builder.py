@@ -178,6 +178,10 @@ def build_video(
     return str(output_path)
 
 
+def run_video_builder(config: dict, log=print, progress=None):
+    build_video(config, log=log, progress=progress)
+
+
 def _find_first_audio(audio_folder: Path) -> Path:
     if not audio_folder.exists():
         raise FileNotFoundError(f"Audio folder not found: {audio_folder}")
