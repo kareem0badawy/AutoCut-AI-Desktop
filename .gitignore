@@ -8,6 +8,10 @@ source/*
 !source/images/
 !source/images/**
 
+dist/
+build/
+*.spec
+
 # Prompt Template
 groq_keys.txt
 
