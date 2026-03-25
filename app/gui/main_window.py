@@ -1,8 +1,9 @@
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QObject, QEvent
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QMainWindow, QWidget, QHBoxLayout, QVBoxLayout,
     QPushButton, QLabel, QStackedWidget, QFrame, QApplication,
+    QComboBox, QAbstractSpinBox,
 )
 
 from app.i18n import lang_manager, t
@@ -25,6 +26,27 @@ NAV_KEYS = [
 NAV_ICONS = ["⊞", "⚙", "🎨", "▶", "📊"]
 
 
+class GlobalScrollBlocker(QObject):
+    """
+    Application-level event filter that prevents accidental value changes
+    when the user scrolls over a ComboBox (dropdown closed) or SpinBox
+    (no keyboard focus). Installed once on QApplication — affects ALL widgets.
+    """
+    def eventFilter(self, watched: QObject, event: QEvent) -> bool:
+        if event.type() == QEvent.Wheel:
+            if isinstance(watched, QComboBox):
+                # Allow scroll only if the popup list is open
+                if not watched.view().isVisible():
+                    event.ignore()
+                    return True
+            elif isinstance(watched, QAbstractSpinBox):
+                # Allow scroll only if the widget has keyboard focus
+                if not watched.hasFocus():
+                    event.ignore()
+                    return True
+        return super().eventFilter(watched, event)
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -33,6 +55,11 @@ class MainWindow(QMainWindow):
         self._current_index = 0
         self._nav_buttons = []
         self._sidebar_labels = {}
+
+        # Install global scroll blocker on the application
+        app = QApplication.instance()
+        self._scroll_blocker = GlobalScrollBlocker(app)
+        app.installEventFilter(self._scroll_blocker)
 
         lang_manager.language_changed.connect(self._on_lang_changed)
         lang_manager.theme_changed.connect(self._on_theme_changed)
@@ -87,7 +114,7 @@ class MainWindow(QMainWindow):
 
         logo = QLabel(t("app_name"))
         logo.setStyleSheet(
-            f"color: {C['accent_hover']}; font-size: 20px; font-weight: bold; background: transparent;"
+            f"color: {C['gold']}; font-size: 22px; font-weight: 700; background: transparent; font-family: Cairo, Segoe UI, Arial;"
         )
         tagline = QLabel(t("tagline"))
         tagline.setStyleSheet(

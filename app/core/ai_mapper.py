@@ -1,3 +1,17 @@
+"""
+ai_mapper.py
+============
+Maps prompts.json scenes to uploaded image files, then writes mapping.json.
+
+Image matching strategy:
+  PRIMARY (only): match by scene_number extracted from filename.
+    e.g. "scene_003_..." → scene_number = 3
+  FALLBACK: none — if no image found for a scene_number, images=[] (black clip).
+
+This guarantees that scene_description changes in prompts.json NEVER affect
+which image is assigned to which scene.
+"""
+
 import json
 import re
 from pathlib import Path
@@ -5,6 +19,10 @@ from typing import Callable, List, Optional, Tuple
 
 IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".webp")
 
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Utility helpers
+# ─────────────────────────────────────────────────────────────────────────────
 
 def _seconds_to_mmss(total_seconds: int) -> str:
     total_seconds = max(0, int(total_seconds))
@@ -21,65 +39,40 @@ def _parse_duration(duration_str: str) -> int:
 def _list_image_files(folder: Path) -> List[Path]:
     if not folder.exists():
         return []
-    return sorted(f for f in folder.iterdir() if f.is_file() and f.suffix.lower() in IMAGE_EXTENSIONS)
-
-
-def _normalize_text(text: str) -> str:
-    text = str(text).lower().strip()
-    text = re.sub(r"\.(jpg|jpeg|png|webp)$", "", text)
-    text = text.replace("_", " ")
-    text = re.sub(r"[^a-z0-9\s]", " ", text)
-    text = re.sub(r"\s+", " ", text).strip()
-    return text
+    return sorted(
+        f for f in folder.iterdir()
+        if f.is_file() and f.suffix.lower() in IMAGE_EXTENSIONS
+    )
 
 
 def _extract_scene_number(text: str) -> Optional[int]:
+    """Extract leading scene number from a filename like 'scene_003_...'."""
     match = re.search(r"scene[_\-\s]*0*(\d+)", str(text).lower())
     return int(match.group(1)) if match else None
 
 
-def _build_requested_names(scene: dict) -> List[str]:
-    candidates = []
-    for key in ("image", "image_name", "filename"):
-        value = scene.get(key)
-        if isinstance(value, str) and value.strip():
-            candidates.append(value.strip())
-    images = scene.get("images", [])
-    if isinstance(images, list):
-        for img in images:
-            if isinstance(img, str) and img.strip():
-                candidates.append(img.strip())
-    scene_number = scene.get("scene_number")
-    if scene_number is not None:
-        candidates.append(f"scene_{int(scene_number):03d}")
-        desc = scene.get("scene_description", "")
-        if desc:
-            candidates.append(f"scene_{int(scene_number):03d}_{desc}")
-    return candidates
+# ─────────────────────────────────────────────────────────────────────────────
+# Build a scene_number → [image_path] index from all image folders
+# ─────────────────────────────────────────────────────────────────────────────
 
-
-def _find_image_for_scene(scene: dict, image_folders: List[Path]) -> Tuple[Optional[Path], Optional[str]]:
-    scene_number = scene.get("scene_number")
-    requested_names = _build_requested_names(scene)
-    normalized_candidates = [_normalize_text(x) for x in requested_names if x]
-
+def _build_image_index(image_folders: List[Path]) -> dict:
+    """
+    Returns {scene_number: [Path, ...]} for every image found across all folders.
+    scene_number is extracted from the filename (e.g. scene_002_... → 2).
+    Files whose names don't start with 'scene_N' are ignored.
+    """
+    index: dict[int, list] = {}
     for folder in image_folders:
-        files = _list_image_files(folder)
-        if not files:
-            continue
-        if scene_number is not None:
-            for file in files:
-                if _extract_scene_number(file.name) == int(scene_number):
-                    return file, f"scene_number match in {folder.name}"
-        for requested in normalized_candidates:
-            if not requested:
-                continue
-            for file in files:
-                file_norm = _normalize_text(file.name)
-                if file_norm == requested or file_norm.startswith(requested) or requested in file_norm:
-                    return file, f"name match in {folder.name}"
-    return None, None
+        for img in _list_image_files(folder):
+            num = _extract_scene_number(img.name)
+            if num is not None:
+                index.setdefault(num, []).append(img)
+    return index
 
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Core mapper
+# ─────────────────────────────────────────────────────────────────────────────
 
 def run_ai_mapper(
     config: dict,
@@ -87,23 +80,28 @@ def run_ai_mapper(
     log: Callable[[str], None] = print,
     progress: Optional[Callable[[int, int], None]] = None,
 ):
-    base_path = Path(config["base_path"])
+    base_path    = Path(config["base_path"])
     prompts_path = base_path / "output" / "prompts.json"
     mapping_path = base_path / "mapping.json"
 
     images_folder = config.get("images_folder", "")
-    image_folders = [
-        base_path / "output" / "images",
-        base_path / "assets" / "images",
-    ]
     if images_folder and Path(images_folder).exists():
-        image_folders.insert(0, Path(images_folder))
+        # Explicit upload folder provided — use IT ONLY, ignore defaults
+        image_folders: List[Path] = [Path(images_folder)]
+        log(f"Using uploaded images folder: {images_folder}")
+    else:
+        # Fall back to default search paths
+        image_folders = [
+            base_path / "output" / "images",
+            base_path / "assets"  / "images",
+        ]
+        log(f"No uploaded folder found, searching defaults: {[str(f) for f in image_folders]}")
 
     seconds_per_image = int(config.get("seconds_per_image", 7))
-    audio_duration = _parse_duration(str(config.get("audio_duration", "4.30")))
+    audio_duration    = _parse_duration(str(config.get("audio_duration", "4.30")))
 
     if not prompts_path.exists():
-        raise FileNotFoundError(f"prompts.json not found. Run Step 1 first.")
+        raise FileNotFoundError("prompts.json not found. Run Step 1 first.")
 
     if reset and mapping_path.exists():
         mapping_path.unlink()
@@ -113,20 +111,27 @@ def run_ai_mapper(
         prompts = json.load(f)
 
     if not prompts:
-        raise ValueError("No prompts found. Run Step 1 first.")
+        raise ValueError("prompts.json is empty. Run Step 1 first.")
 
-    total_images_found = sum(len(_list_image_files(f)) for f in image_folders)
-    log(f"Found {total_images_found} images across {len(image_folders)} folders")
+    # ── Build scene_number → [image] index ───────────────────────────────────
+    image_index = _build_image_index(image_folders)
+    total_found = sum(len(v) for v in image_index.values())
+    log(f"Image index: {total_found} images across scenes {sorted(image_index.keys())}")
 
-    if total_images_found == 0:
+    if total_found == 0:
         raise ValueError(
-            "No images found in any folder. Run Step 2 first or check your images folder."
+            "No images found in any folder. "
+            "Upload images whose filenames start with 'scene_NNN_...' "
+            "then run this step again."
         )
 
-    mapping = []
-    missing = []
+    # ── Sort prompts by scene_number ascending ────────────────────────────────
+    prompts = sorted(prompts, key=lambda s: int(s.get("scene_number", 0)))
+
+    mapping  = []
+    missing  = []
     current_start = 0
-    total = len(prompts)
+    total    = len(prompts)
 
     log(f"Mapping {total} scenes | {seconds_per_image}s per image | {audio_duration}s audio")
 
@@ -134,44 +139,47 @@ def run_ai_mapper(
         if current_start >= audio_duration:
             break
 
-        start_sec = current_start
-        end_sec = min(current_start + seconds_per_image, audio_duration)
+        scene_number = int(scene.get("scene_number", i))
+        start_sec    = current_start
+        end_sec      = min(current_start + seconds_per_image, audio_duration)
 
-        image_path, match_reason = _find_image_for_scene(scene, image_folders)
+        # ── PRIMARY match: scene_number only ─────────────────────────────────
+        matched_images: List[Path] = image_index.get(scene_number, [])
 
-        if image_path:
-            images = [image_path.name]
-            log(f"  scene {i:03d} -> {image_path.name}")
+        if matched_images:
+            # Use all images for this scene number (sorted by name)
+            image_names = [p.name for p in sorted(matched_images)]
+            log(f"  scene {scene_number:03d} → {image_names}")
         else:
-            requested = _build_requested_names(scene)
-            log(f"  scene {i:03d} -> [NOT FOUND] candidates: {requested[:2]}")
-            images = []
-            missing.append({"scene_number": scene.get("scene_number", i), "candidates": requested})
+            image_names = []
+            missing.append(scene_number)
+            log(f"  scene {scene_number:03d} → [NOT FOUND] (no file named scene_{scene_number:03d}_*)")
 
         mapping.append({
-            "scene_number": scene.get("scene_number", i),
-            "start": _seconds_to_mmss(start_sec),
-            "end": _seconds_to_mmss(end_sec),
-            "images": images,
+            "scene_number":    scene_number,
+            "start":           _seconds_to_mmss(start_sec),
+            "end":             _seconds_to_mmss(end_sec),
+            "images":          image_names,
             "scene_description": scene.get("scene_description", ""),
-            "label_text": scene.get("label_text", ""),
+            "label_text":      scene.get("label_text", ""),
         })
         current_start = end_sec
 
         if progress:
             progress(i, total)
 
+    # ── Write mapping.json (sorted ascending by scene_number) ─────────────────
+    mapping = sorted(mapping, key=lambda s: int(s["scene_number"]))
+
     with open(mapping_path, "w", encoding="utf-8") as f:
         json.dump(mapping, f, indent=2, ensure_ascii=False)
 
-    log(f"\nMapping saved: {mapping_path}")
-    log(f"Total scenes mapped: {len(mapping)}")
+    log(f"\nMapping saved → {mapping_path}")
+    log(f"Scenes mapped: {len(mapping)} | Missing images: {len(missing)}")
 
     if missing:
-        log(f"WARNING: {len(missing)} scenes have no image:")
-        for item in missing:
-            log(f"  - scene {item['scene_number']}: {item['candidates'][:1]}")
+        log(f"WARNING: no image found for scenes: {missing}")
     else:
-        log("All scenes mapped successfully!")
+        log("All scenes matched successfully by scene_number ✓")
 
     return mapping, missing

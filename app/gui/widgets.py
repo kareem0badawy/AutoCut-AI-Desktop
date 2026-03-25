@@ -1,12 +1,38 @@
 from pathlib import Path
 
 from PySide6.QtCore import Qt, Signal, QMimeData
-from PySide6.QtGui import QDragEnterEvent, QDropEvent, QFont
+from PySide6.QtGui import QDragEnterEvent, QDropEvent, QFont, QWheelEvent
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QFileDialog,
+    QComboBox, QSpinBox, QDoubleSpinBox,
 )
 
 from app.gui.theme import get_colors
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# No-scroll wrappers — prevent value change on scroll unless widget is focused
+# ─────────────────────────────────────────────────────────────────────────────
+
+class NoScrollComboBox(QComboBox):
+    """ComboBox that ignores wheel events when the dropdown is not open."""
+    def wheelEvent(self, event: QWheelEvent):
+        if not self.view().isVisible():
+            event.ignore()
+        else:
+            super().wheelEvent(event)
+
+
+class NoScrollSpinBox(QSpinBox):
+    """SpinBox that always ignores wheel events — no accidental value changes."""
+    def wheelEvent(self, event: QWheelEvent):
+        event.ignore()
+
+
+class NoScrollDoubleSpinBox(QDoubleSpinBox):
+    """DoubleSpinBox that always ignores wheel events — no accidental value changes."""
+    def wheelEvent(self, event: QWheelEvent):
+        event.ignore()
 
 
 class DropZone(QWidget):

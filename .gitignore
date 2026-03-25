@@ -4,7 +4,9 @@ config.json
 # Folders
 assets/
 output/
-source/
+source/*
+!source/images/
+!source/images/**
 
 # Prompt Template
 groq_keys.txt

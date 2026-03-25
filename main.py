@@ -60,7 +60,23 @@ def main():
     _install_exception_hook(logger)
 
     app = QApplication(sys.argv)
-    app.setFont(QFont("Segoe UI", 10))
+
+    # Load Cairo Bold from bundled assets
+    import os
+    from PySide6.QtGui import QFontDatabase
+    _font_path = os.path.join(os.path.dirname(__file__), "assets", "fonts", "Cairo-Bold.ttf")
+    if os.path.exists(_font_path):
+        _fid = QFontDatabase.addApplicationFont(_font_path)
+        if _fid >= 0:
+            _families = QFontDatabase.applicationFontFamilies(_fid)
+            logger.info(f"Cairo font loaded — families: {_families}")
+            app.setFont(QFont("Cairo", 11, QFont.Bold))
+        else:
+            logger.warning("Cairo font file found but failed to load — using fallback")
+            app.setFont(QFont("Segoe UI", 11))
+    else:
+        logger.warning(f"Cairo font not found at {_font_path} — using fallback")
+        app.setFont(QFont("Segoe UI", 11))
 
     logger.info("Creating main window...")
     try:

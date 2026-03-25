@@ -6,8 +6,8 @@
     "images": [
       "scene_001_Friedrich_Hecker_a_German_banker_watches_his_life_savings_become_worthless_in_1923_a_dramatic_turn_of_events_that_leaves_x1.jpg"
     ],
-    "scene_description": "Friedrich Hecker, a German banker, watches his life savings become worthless in 1923, a dramatic turn of events that leaves him stunned and helpless.",
-    "label_text": "BANKER'S DESPAIR"
+    "scene_description": "A german banker's life savings are worthless, as he watches his money buy less than a cup of coffee, a dramatic turn of events in 1923 berlin",
+    "label_text": "WORTHLESS MONEY"
   },
   {
     "scene_number": 2,
@@ -16,8 +16,8 @@
     "images": [
       "scene_002_A_wheat_farmer_outside_Berlin_in_1923_experiences_a_surge_in_wealth_as_the_value_of_grain_increases_a_stark_contrast_to_x1.jpg"
     ],
-    "scene_description": "A wheat farmer outside Berlin in 1923 experiences a surge in wealth as the value of grain increases, a stark contrast to the economic struggles of the city.",
-    "label_text": "FARMER'S PROSPERITY"
+    "scene_description": "A wheat farmer outside berlin experiences a surge in wealth as the value of his grain increases daily, a stark contrast to the city's economic turmoil",
+    "label_text": "PROSPERING FARMER"
   },
   {
     "scene_number": 3,
@@ -26,7 +26,7 @@
     "images": [
       "scene_003_The_contrast_between_the_banker_s_loss_and_the_farmer_s_gain_is_highlighted_showcasing_the_drastic_difference_in_their_e_x3.jpg"
     ],
-    "scene_description": "The contrast between the banker's loss and the farmer's gain is highlighted, showcasing the drastic difference in their economic fortunes during the same time period.",
+    "scene_description": "Two outcomes, two worlds: a banker's worthless marks and a farmer's valuable grain, a split composition highlighting the contrast between the city and the countryside",
     "label_text": "CONTRASTING FORTUNES"
   },
   {
@@ -36,8 +36,8 @@
     "images": [
       "scene_004_A_single_gold_bar_rests_on_a_pile_of_worthless_paper_marks_symbolizing_the_value_of_hard_assets_during_times_of_economic_x1.jpg"
     ],
-    "scene_description": "A single gold bar rests on a pile of worthless paper marks, symbolizing the value of hard assets during times of economic crisis.",
-    "label_text": "GOLDEN ASSET"
+    "scene_description": "A single pension certificate, once a promise of security, now worthless, a poignant symbol of the economic crisis",
+    "label_text": "WORTHLESS PROMISE"
   },
   {
     "scene_number": 5,
@@ -46,8 +46,8 @@
     "images": [
       "scene_005_A_historical_pattern_emerges_where_the_value_of_tangible_assets_like_grain_and_gold_endures_while_paper_money_and_financ_x3.jpg"
     ],
-    "scene_description": "A historical pattern emerges, where the value of tangible assets like grain and gold endures, while paper money and financial institutions falter.",
-    "label_text": "HISTORICAL PATTERN"
+    "scene_description": "A wheat farmer's grain, a symbol of prosperity and abundance, stands in stark contrast to the worthless marks of the city",
+    "label_text": "PROSPERING HARVEST"
   },
   {
     "scene_number": 6,
@@ -56,8 +56,8 @@
     "images": [
       "scene_006_The_story_of_Friedrich_Hecker_and_the_wheat_farmer_serves_as_a_cautionary_tale_about_the_importance_of_understanding_the_x3.jpg"
     ],
-    "scene_description": "The story of Friedrich Hecker and the wheat farmer serves as a cautionary tale about the importance of understanding the value of different assets during times of economic upheaval.",
-    "label_text": "CAUTIONARY TALE"
+    "scene_description": "A crumbling stone wall, once strong and sturdy, now patched with worthless paper notes, a metaphor for the economic crisis",
+    "label_text": "CRUMBLING FOUNDATIONS"
   },
   {
     "scene_number": 7,
@@ -66,8 +66,8 @@
     "images": [
       "scene_007_The_idea_that_the_value_of_money_can_disappear_overnight_is_a_stark_reminder_of_the_impermanence_of_financial_systems_an_x3.jpg"
     ],
-    "scene_description": "The idea that the value of money can disappear overnight is a stark reminder of the impermanence of financial systems and the importance of diversifying one's assets.",
-    "label_text": "IMPERMANENCE"
+    "scene_description": "A split composition, contrasting the worthless marks of the city with the valuable grain of the countryside, highlighting the disparity between the two",
+    "label_text": "TWO WORLDS APART"
   },
   {
     "scene_number": 8,
@@ -76,8 +76,8 @@
     "images": [
       "scene_008_The_story_of_the_wheat_farmer_and_the_banker_serves_as_a_reminder_that_true_wealth_is_not_just_about_accumulating_money_x1.jpg"
     ],
-    "scene_description": "The story of the wheat farmer and the banker serves as a reminder that true wealth is not just about accumulating money, but about having assets that hold value over time.",
-    "label_text": "TRUE WEALTH"
+    "scene_description": "A single gold bar, resting on a pile of worthless paper notes, a symbol of the value of hard assets in times of economic crisis",
+    "label_text": "HARD ASSET"
   },
   {
     "scene_number": 9,
@@ -86,17 +86,17 @@
     "images": [
       "scene_009_The_contrast_between_the_tangible_assets_of_the_wheat_farmer_and_the_intangible_assets_of_the_banker_highlights_the_impo_x3.jpg"
     ],
-    "scene_description": "The contrast between the tangible assets of the wheat farmer and the intangible assets of the banker highlights the importance of understanding the nature of wealth and value.",
-    "label_text": "NATURE OF WEALTH"
+    "scene_description": "A wheat field, stretching to the horizon, a symbol of the earth's promise and the value of hard work, in contrast to the worthless paper notes of the city",
+    "label_text": "EARTH'S PROMISE"
   },
   {
     "scene_number": 10,
     "start": "01:03",
-    "end": "01:05",
+    "end": "01:10",
     "images": [
       "scene_010_The_story_of_the_wheat_farmer_and_the_banker_serves_as_a_reminder_that_the_value_of_money_and_assets_can_change_rapidly_x1.jpg"
     ],
-    "scene_description": "The story of the wheat farmer and the banker serves as a reminder that the value of money and assets can change rapidly, and that true prosperity comes from understanding and adapting to these changes.",
-    "label_text": "PROSPERITY"
+    "scene_description": "A pension certificate, once a promise of security, now worthless, a poignant reminder of the economic crisis and its human cost",
+    "label_text": "LOST SECURITY"
   }
 ]
