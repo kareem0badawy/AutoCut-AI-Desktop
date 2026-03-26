@@ -4,10 +4,10 @@ config.json
 # Folders
 assets/
 output/
-source/*
-!source/images/
-!source/images/**
+source/
+session/
 
+# Build artifacts
 dist/
 build/
 *.spec
