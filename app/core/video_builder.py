@@ -6,8 +6,8 @@ Builds the final video by:
   2. Using ffmpeg concat-demuxer to join them in EXPLICIT ORDER.
   3. Adding audio with a final ffmpeg call.
 
-This bypasses moviepy's concatenate_videoclips entirely, which eliminates
-any ordering bugs caused by lazy evaluation or internal sorting.
+moviepy is NOT used anymore — all encoding is done via ffmpeg stdin pipe.
+This avoids moviepy v1/v2 API incompatibilities.
 
 Ken Burns motions (6 presets):
   Coords: (x0, y0) = top-left of W×H crop inside rW×rH render buffer.
@@ -20,16 +20,14 @@ Ken Burns motions (6 presets):
 """
 
 import json
-import difflib
+import os
+import shutil
 import subprocess
 import tempfile
-import os
 from pathlib import Path
 from typing import Callable, List, Optional, Tuple
 
 import numpy as np
-from moviepy.config import get_setting            # to find ffmpeg executable
-from moviepy.editor import AudioFileClip, ImageSequenceClip
 from PIL import Image
 
 IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".webp")
@@ -38,7 +36,7 @@ MOTION_RANGE = 0.05   # max pan = 5 % of dimension (cinematic, not aggressive)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Motion math
+# Motion math (Ken Burns)
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _lerp(a: float, b: float, t: float, dur: float) -> float:
@@ -50,61 +48,61 @@ def _lerp(a: float, b: float, t: float, dur: float) -> float:
 
 def _pan_up(t, dur, rW, rH, W, H):
     """Center-x, y bottom→top (limited range)."""
-    cx    = (rW - W) / 2
-    my    = H * MOTION_RANGE     # max pixels to travel vertically
-    cy    = (rH - H) / 2
-    y0    = _lerp(cy + my, cy - my, t, dur)
+    cx  = (rW - W) / 2
+    my  = H * MOTION_RANGE
+    cy  = (rH - H) / 2
+    y0  = _lerp(cy + my, cy - my, t, dur)
     return int(cx), int(max(0, min(y0, rH - H)))
 
 
 def _pan_from_left(t, dur, rW, rH, W, H):
     """Center-y, x left→center (limited range)."""
-    cy    = (rH - H) / 2
-    mx    = W * MOTION_RANGE
-    cx    = (rW - W) / 2
-    x0    = _lerp(cx - mx, cx, t, dur)
+    cy  = (rH - H) / 2
+    mx  = W * MOTION_RANGE
+    cx  = (rW - W) / 2
+    x0  = _lerp(cx - mx, cx, t, dur)
     return int(max(0, x0)), int(cy)
 
 
 def _pan_from_right(t, dur, rW, rH, W, H):
     """Center-y, x right→center (limited range)."""
-    cy    = (rH - H) / 2
-    mx    = W * MOTION_RANGE
-    cx    = (rW - W) / 2
-    x0    = _lerp(cx + mx, cx, t, dur)
+    cy  = (rH - H) / 2
+    mx  = W * MOTION_RANGE
+    cx  = (rW - W) / 2
+    x0  = _lerp(cx + mx, cx, t, dur)
     return int(max(0, min(x0, rW - W))), int(cy)
 
 
 def _zoom_in_center(t, dur, rW, rH, W, H):
     """Start at slight top-left offset, converge to center."""
-    cx    = (rW - W) / 2
-    cy    = (rH - H) / 2
-    mx    = W * MOTION_RANGE
-    my    = H * MOTION_RANGE
-    x0    = _lerp(cx - mx, cx, t, dur)
-    y0    = _lerp(cy - my, cy, t, dur)
+    cx  = (rW - W) / 2
+    cy  = (rH - H) / 2
+    mx  = W * MOTION_RANGE
+    my  = H * MOTION_RANGE
+    x0  = _lerp(cx - mx, cx, t, dur)
+    y0  = _lerp(cy - my, cy, t, dur)
     return int(max(0, x0)), int(max(0, y0))
 
 
 def _pan_up_left(t, dur, rW, rH, W, H):
     """Bottom-left → center."""
-    cx    = (rW - W) / 2
-    cy    = (rH - H) / 2
-    mx    = W * MOTION_RANGE
-    my    = H * MOTION_RANGE
-    x0    = _lerp(cx - mx, cx, t, dur)
-    y0    = _lerp(cy + my, cy, t, dur)
+    cx  = (rW - W) / 2
+    cy  = (rH - H) / 2
+    mx  = W * MOTION_RANGE
+    my  = H * MOTION_RANGE
+    x0  = _lerp(cx - mx, cx, t, dur)
+    y0  = _lerp(cy + my, cy, t, dur)
     return int(max(0, x0)), int(max(0, min(y0, rH - H)))
 
 
 def _pan_up_right(t, dur, rW, rH, W, H):
     """Bottom-right → center."""
-    cx    = (rW - W) / 2
-    cy    = (rH - H) / 2
-    mx    = W * MOTION_RANGE
-    my    = H * MOTION_RANGE
-    x0    = _lerp(cx + mx, cx, t, dur)
-    y0    = _lerp(cy + my, cy, t, dur)
+    cx  = (rW - W) / 2
+    cy  = (rH - H) / 2
+    mx  = W * MOTION_RANGE
+    my  = H * MOTION_RANGE
+    x0  = _lerp(cx + mx, cx, t, dur)
+    y0  = _lerp(cy + my, cy, t, dur)
     return int(max(0, min(x0, rW - W))), int(max(0, min(y0, rH - H)))
 
 
@@ -160,15 +158,150 @@ def _find_image(folders: List[Path], name: str) -> Optional[Path]:
 
 
 def _get_ffmpeg() -> str:
-    """Return path to ffmpeg binary from moviepy's config."""
+    """
+    Find ffmpeg binary.
+    Order: shutil.which → moviepy v1 config → common paths → "ffmpeg".
+    """
+    # 1. shutil.which — covers any PATH installation
+    found = shutil.which("ffmpeg")
+    if found:
+        return found
+
+    # 2. moviepy v1 config API (not available in v2, so wrapped in try/except)
     try:
-        return get_setting("FFMPEG_BINARY")
+        from moviepy.config import get_setting          # type: ignore
+        path = get_setting("FFMPEG_BINARY")
+        if path and os.path.exists(path):
+            return path
     except Exception:
-        return "ffmpeg"
+        pass
+
+    # 3. Common explicit paths (Windows + Unix)
+    common = [
+        r"C:\ffmpeg\bin\ffmpeg.exe",
+        r"C:\Program Files\ffmpeg\bin\ffmpeg.exe",
+        r"C:\Program Files (x86)\ffmpeg\bin\ffmpeg.exe",
+        os.path.expandvars(r"%LOCALAPPDATA%\ffmpeg\bin\ffmpeg.exe"),
+        "/usr/bin/ffmpeg",
+        "/usr/local/bin/ffmpeg",
+        "/opt/homebrew/bin/ffmpeg",
+    ]
+    for p in common:
+        if os.path.exists(p):
+            return p
+
+    return "ffmpeg"  # last resort: assume it is in PATH
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Frame rendering
+# Fade helper
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _apply_fades(
+    frames: List[np.ndarray],
+    fps: int,
+    fade_duration: float,
+) -> List[np.ndarray]:
+    """
+    Apply linear fade-in (from black) and fade-out (to black) to a frame list.
+    Replaces moviepy's .fadein() / .fadeout().
+    """
+    n = len(frames)
+    if n == 0 or fade_duration <= 0:
+        return frames
+
+    fade_n = min(max(1, int(fade_duration * fps)), n // 2)
+    result = [f.copy() for f in frames]
+
+    # Fade in: frames 0..fade_n-1
+    for i in range(fade_n):
+        alpha = i / fade_n
+        result[i] = (frames[i].astype(np.float32) * alpha).astype(np.uint8)
+
+    # Fade out: frames n-fade_n..n-1
+    for i in range(fade_n):
+        alpha = (fade_n - 1 - i) / fade_n
+        result[n - fade_n + i] = (
+            frames[n - fade_n + i].astype(np.float32) * alpha
+        ).astype(np.uint8)
+
+    return result
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ffmpeg pipe encoder — replaces moviepy.ImageSequenceClip
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _frames_to_mp4(
+    frames: List[np.ndarray],
+    fps: int,
+    output_path: Path,
+    ffmpeg: str,
+    fade_duration: float = 0.0,
+    duration: float = 0.0,
+) -> None:
+    """
+    Encode a list of HxWx3 uint8 numpy frames to H.264 mp4
+    by piping raw RGB24 data to ffmpeg stdin.
+
+    This replaces moviepy.ImageSequenceClip + write_videofile entirely,
+    keeping Ken Burns motion intact (motion is baked into the frames).
+    """
+    if not frames:
+        return
+
+    # Apply fades if duration is long enough to accommodate both ends
+    if fade_duration > 0 and duration > fade_duration * 2:
+        frames = _apply_fades(frames, fps, fade_duration)
+
+    h, w = frames[0].shape[:2]
+
+    cmd = [
+        ffmpeg, "-y",
+        "-f",       "rawvideo",
+        "-vcodec",  "rawvideo",
+        "-s",       f"{w}x{h}",
+        "-pix_fmt", "rgb24",
+        "-r",       str(fps),
+        "-i",       "pipe:0",
+        "-c:v",     "libx264",
+        "-preset",  "ultrafast",
+        "-pix_fmt", "yuv420p",
+        str(output_path),
+    ]
+
+    proc = subprocess.Popen(
+        cmd,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
+    )
+    try:
+        for frame in frames:
+            proc.stdin.write(frame.tobytes())
+        proc.stdin.close()
+        proc.wait()
+    except Exception as exc:
+        try:
+            proc.kill()
+        except Exception:
+            pass
+        raise RuntimeError(f"ffmpeg pipe error: {exc}") from exc
+
+    if proc.returncode != 0:
+        err_txt = b""
+        try:
+            err_txt = proc.stderr.read()
+        except Exception:
+            pass
+        raise RuntimeError(
+            f"ffmpeg encoding failed (exit {proc.returncode}):\n"
+            f"{err_txt.decode(errors='replace')}"
+        )
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Frame rendering (Ken Burns)
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _render_scene_frames(
@@ -231,6 +364,7 @@ def build_video(
     fade_duration = float(config.get("transition_duration", 0.5))
     mapping_path  = base_path / "mapping.json"
     ffmpeg        = _get_ffmpeg()
+    log(f"ffmpeg: {ffmpeg}")
 
     # ── Audio ─────────────────────────────────────────────────────────────────
     audio_path_str = config.get("audio_path", "")
@@ -239,12 +373,18 @@ def build_video(
     else:
         audio_path = _find_first_audio(base_path / "assets" / "audio")
 
+    if not audio_path or not audio_path.exists():
+        raise FileNotFoundError(
+            f"Audio file not found.\n"
+            f"Tried: {audio_path_str!r}\n"
+            f"Please upload an audio file in Step 3."
+        )
+
     # ── Images folders ────────────────────────────────────────────────────────
     images_folder_str = config.get("images_folder", "")
     if images_folder_str and Path(images_folder_str).exists():
-        # Explicit uploaded folder — use IT ONLY
         images_folders: List[Path] = [Path(images_folder_str)]
-        log(f"images_folder (uploaded): {images_folder_str}")
+        log(f"Using uploaded images folder: {images_folder_str}")
     else:
         images_folders = [
             base_path / "output" / "images",
@@ -284,11 +424,11 @@ def build_video(
 
     try:
         for i, scene in enumerate(mapping, start=1):
-            snum      = int(scene.get("scene_number", i))
-            start_s   = _time_to_seconds(scene["start"])
-            end_s     = _time_to_seconds(scene["end"])
-            dur       = max(1, end_s - start_s)
-            images    = scene.get("images", [])
+            snum    = int(scene.get("scene_number", i))
+            start_s = _time_to_seconds(scene["start"])
+            end_s   = _time_to_seconds(scene["end"])
+            dur     = max(1, end_s - start_s)
+            images  = scene.get("images", [])
             preset_fn = _PRESETS[(i - 1) % n_presets]
 
             log(f"  scene {snum:03d} [{i}/{total}] → {dur}s  [{preset_fn.__name__}]")
@@ -312,22 +452,9 @@ def build_video(
                             img_path, per_image, resolution, fps, preset_fn
                         )
 
-            # Write this scene to a temp mp4 using ImageSequenceClip
+            # Encode this scene to a temp mp4 using ffmpeg pipe (no moviepy)
             temp_path = tmpdir / f"scene_{snum:03d}.mp4"
-            scene_clip = ImageSequenceClip(all_frames, fps=fps)
-
-            if fade_duration > 0 and dur > fade_duration * 2:
-                scene_clip = scene_clip.fadein(fade_duration).fadeout(fade_duration)
-
-            scene_clip.write_videofile(
-                str(temp_path),
-                fps=fps,
-                codec="libx264",
-                audio=False,
-                threads=2,
-                preset="ultrafast",
-                logger=None,
-            )
+            _frames_to_mp4(all_frames, fps, temp_path, ffmpeg, fade_duration, dur)
             temp_clips.append(temp_path)
             log(f"    ✓ written to {temp_path.name}")
 
@@ -400,10 +527,10 @@ def run_video_builder(config: dict, log=print, progress=None):
     build_video(config, log=log, progress=progress)
 
 
-def _find_first_audio(audio_folder: Path) -> Path:
+def _find_first_audio(audio_folder: Path) -> Optional[Path]:
     if not audio_folder.exists():
-        raise FileNotFoundError(f"Audio folder not found: {audio_folder}")
+        return None
     for f in sorted(audio_folder.iterdir()):
-        if f.is_file() and f.suffix.lower() in {".mp3", ".wav", ".m4a"}:
+        if f.is_file() and f.suffix.lower() in {".mp3", ".wav", ".m4a", ".aac", ".ogg"}:
             return f
-    raise FileNotFoundError(f"No audio file found in: {audio_folder}")
+    return None

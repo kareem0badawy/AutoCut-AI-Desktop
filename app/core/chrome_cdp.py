@@ -634,11 +634,149 @@ class ChromeCDP:
         """Return the src attribute of an image element (could be blob: or https:)."""
         return self.get_attribute(selector, "src")
 
+    def get_result_image_count(self, selector: str) -> int:
+        """Return how many elements match selector (used to track before/after counts)."""
+        try:
+            cnt = self.evaluate(f"document.querySelectorAll({json.dumps(selector)}).length")
+            return int(cnt) if cnt else 0
+        except Exception:
+            return 0
+
+    def screenshot_element(self, selector: str) -> bytes:
+        """
+        Capture a screenshot cropped to just the bounding box of the first
+        element matching selector.  Falls back to full-page screenshot if
+        the element is not found or has zero size.
+        """
+        coords = self.evaluate(f"""
+        (function() {{
+            var el = document.querySelector({json.dumps(selector)});
+            if (!el) return null;
+            el.scrollIntoView({{block: 'center'}});
+            var r = el.getBoundingClientRect();
+            var s = window.devicePixelRatio || 1;
+            return {{x: r.left, y: r.top, width: r.width, height: r.height, scale: s}};
+        }})()
+        """)
+        if not coords or not coords.get("width") or not coords.get("height"):
+            return self.screenshot()
+        result = self._send("Page.captureScreenshot", {
+            "format": "png",
+            "clip": {
+                "x":      max(0.0, float(coords["x"])),
+                "y":      max(0.0, float(coords["y"])),
+                "width":  max(1.0, float(coords["width"])),
+                "height": max(1.0, float(coords["height"])),
+                "scale":  float(coords.get("scale", 1.0)),
+            },
+        })
+        return base64.b64decode(result.get("data", ""))
+
+    def screenshot_element_at_index(self, selector: str, index: int) -> bytes:
+        """
+        Capture a screenshot cropped to just the bounding box of element at
+        position `index` within querySelectorAll(selector).  Falls back to
+        full-page screenshot if element is not found.
+        """
+        coords = self.evaluate(f"""
+        (function() {{
+            var els = document.querySelectorAll({json.dumps(selector)});
+            var el  = els[{index}];
+            if (!el) return null;
+            el.scrollIntoView({{block: 'center'}});
+            var r = el.getBoundingClientRect();
+            var s = window.devicePixelRatio || 1;
+            return {{x: r.left, y: r.top, width: r.width, height: r.height, scale: s}};
+        }})()
+        """)
+        if not coords or not coords.get("width") or not coords.get("height"):
+            return self.screenshot()
+        result = self._send("Page.captureScreenshot", {
+            "format": "png",
+            "clip": {
+                "x":      max(0.0, float(coords["x"])),
+                "y":      max(0.0, float(coords["y"])),
+                "width":  max(1.0, float(coords["width"])),
+                "height": max(1.0, float(coords["height"])),
+                "scale":  float(coords.get("scale", 1.0)),
+            },
+        })
+        return base64.b64decode(result.get("data", ""))
+
+    def download_image_at_index(self, selector: str, index: int) -> bytes | None:
+        """
+        Download the image at position `index` within querySelectorAll(selector).
+
+        Strategy (most reliable first):
+          1. Canvas drawImage → toDataURL  (works for blob: and same-origin CDN)
+          2. fetch() → FileReader blob → base64  (works for CDN with credentials)
+          3. None  (caller should fall back to screenshot_element_at_index)
+        """
+        js = f"""
+        (async function() {{
+            var els = document.querySelectorAll({json.dumps(selector)});
+            var el  = els[{index}];
+            if (!el || el.tagName !== 'IMG') return null;
+
+            // Wait for image to load
+            if (!el.complete || el.naturalWidth === 0) {{
+                await new Promise(function(resolve) {{
+                    el.addEventListener('load',  resolve, {{once: true}});
+                    el.addEventListener('error', resolve, {{once: true}});
+                    setTimeout(resolve, 4000);
+                }});
+            }}
+
+            // Strategy 1: canvas drawImage → PNG data URL
+            try {{
+                var nw = el.naturalWidth  || el.width  || 512;
+                var nh = el.naturalHeight || el.height || 512;
+                var canvas = document.createElement('canvas');
+                canvas.width  = nw;
+                canvas.height = nh;
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(el, 0, 0, nw, nh);
+                var data = canvas.toDataURL('image/png');
+                if (data && data.length > 100) return data;
+            }} catch(e1) {{}}
+
+            // Strategy 2: fetch blob → FileReader
+            try {{
+                var src = el.src;
+                if (src) {{
+                    var resp = await fetch(src, {{credentials: 'include'}});
+                    var blob = await resp.blob();
+                    return await new Promise(function(resolve) {{
+                        var reader = new FileReader();
+                        reader.onloadend = function() {{ resolve(reader.result); }};
+                        reader.readAsDataURL(blob);
+                    }});
+                }}
+            }} catch(e2) {{}}
+
+            return null;
+        }})()
+        """
+        try:
+            result = self.evaluate(js, await_promise=True)
+        except Exception:
+            result = None
+
+        if result and isinstance(result, str) and result.startswith("data:"):
+            _, encoded = result.split(",", 1)
+            return base64.b64decode(encoded)
+        return None  # caller falls back to screenshot_element_at_index
+
     def download_blob_image(self, selector: str) -> bytes | None:
         """
-        Download an image that might be a blob: URL.
-        Uses fetch() inside the page context to convert blob → base64.
+        Download the first image matching selector.
+        Wrapper around download_image_at_index(selector, 0)
+        kept for backward compatibility.
         """
+        result = self.download_image_at_index(selector, 0)
+        if result:
+            return result
+        # Legacy fetch fallback
         js = f"""
         (async function() {{
             var el = document.querySelector({json.dumps(selector)});
@@ -646,31 +784,24 @@ class ChromeCDP:
             var src = el.src;
             if (!src) return null;
             try {{
-                var resp = await fetch(src);
+                var resp = await fetch(src, {{credentials: 'include'}});
                 var blob = await resp.blob();
                 return await new Promise(function(resolve) {{
                     var reader = new FileReader();
                     reader.onloadend = function() {{ resolve(reader.result); }};
                     reader.readAsDataURL(blob);
                 }});
-            }} catch(e) {{
-                return src;  // return raw URL as fallback
-            }}
+            }} catch(e) {{ return null; }}
         }})()
         """
-        result = self.evaluate(js, await_promise=True)
-        if not result:
-            return None
-        if result.startswith("data:"):
-            _, encoded = result.split(",", 1)
-            return base64.b64decode(encoded)
-        # Regular URL — download via requests
         try:
-            import requests
-            resp = requests.get(result, timeout=30)
-            return resp.content
+            r = self.evaluate(js, await_promise=True)
+            if r and r.startswith("data:"):
+                _, enc = r.split(",", 1)
+                return base64.b64decode(enc)
         except Exception:
-            return None
+            pass
+        return None
 
     # ── Cleanup ───────────────────────────────────────────────────────────────
 

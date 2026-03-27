@@ -210,9 +210,10 @@ class FlowWorker(QThread):
 
     log         = Signal(str)
     progress    = Signal(int, int)    # scene_idx, total
-    scene_done  = Signal(int, str)    # scene_idx, image_path
+    scene_done  = Signal(int, str)    # scene_idx, first image path
     fallback    = Signal(str)         # reason
     finished_ok = Signal()
+    all_images_done = Signal(object)  # dict: {scene_idx: [path1, path2, ...]}
     login_needed = Signal()
     login_done   = Signal()
 
@@ -319,8 +320,9 @@ class FlowWorker(QThread):
             else:
                 self.log.emit("ℹ️  لا توجد جلسة محفوظة — البدء من الأول.")
 
-        # ── Step 5: Process each scene (sequential, one at a time) ────────────
+        # ── Step 5: Process each scene (sequential, one at a time) ──────────────────────
         failed_count = 0
+        all_scene_images: dict = {}   # {scene_idx: [path1, path2, ...]}
         for idx, scene in enumerate(self._scenes):
             if self._stop_flag:
                 self.log.emit("⛔  تم الإيقاف بواسطة المستخدم.")
@@ -331,7 +333,7 @@ class FlowWorker(QThread):
             if idx in completed_indices:
                 self.log.emit(f"⏭️  تخطي مشهد {idx + 1} (تم إنجازه مسبقاً).")
                 # Emit progress so UI stays in sync
-                existing = self._output_dir / f"scene_{idx + 1:03d}.png"
+                existing = self._output_dir / f"scene_{idx + 1:03d}_option1.png"
                 self.scene_done.emit(idx, str(existing) if existing.exists() else "")
                 self.progress.emit(idx + 1, total)
                 continue
@@ -341,12 +343,13 @@ class FlowWorker(QThread):
             self.log.emit(f"\n🎬  مشهد {idx + 1}/{total}: {scene_prompt[:60]}...")
 
             try:
-                img_path = self._process_one_scene(idx, scene_prompt)
-                if img_path:
-                    self.scene_done.emit(idx, img_path)
-                    self.log.emit(f"✅  صورة مشهد {idx + 1} محفوظة: {img_path}")
-                    failed_count = 0  # reset on success
-                    # Save progress so we can resume later
+                img_paths = self._process_one_scene(idx, scene_prompt)
+                if img_paths:
+                    first = img_paths[0]
+                    self.scene_done.emit(idx, first)
+                    all_scene_images[idx] = img_paths
+                    self.log.emit(f"✅  مشهد {idx + 1}: {len(img_paths)} صورة محفوظة")
+                    failed_count = 0
                     completed_indices.add(idx)
                     self._save_progress(completed_indices)
                 else:
@@ -365,6 +368,8 @@ class FlowWorker(QThread):
         self.progress.emit(total, total)
         done_count = len(completed_indices)
         self.log.emit(f"\n🎉  اكتمل! {done_count}/{total} مشهد ناجح.")
+        # Emit grouped images for gallery selection
+        self.all_images_done.emit(all_scene_images)
         # Clear session state on full completion
         self._clear_progress()
         self.finished_ok.emit()
@@ -618,6 +623,186 @@ class FlowWorker(QThread):
             return f"{self._main_prompt}. {scene_text}"
         return scene_text or self._main_prompt
 
+    def _find_best_result_selector(self) -> tuple:
+        """
+        Try each IMAGE_RESULT_SELECTORS and return (selector, count)
+        for the one that currently has the most matching elements.
+        """
+        best_sel, best_count = IMAGE_RESULT_SELECTORS[0], 0
+        for sel in IMAGE_RESULT_SELECTORS:
+            try:
+                count = self._cdp.get_result_image_count(sel)
+                if count > best_count:
+                    best_sel, best_count = sel, count
+            except Exception:
+                pass
+        return best_sel, best_count
+
+    def _process_one_scene(self, idx: int, prompt: str) -> list:
+        """
+        Run one full generate cycle for a scene.
+        Returns list of saved image paths (ideally 2, one per Flow option).
+        Empty list on failure.
+        Raises ChromeCDPError on critical failures.
+        """
+        try:
+            # Subtle human warmup
+            self._cdp.subtle_mouse_wander(steps=3)
+            time.sleep(random.uniform(0.4, 0.9))
+
+            # ── Find prompt input ────────────────────────────────────────────────────
+            self.log.emit(f"  🔍  البحث عن حقل الـ prompt (مشهد {idx + 1})...")
+            prompt_sel = self._cdp.wait_for_any(PROMPT_SELECTORS, timeout=TIMEOUT_PROMPT_FIND)
+            if not prompt_sel:
+                found_sel = self._cdp.evaluate(
+                    """
+                    (function() {
+                        var el = document.querySelector('[role="textbox"][contenteditable]')
+                            || document.querySelector('div[contenteditable="true"]')
+                            || document.querySelector('textarea');
+                        if (!el) return null;
+                        if (el.id) return '#' + el.id;
+                        if (el.getAttribute('role')) return '[role="' + el.getAttribute('role') + '"]';
+                        return el.tagName.toLowerCase();
+                    })()
+                    """
+                )
+                if found_sel:
+                    prompt_sel = found_sel
+                else:
+                    raise ChromeCDPError(
+                        f"❌ لم يُعثر على حقل الـ prompt لمشهد {idx + 1}."
+                    )
+
+            self.log.emit(f"  ✏️  حقن الـ prompt ({len(prompt)} حرف)...")
+            self._cdp.type_into(prompt_sel, prompt)
+            self.log.emit(f"  ✅  تم حقن الـ prompt.")
+            time.sleep(random.uniform(0.4, 0.8))
+            self._cdp.subtle_mouse_wander(steps=2)
+
+            # ── Count images BEFORE clicking Generate ────────────────────────────────
+            before_sel, before_count = self._find_best_result_selector()
+            self.log.emit(f"  📊  صور قبل التوليد: {before_count} (سيليكتور: {before_sel})")
+
+            # ── Find & Click Generate ────────────────────────────────────────────────
+            self.log.emit("  🔍  البحث عن زر Generate...")
+            if not self._find_generate_btn():
+                time.sleep(2.0)
+                if not self._find_generate_btn():
+                    raise ChromeCDPError(f"❌ لم يُعثر على زر Generate لمشهد {idx + 1}.")
+
+            time.sleep(random.uniform(0.3, 0.6))
+            self._click_generate_btn()
+            self.log.emit("  ✅  تم الضغط على Generate.")
+
+            # ── Wait for BOTH new images (Flow always generates 2) ────────────────
+            self.log.emit("  ⏳  انتظار ظهور صورتين جديدتين...")
+            result_sel, after_count = self._wait_for_new_images(
+                before_sel, before_count, expected_new=2
+            )
+            new_count = after_count - before_count
+            self.log.emit(f"  📊  صور بعد التوليد: {after_count} (جديد: {new_count})")
+
+            if new_count == 0:
+                self.log.emit(f"  ⚠️  لم تظهر صور جديدة لمشهد {idx + 1}")
+                return []
+
+            time.sleep(0.5)   # brief settle
+
+            # ── Download all new images ───────────────────────────────────────────
+            saved: list = []
+            for img_i in range(before_count, after_count):
+                option_num = img_i - before_count + 1
+                filename   = f"scene_{idx + 1:03d}_option{option_num}.png"
+                save_path  = self._output_dir / filename
+
+                self.log.emit(f"  ⬇️  تحميل صورة {option_num} (index {img_i})...")
+                img_data = self._cdp.download_image_at_index(result_sel, img_i)
+                if not img_data:
+                    # Fallback: element-level screenshot (crops to image bounds)
+                    self.log.emit(f"  📸  لم يتم التحميل — أخذ لقطة لعنصر الصورة...")
+                    img_data = self._cdp.screenshot_element_at_index(result_sel, img_i)
+
+                if img_data:
+                    with open(save_path, "wb") as f:
+                        f.write(img_data)
+                    saved.append(str(save_path))
+                    self.log.emit(f"  💾  محفوظة: {filename}")
+                else:
+                    self.log.emit(f"  ❌  فشل تحميل الصورة {option_num}")
+
+            return saved
+
+        except ChromeCDPError as e:
+            self.log.emit(f"  ❌  CDP error لمشهد {idx + 1}: {e}")
+            raise
+        except Exception as e:
+            self.log.emit(f"  ❌  خطأ لمشهد {idx + 1}: {e}")
+            return []
+
+    # ─────────────────────────────────────────────────────────────────────────────────
+    # Image wait helpers
+    # ─────────────────────────────────────────────────────────────────────────────────
+
+    def _wait_for_new_images(
+        self,
+        selector: str,
+        before_count: int,
+        expected_new: int = 2,
+        timeout: float = TIMEOUT_IMAGE_GEN,
+    ) -> tuple:
+        """
+        Poll until the image count on selector exceeds before_count.
+        After the first new image appears, wait up to 8 more seconds for
+        the expected_new total to arrive (Flow always generates 2).
+        Returns (best_selector, final_count).
+        """
+        deadline    = time.time() + timeout
+        poll        = 1.5               # ↓ reduced from 3.0s
+        got_first   = False
+        extra_end   = None
+
+        while time.time() < deadline:
+            self._check_stop()
+
+            # Refresh which selector has the most images
+            cur_sel, cur_count = self._find_best_result_selector()
+
+            if cur_count >= before_count + expected_new:
+                self.log.emit(
+                    f"  📊  جاهز — {cur_count} صورة (توقعنا {expected_new} جديد)"
+                )
+                return cur_sel, cur_count
+
+            if cur_count > before_count and not got_first:
+                # First new image appeared — give it 8s to load the second
+                got_first = True
+                extra_end = time.time() + 8.0
+                self.log.emit("  🖼️  ظهرت صورة أولى — انتظار الثانية...")
+
+            if got_first and extra_end and time.time() >= extra_end:
+                # Time's up for second image
+                return cur_sel, cur_count
+
+            # Check for error card
+            try:
+                err = self._cdp.evaluate(_ERROR_RETRY_JS)
+                if err and err not in ("none", None):
+                    self.log.emit(f"  🔄  خطأ في Flow — الضغط على Retry...")
+                    time.sleep(random.uniform(1.5, 3.0))   # ↓ reduced from (3,6)
+                    self._click_generate_btn()
+                    before_count = cur_count  # reset baseline after retry
+                    got_first  = False
+                    extra_end  = None
+            except Exception:
+                pass
+
+            time.sleep(poll)
+
+        # Timeout — return whatever we have
+        _, final = self._find_best_result_selector()
+        return selector, final
+
     # ─────────────────────────────────────────────────────────────────────────
     # Generate button helpers
     # ─────────────────────────────────────────────────────────────────────────
@@ -721,101 +906,9 @@ class FlowWorker(QThread):
             if sel:
                 self._cdp.click(sel)
 
-    def _process_one_scene(self, idx: int, prompt: str) -> str | None:
-        """
-        Run one full generate cycle for a scene.
-        Returns saved image path on success, None on failure.
-        Raises explicit errors on critical failures — does NOT continue silently.
-        """
-        try:
-            # Subtle human warmup
-            self._cdp.subtle_mouse_wander(steps=3)
-            time.sleep(random.uniform(0.5, 1.2))
-
-            # ── Find prompt input ─────────────────────────────────────────────
-            self.log.emit(f"  🔍  البحث عن حقل الـ prompt (مشهد {idx + 1})...")
-            prompt_sel = self._cdp.wait_for_any(PROMPT_SELECTORS, timeout=TIMEOUT_PROMPT_FIND)
-            if not prompt_sel:
-                # Last-chance JS search
-                found_sel = self._cdp.evaluate(
-                    """
-                    (function() {
-                        var el = document.querySelector('[role="textbox"][contenteditable]')
-                            || document.querySelector('div[contenteditable="true"]')
-                            || document.querySelector('textarea');
-                        if (!el) return null;
-                        // Build a unique selector
-                        if (el.id) return '#' + el.id;
-                        if (el.getAttribute('role')) return '[role="' + el.getAttribute('role') + '"]';
-                        return el.tagName.toLowerCase();
-                    })()
-                    """
-                )
-                if found_sel:
-                    prompt_sel = found_sel
-                    self.log.emit(f"  ✅  حقل الـ prompt وُجد بـ JS: {prompt_sel}")
-                else:
-                    raise ChromeCDPError(
-                        f"❌ لم يُعثر على حقل الـ prompt لمشهد {idx + 1}.\n"
-                        "تأكد أنك داخل مشروع Flow جاهز للاستخدام."
-                    )
-
-            self.log.emit(f"  ✏️  حقن الـ prompt في: {prompt_sel} ({len(prompt)} حرف)...")
-            # type_into now raises on failure — no silent skip
-            self._cdp.type_into(prompt_sel, prompt)
-            self.log.emit(f"  ✅  تم حقن الـ prompt بنجاح.")
-            time.sleep(random.uniform(0.5, 1.0))
-            self._cdp.subtle_mouse_wander(steps=2)
-
-            # ── Find & Click Generate ─────────────────────────────────────────
-            self.log.emit("  🔍  البحث عن زر Generate...")
-            if not self._find_generate_btn():
-                time.sleep(3.0)  # wait for UI to settle then retry
-                if not self._find_generate_btn():
-                    raise ChromeCDPError(
-                        f"❌ لم يُعثر على زر Generate لمشهد {idx + 1}.\n"
-                        "تحقق من الصفحة — قد تكون في حالة خطأ."
-                    )
-
-            # ── Count images BEFORE clicking Generate (baseline) ──────────────
-            before_count = self._count_result_images()
-            self.log.emit(f"  📊  صور موجودة قبل التوليد: {before_count}")
-
-            self.log.emit("  🖱️  ضغط Generate...")
-            time.sleep(random.uniform(0.3, 0.7))
-            self._click_generate_btn()
-            self.log.emit("  ✅  تم الضغط على Generate.")
-
-            # ── Wait for generated image (with error detection + retry) ───────
-            # We pass before_count so we only detect NEW images (not old ones)
-            self.log.emit("  ⏳  انتظار توليد الصورة الجديدة...")
-            img_sel = self._wait_for_image_with_retry(idx, before_count=before_count)
-
-            self.log.emit(f"  🖼️  صورة ظهرت: {img_sel}")
-            time.sleep(1.5)  # settle after image appears
-
-            # ── Download & save ───────────────────────────────────────────────
-            img_data = self._cdp.download_blob_image(img_sel)
-            if not img_data:
-                self.log.emit("  📸  تعذّر تحميل الصورة — أخذ screenshot...")
-                img_data = self._cdp.screenshot()
-
-            filename = f"scene_{idx + 1:03d}.png"
-            save_path = self._output_dir / filename
-            with open(save_path, "wb") as f:
-                f.write(img_data)
-            self.log.emit(f"  💾  صورة محفوظة: {save_path}")
-            return str(save_path)
-
-        except ChromeCDPError as e:
-            self.log.emit(f"  ❌  CDP error لمشهد {idx + 1}: {e}")
-            raise  # re-raise so _automation_loop can handle it
-        except Exception as e:
-            self.log.emit(f"  ❌  خطأ لمشهد {idx + 1}: {e}")
-            return None
-
     # ─────────────────────────────────────────────────────────────────────────
-    # Image wait helpers
+    # Old image wait helpers (kept for compatibility — new code uses
+    # _wait_for_new_images above)
     # ─────────────────────────────────────────────────────────────────────────
 
     def _count_result_images(self) -> int:

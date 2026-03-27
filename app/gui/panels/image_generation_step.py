@@ -1097,7 +1097,16 @@ class ImageGenerationStep(QWidget):
 
     def _on_action_clicked(self):
         if self._auto_btn.isChecked():
-            self._start_auto_mode()
+            # --- Check if we already have generated images before starting ---
+            existing = self._find_existing_images()
+            if existing:
+                self._log_auto(
+                    f"ℹ️  وُجدت {sum(len(v) for v in existing.values())} صورة من جلسة سابقة — عرضها للاختيار..."
+                )
+                self._show_auto_log(True)
+                self._show_completion_gallery(existing)
+            else:
+                self._start_auto_mode()
         else:
             self._open_flow_browser()
 
@@ -1128,131 +1137,252 @@ class ImageGenerationStep(QWidget):
             return
         self._start_auto_mode(resume=True)
 
-    def _show_completion_gallery(self, images: list):
+    def _find_existing_images(self) -> dict | None:
         """
-        Show a completion dialog with a grid of all generated images.
-        User can review and select images to include in the next step.
-        Styled beautifully with thumbnails and scene labels.
+        Scan output_dir for images saved by a previous auto-mode run.
+        Returns dict {scene_idx: [path1, path2, ...]} if enough images
+        are found (at least 50% of scenes), else None.
+        """
+        import re
+        output_dir = Path(
+            self._output_dir_edit.text().strip() or _default_output_dir()
+        )
+        if not output_dir.exists() or not self._scenes_data:
+            return None
+
+        images_by_scene: dict[int, list] = {}
+        for f in sorted(output_dir.iterdir()):
+            if f.is_file() and f.suffix.lower() in IMAGE_EXTS:
+                m = re.match(r'scene_(\d+)', f.name, re.IGNORECASE)
+                if m:
+                    snum = int(m.group(1))
+                    images_by_scene.setdefault(snum, []).append(f)
+
+        if not images_by_scene:
+            return None
+
+        # Need images for at least 50% of scenes
+        needed = max(1, len(self._scenes_data) // 2)
+        if len(images_by_scene) >= needed:
+            return images_by_scene
+        return None
+
+    def _show_completion_gallery(self, images_by_scene: dict):
+        """
+        Show a modal where each scene displays its generated image options.
+        User checks exactly one image per scene (or skips), then confirms.
+        images_by_scene: dict  scene_number(int) -> list[Path]
         """
         C = get_colors()
         dlg = QDialog(self)
-        dlg.setWindowTitle("🎉  الصور المولّدة — اختر ما تريد إرساله للخطوة التالية")
-        dlg.setMinimumSize(860, 600)
+        dlg.setWindowTitle("🎉  اختر صورة لكل مشهد")
+        dlg.setMinimumSize(920, 640)
         dlg.setStyleSheet(
             f"background:{C['surface']};color:{C['text']};"
             f"font-family:'Segoe UI', Arial, sans-serif;"
         )
 
-        v = QVBoxLayout(dlg)
-        v.setContentsMargins(20, 20, 20, 20)
-        v.setSpacing(16)
+        root = QVBoxLayout(dlg)
+        root.setContentsMargins(20, 20, 20, 16)
+        root.setSpacing(12)
 
-        # Title
-        title = QLabel(f"✅  تم توليد {len(images)} صورة بنجاح")
+        # --- Title ---
+        total_scenes = len(self._scenes_data) if self._scenes_data else len(images_by_scene)
+        title = QLabel(f"✅  تم توليد الصور — اختر صورة واحدة لكل مشهد")
         title.setStyleSheet(
-            f"font-size:18px;font-weight:700;color:{C['accent']};background:transparent;"
+            f"font-size:17px;font-weight:700;color:{C['accent']};background:transparent;"
         )
         title.setAlignment(Qt.AlignCenter)
-        v.addWidget(title)
+        root.addWidget(title)
 
-        subtitle = QLabel("Scroll لرؤية جميع الصور — كل صورة مرتبطة بمشهدها تلقائياً")
-        subtitle.setStyleSheet(f"font-size:12px;color:{C['text_sec']};background:transparent;")
-        subtitle.setAlignment(Qt.AlignCenter)
-        v.addWidget(subtitle)
+        # --- Counter label ---
+        counter_lbl = QLabel(f"0 / {total_scenes} مشهد مختار")
+        counter_lbl.setStyleSheet(
+            f"font-size:12px;color:{C['text_sec']};background:transparent;"
+        )
+        counter_lbl.setAlignment(Qt.AlignCenter)
+        root.addWidget(counter_lbl)
 
-        # Scroll grid of images
+        # --- Scroll grid ---
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
         scroll.setFrameShape(QFrame.NoFrame)
-        scroll.setStyleSheet(f"background:{C['surface2']};border-radius:10px;")
+        scroll.setStyleSheet(
+            f"background:{C['surface2']};border-radius:10px;"
+        )
 
         grid_w = QWidget()
         grid_w.setStyleSheet("background:transparent;")
         grid = QGridLayout(grid_w)
-        grid.setSpacing(14)
-        cols = 4
+        grid.setSpacing(16)
+        grid.setContentsMargins(12, 12, 12, 12)
 
-        for i, img_p in enumerate(images):
-            cell = QWidget()
-            cell.setStyleSheet(
-                f"background:{C['surface']};border:2px solid {C['border']};"
-                f"border-radius:10px;padding:6px;"
-            )
-            cell_v = QVBoxLayout(cell)
-            cell_v.setContentsMargins(6, 6, 6, 6)
-            cell_v.setSpacing(4)
+        # Track selection: scene_number -> selected Path | None
+        selected: dict[int, object] = {}
+        # btn_groups: scene_number -> list[(btn, path)]
+        btn_groups: dict[int, list] = {}
 
-            # Thumbnail
-            thumb = QLabel()
-            thumb.setFixedSize(160, 120)
-            thumb.setAlignment(Qt.AlignCenter)
-            px = QPixmap(str(img_p))
-            if not px.isNull():
-                thumb.setPixmap(
-                    px.scaled(160, 120, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-                )
-            else:
-                thumb.setText("⚠️ لا يمكن تحميل الصورة")
-                thumb.setStyleSheet(f"color:{C['warning']};font-size:10px;")
-            cell_v.addWidget(thumb, alignment=Qt.AlignCenter)
+        def update_counter():
+            chosen = sum(1 for v in selected.values() if v is not None)
+            counter_lbl.setText(f"{chosen} / {total_scenes} مشهد مختار")
+            ok_btn.setEnabled(chosen > 0)
 
-            # Scene label — try to match by index
-            scene_name = f"مشهد {i + 1}"
-            if i < len(self._scene_cards):
-                sc_data = self._scene_cards[i]._scene_data
+        # Build a sorted list of (scene_number, paths)
+        sorted_scenes = sorted(images_by_scene.items())
+        col = 0
+        row = 0
+        max_cols = 4   # image options per scene in one row
+
+        for s_idx, (scene_num, paths) in enumerate(sorted_scenes):
+            selected[scene_num] = None
+            btn_groups[scene_num] = []
+
+            # Scene label row
+            scene_name = f"مشهد {scene_num}"
+            if self._scene_cards and (scene_num - 1) < len(self._scene_cards):
+                sc_data = self._scene_cards[scene_num - 1]._scene_data
                 scene_name = (
                     sc_data.get("label_text")
                     or sc_data.get("scene_title")
                     or sc_data.get("title")
                     or scene_name
                 )
-            name_lbl = QLabel(f"#{i + 1}  {str(scene_name)[:25]}")
-            name_lbl.setStyleSheet(
-                f"font-size:10px;font-weight:600;color:{C['text_sec']};background:transparent;"
-            )
-            name_lbl.setAlignment(Qt.AlignCenter)
-            cell_v.addWidget(name_lbl)
 
-            # File name
-            file_lbl = QLabel(img_p.name)
-            file_lbl.setStyleSheet(
-                f"font-size:9px;color:{C['text_dim']};background:transparent;"
+            # Each scene occupies its own block cell
+            block = QWidget()
+            block.setStyleSheet(
+                f"background:{C['surface']};border:2px solid {C['border']};"
+                f"border-radius:10px;padding:4px;"
             )
-            file_lbl.setAlignment(Qt.AlignCenter)
-            cell_v.addWidget(file_lbl)
+            block_v = QVBoxLayout(block)
+            block_v.setSpacing(6)
+            block_v.setContentsMargins(8, 8, 8, 8)
 
-            grid.addWidget(cell, i // cols, i % cols)
+            # Scene title
+            slbl = QLabel(f"#{scene_num}  {str(scene_name)[:30]}")
+            slbl.setStyleSheet(
+                f"font-size:11px;font-weight:700;color:{C['text_sec']};background:transparent;"
+            )
+            slbl.setAlignment(Qt.AlignCenter)
+            block_v.addWidget(slbl)
+
+            # Image options in a horizontal row
+            opts_row = QHBoxLayout()
+            opts_row.setSpacing(8)
+
+            for opt_i, img_path in enumerate(paths):
+                opt_w = QWidget()
+                opt_w.setStyleSheet("background:transparent;")
+                opt_v = QVBoxLayout(opt_w)
+                opt_v.setSpacing(4)
+                opt_v.setContentsMargins(0, 0, 0, 0)
+
+                # Thumbnail button (acts as radio)
+                thumb_btn = QPushButton()
+                thumb_btn.setCheckable(True)
+                thumb_btn.setFixedSize(140, 105)
+                px = QPixmap(str(img_path))
+                if not px.isNull():
+                    thumb_btn.setIcon(px.scaled(128, 96, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+                    thumb_btn.setIconSize(px.size().scaled(128, 96, Qt.KeepAspectRatio))
+                else:
+                    thumb_btn.setText("❌")
+                thumb_btn.setStyleSheet(
+                    f"background:{C['surface2']};border:2px solid {C['border']};"
+                    f"border-radius:8px;"
+                )
+                thumb_btn.setToolTip(img_path.name)
+
+                opt_lbl = QLabel(f"خيار {opt_i + 1}")
+                opt_lbl.setStyleSheet(
+                    f"font-size:9px;color:{C['text_dim']};background:transparent;"
+                )
+                opt_lbl.setAlignment(Qt.AlignCenter)
+
+                opt_v.addWidget(thumb_btn, alignment=Qt.AlignCenter)
+                opt_v.addWidget(opt_lbl)
+                opts_row.addWidget(opt_w)
+
+                btn_groups[scene_num].append((thumb_btn, img_path))
+
+                def make_picker(snum, path, btn):
+                    def on_click(checked):
+                        # Deselect all in same scene, select this
+                        for b, _ in btn_groups[snum]:
+                            is_this = (b is btn)
+                            b.setChecked(is_this)
+                            b.setStyleSheet(
+                                f"background:{C['surface2']};border:2px solid "
+                                + (f"{C['accent']}" if is_this else f"{C['border']}")
+                                + ";border-radius:8px;"
+                            )
+                        selected[snum] = path if checked else None
+                        update_counter()
+                    return on_click
+
+                thumb_btn.clicked.connect(make_picker(scene_num, img_path, thumb_btn))
+
+            block_v.addLayout(opts_row)
+            grid.addWidget(block, s_idx // 3, s_idx % 3)
 
         scroll.setWidget(grid_w)
-        v.addWidget(scroll, 1)
+        root.addWidget(scroll, 1)
 
-        # Summary line
-        summary = QLabel(
-            f"📁  مجلد الحفظ: {self._output_dir_edit.text().strip() or _default_output_dir()}"
-        )
-        summary.setStyleSheet(
-            f"font-size:11px;color:{C['text_dim']};background:transparent;"
-        )
-        v.addWidget(summary)
-
-        # Buttons
+        # --- Buttons row ---
         btn_row = QHBoxLayout()
 
-        go_next_btn = QPushButton("✅  تسليم للخطوة التالية")
-        go_next_btn.setObjectName("primary")
-        go_next_btn.setFixedHeight(38)
-        go_next_btn.setMinimumWidth(200)
-        go_next_btn.clicked.connect(lambda: (dlg.accept(), self._on_next_clicked()))
+        cancel_btn2 = QPushButton("❌  إلغاء")
+        cancel_btn2.setObjectName("secondary")
+        cancel_btn2.setFixedHeight(36)
+        cancel_btn2.clicked.connect(dlg.reject)
 
-        close_btn = QPushButton("إغلاق")
-        close_btn.setObjectName("secondary")
-        close_btn.setFixedHeight(38)
-        close_btn.clicked.connect(dlg.reject)
+        select_all_btn = QPushButton("✅  تحديد الأولى للكل")
+        select_all_btn.setObjectName("secondary")
+        select_all_btn.setFixedHeight(36)
+        def auto_select_first():
+            for snum, pairs in btn_groups.items():
+                if pairs:
+                    btn, path = pairs[0]
+                    for b, _ in pairs:
+                        b.setChecked(False)
+                        b.setStyleSheet(
+                            f"background:{C['surface2']};border:2px solid {C['border']};border-radius:8px;"
+                        )
+                    btn.setChecked(True)
+                    btn.setStyleSheet(
+                        f"background:{C['surface2']};border:2px solid {C['accent']};border-radius:8px;"
+                    )
+                    selected[snum] = path
+            update_counter()
+        select_all_btn.clicked.connect(auto_select_first)
 
-        btn_row.addWidget(close_btn)
+        ok_btn = QPushButton("✅  تأكيد الاختيار وتسليم للخطوة 3")
+        ok_btn.setObjectName("primary")
+        ok_btn.setFixedHeight(38)
+        ok_btn.setMinimumWidth(220)
+        ok_btn.setEnabled(False)
+
+        btn_row.addWidget(cancel_btn2)
+        btn_row.addWidget(select_all_btn)
         btn_row.addStretch()
-        btn_row.addWidget(go_next_btn)
-        v.addLayout(btn_row)
+        btn_row.addWidget(ok_btn)
+        root.addLayout(btn_row)
+
+        def on_confirm():
+            # Assign chosen images to scene cards & do handoff
+            for i, sc in enumerate(self._scene_cards):
+                snum = sc.scene_number
+                chosen_path = selected.get(snum)
+                if chosen_path:
+                    sc.set_image(Path(chosen_path))
+            dlg.accept()
+            self._update_next_btn_state()
+            self._on_next_clicked()   # auto-handoff
+
+        ok_btn.clicked.connect(on_confirm)
+
+        # Auto-select first option for every scene by default
+        auto_select_first()
 
         dlg.exec()
 
@@ -1329,11 +1459,12 @@ class ImageGenerationStep(QWidget):
 
         # Connect signals
         self._worker.log.connect(self._log_auto)
-        self._worker.log.connect(self._handle_ws_error)   # intercept WS errors
+        self._worker.log.connect(self._handle_ws_error)
         self._worker.progress.connect(self._on_auto_progress)
         self._worker.scene_done.connect(self._on_scene_done)
         self._worker.fallback.connect(self._on_auto_fallback)
         self._worker.finished_ok.connect(self._on_auto_finished)
+        self._worker.all_images_done.connect(self._on_all_images_done)  # NEW
         self._worker.login_needed.connect(self._on_login_needed)
         self._worker.login_done.connect(lambda: self._login_banner.setVisible(False))
         self._worker.finished.connect(self._on_worker_finished)
@@ -1425,21 +1556,35 @@ class ImageGenerationStep(QWidget):
         self._auto_pbar.setRange(0, 100)
         self._auto_pbar.setValue(100)
         self._set_action_status("✅  اكتمل بنجاح")
-        # Hide resume button after full completion
         self._resume_btn.setVisible(False)
-        # Trigger auto scan of generated images
-        output_dir = Path(self._output_dir_edit.text().strip() or _default_output_dir())
-        if output_dir.exists():
-            images = sorted(
-                p for p in output_dir.iterdir()
-                if p.is_file() and p.suffix.lower() in IMAGE_EXTS
+        # Gallery is shown by _on_all_images_done via all_images_done signal
+
+    def _on_all_images_done(self, images_by_scene: dict):
+        """
+        Called via FlowWorker.all_images_done signal.
+        images_by_scene: {scene_idx(int): [path_str, ...]}
+        Convert to {scene_number: [Path, ...]} and show gallery.
+        """
+        # Convert scene_idx (0-based) to scene_number (1-based) and Path objects
+        converted: dict[int, list] = {}
+        for idx, paths in images_by_scene.items():
+            snum = idx + 1
+            converted[snum] = [Path(p) for p in paths if Path(p).exists()]
+
+        converted = {k: v for k, v in converted.items() if v}  # drop empties
+
+        if converted:
+            self._show_completion_gallery(converted)
+        else:
+            # Fallback: scan output dir
+            output_dir = Path(
+                self._output_dir_edit.text().strip() or _default_output_dir()
             )
-            if images:
-                self._flow_images = images
-                for sc in self._scene_cards:
-                    sc.update_flow_images(images)
-                self._apply_scan_to_cards()
-                self._show_completion_gallery(images)
+            existing = self._find_existing_images()
+            if existing:
+                self._show_completion_gallery(existing)
+            else:
+                self._log_auto("⚠️  لم تُعثر على صور محفوظة.")
 
     def _on_worker_finished(self):
         self._set_running_ui(False)
