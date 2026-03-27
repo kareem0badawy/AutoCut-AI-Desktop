@@ -4,99 +4,99 @@
     "start": "00:00",
     "end": "00:07",
     "images": [
-      "scene_001_Friedrich_Hecker_a_German_banker_watches_his_life_savings_become_worthless_in_1923_a_dramatic_turn_of_events_that_leaves_x1.jpg"
+      "scene_001.png"
     ],
-    "scene_description": "A german banker's life savings are worthless, as he watches his money buy less than a cup of coffee, a dramatic turn of events in 1923 berlin",
-    "label_text": "WORTHLESS MONEY"
+    "scene_description": "Friedrich Hecker, a German banker, sits amidst worthless paper notes, his life savings gone, in a cold Berlin office, 1923, surrounded by empty financial ledgers and faded documents.",
+    "label_text": "BANKER'S DESPAIR"
   },
   {
     "scene_number": 2,
     "start": "00:07",
     "end": "00:14",
     "images": [
-      "scene_002_A_wheat_farmer_outside_Berlin_in_1923_experiences_a_surge_in_wealth_as_the_value_of_grain_increases_a_stark_contrast_to_x1.jpg"
+      "scene_002.png"
     ],
-    "scene_description": "A wheat farmer outside berlin experiences a surge in wealth as the value of his grain increases daily, a stark contrast to the city's economic turmoil",
-    "label_text": "PROSPERING FARMER"
+    "scene_description": "A split composition contrasts the fates of a city banker and a wheat farmer, one surrounded by worthless marks, the other by abundant grain, highlighting the disparity in their fortunes during the 1923 crisis.",
+    "label_text": "FORTUNE'S DIVIDE"
   },
   {
     "scene_number": 3,
     "start": "00:14",
     "end": "00:21",
     "images": [
-      "scene_003_The_contrast_between_the_banker_s_loss_and_the_farmer_s_gain_is_highlighted_showcasing_the_drastic_difference_in_their_e_x3.jpg"
+      "scene_003.png"
     ],
-    "scene_description": "Two outcomes, two worlds: a banker's worthless marks and a farmer's valuable grain, a split composition highlighting the contrast between the city and the countryside",
-    "label_text": "CONTRASTING FORTUNES"
+    "scene_description": "A single, gleaming gold bar rests on a pile of worthless paper reichsmarks, symbolizing the value of hard assets during times of economic turmoil, set against a backdrop of faded financial documents and worn leather bindings.",
+    "label_text": "GOLDEN REFUGE"
   },
   {
     "scene_number": 4,
     "start": "00:21",
     "end": "00:28",
     "images": [
-      "scene_004_A_single_gold_bar_rests_on_a_pile_of_worthless_paper_marks_symbolizing_the_value_of_hard_assets_during_times_of_economic_x1.jpg"
+      "scene_004.png"
     ],
-    "scene_description": "A single pension certificate, once a promise of security, now worthless, a poignant symbol of the economic crisis",
-    "label_text": "WORTHLESS PROMISE"
+    "scene_description": "Vast wheat fields stretch to the horizon outside Berlin, 1923, under a golden afternoon light, with a lone farmhouse in the distance, symbolizing the prosperity of the land during economic crisis.",
+    "label_text": "LAND'S PROSPERITY"
   },
   {
     "scene_number": 5,
     "start": "00:28",
     "end": "00:35",
     "images": [
-      "scene_005_A_historical_pattern_emerges_where_the_value_of_tangible_assets_like_grain_and_gold_endures_while_paper_money_and_financ_x3.jpg"
+      "scene_005.png"
     ],
-    "scene_description": "A wheat farmer's grain, a symbol of prosperity and abundance, stands in stark contrast to the worthless marks of the city",
-    "label_text": "PROSPERING HARVEST"
+    "scene_description": "A pension certificate, once a promise of security, now lies pinned to aged paper beside a wax seal and fountain pen, the promise of security framed like an old archival exhibit, highlighting the loss of trust in institutions.",
+    "label_text": "LOST SECURITY"
   },
   {
     "scene_number": 6,
     "start": "00:35",
     "end": "00:42",
     "images": [
-      "scene_006_The_story_of_Friedrich_Hecker_and_the_wheat_farmer_serves_as_a_cautionary_tale_about_the_importance_of_understanding_the_x3.jpg"
+      "scene_006.png"
     ],
-    "scene_description": "A crumbling stone wall, once strong and sturdy, now patched with worthless paper notes, a metaphor for the economic crisis",
-    "label_text": "CRUMBLING FOUNDATIONS"
+    "scene_description": "A wheat farmer stands sovereign over his grain, the earth keeping its promises when paper cannot, symbolizing the reliability of natural assets during economic crisis, set against a backdrop of warm earthy tones and natural textures.",
+    "label_text": "EARTH'S PROMISE"
   },
   {
     "scene_number": 7,
     "start": "00:42",
     "end": "00:49",
     "images": [
-      "scene_007_The_idea_that_the_value_of_money_can_disappear_overnight_is_a_stark_reminder_of_the_impermanence_of_financial_systems_an_x3.jpg"
+      "scene_007.png"
     ],
-    "scene_description": "A split composition, contrasting the worthless marks of the city with the valuable grain of the countryside, highlighting the disparity between the two",
-    "label_text": "TWO WORLDS APART"
+    "scene_description": "A crumbling stone wall with old banknotes plastered over cracks like wallpaper, peeling away to reveal solid gold bricks underneath, symbolizing the true value beneath the surface of economic turmoil.",
+    "label_text": "GOLDEN FOUNDATION"
   },
   {
     "scene_number": 8,
     "start": "00:49",
     "end": "00:56",
     "images": [
-      "scene_008_The_story_of_the_wheat_farmer_and_the_banker_serves_as_a_reminder_that_true_wealth_is_not_just_about_accumulating_money_x1.jpg"
+      "scene_008.png"
     ],
-    "scene_description": "A single gold bar, resting on a pile of worthless paper notes, a symbol of the value of hard assets in times of economic crisis",
-    "label_text": "HARD ASSET"
+    "scene_description": "A close-up of a single mark note, once a symbol of economic stability, now worthless, set against a backdrop of faded financial documents and worn leather bindings, highlighting the devaluation of currency during hyperinflation.",
+    "label_text": "WORTHLESS PAPER"
   },
   {
     "scene_number": 9,
     "start": "00:56",
     "end": "01:03",
     "images": [
-      "scene_009_The_contrast_between_the_tangible_assets_of_the_wheat_farmer_and_the_intangible_assets_of_the_banker_highlights_the_impo_x3.jpg"
+      "scene_009.png"
     ],
-    "scene_description": "A wheat field, stretching to the horizon, a symbol of the earth's promise and the value of hard work, in contrast to the worthless paper notes of the city",
-    "label_text": "EARTH'S PROMISE"
+    "scene_description": "A wheat field at sunset, with a few stalks of wheat in the foreground, symbolizing the abundance of natural resources during economic crisis, set against a backdrop of warm earthy tones and soft natural light.",
+    "label_text": "NATURAL ABUNDANCE"
   },
   {
     "scene_number": 10,
     "start": "01:03",
     "end": "01:10",
     "images": [
-      "scene_010_The_story_of_the_wheat_farmer_and_the_banker_serves_as_a_reminder_that_the_value_of_money_and_assets_can_change_rapidly_x1.jpg"
+      "scene_010.png"
     ],
-    "scene_description": "A pension certificate, once a promise of security, now worthless, a poignant reminder of the economic crisis and its human cost",
-    "label_text": "LOST SECURITY"
+    "scene_description": "A contrast between a cityscape with a closed factory and a rural landscape with a thriving farm, highlighting the different outcomes of economic crisis on urban and rural areas, set against a backdrop of muted vintage colors and aged paper texture.",
+    "label_text": "URBAN RURAL DIVIDE"
   }
 ]

@@ -533,7 +533,8 @@ class ImageGenerationStep(QWidget):
             self._action_btn.setText("🔗  فتح Flow في المتصفح")
             self._action_btn.setObjectName("secondary")
             self._action_btn.setEnabled(True)
-            self._resume_btn.setVisible(False)
+            if hasattr(self, "_resume_btn"):
+                self._resume_btn.setVisible(False)
         # Re-polish button
         self._action_btn.style().unpolish(self._action_btn)
         self._action_btn.style().polish(self._action_btn)
@@ -861,6 +862,14 @@ class ImageGenerationStep(QWidget):
         self._action_btn.setMinimumWidth(200)
         self._action_btn.clicked.connect(self._on_action_clicked)
 
+        self._resume_btn = QPushButton("▶️  استئناف")
+        self._resume_btn.setObjectName("secondary")
+        self._resume_btn.setFixedHeight(40)
+        self._resume_btn.setFixedWidth(120)
+        self._resume_btn.setVisible(False)
+        self._resume_btn.setToolTip("استئناف التوليد من حيث توقف")
+        self._resume_btn.clicked.connect(self._on_resume_clicked)
+
         self._stop_btn = QPushButton("⛔  إيقاف")
         self._stop_btn.setObjectName("secondary")
         self._stop_btn.setFixedHeight(40)
@@ -874,10 +883,12 @@ class ImageGenerationStep(QWidget):
         )
 
         row.addWidget(self._action_btn)
+        row.addWidget(self._resume_btn)
         row.addWidget(self._stop_btn)
         row.addWidget(self._action_status_lbl, 1)
         row.addStretch()
         return row
+
 
     # ─────────────────────────────────────────────────────────────────────────
     # Data

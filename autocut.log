@@ -1,0 +1,42 @@
+▶ الخطوة 3 — ربط الصور بالتوقيت
+  images_folder: D:\sites\AutoCut-AI-Desktop\session\images
+Using uploaded images folder: D:\sites\AutoCut-AI-Desktop\session\images
+Image index: 10 images across scenes [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+Mapping 10 scenes | 7s per image | 270s audio
+  scene 001 → ['scene_001.png']
+  scene 002 → ['scene_002.png']
+  scene 003 → ['scene_003.png']
+  scene 004 → ['scene_004.png']
+  scene 005 → ['scene_005.png']
+  scene 006 → ['scene_006.png']
+  scene 007 → ['scene_007.png']
+  scene 008 → ['scene_008.png']
+  scene 009 → ['scene_009.png']
+  scene 010 → ['scene_010.png']
+
+Mapping saved → D:\sites\AutoCut-AI-Desktop\mapping.json
+Scenes mapped: 10 | Missing images: 0
+All scenes matched successfully by scene_number ✓
+✓ اكتملت الخطوة بنجاح
+⚡ تشغيل الكل
+  images_folder: D:\sites\AutoCut-AI-Desktop\session\images
+  audio_path: D:\sites\AutoCut-AI-Desktop\source\audio\The Only 6 Assets That Actually Survive Economic C.MP3
+ImportError: cannot import name 'get_setting' from 'moviepy.config' (C:\Users\DELL\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\moviepy\config.py)
+
+Traceback (most recent call last):
+  File "D:\sites\AutoCut-AI-Desktop\app\gui\panels\pipeline_panel.py", line 40, in run
+    self._task_fn(
+    ~~~~~~~~~~~~~^
+        log=lambda msg: self.log.emit(str(msg)),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        progress=lambda cur, total: self.progress.emit(cur, total),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\sites\AutoCut-AI-Desktop\app\gui\panels\pipeline_panel.py", line 974, in task
+    from app.core.video_builder import run_video_builder
+  File "D:\sites\AutoCut-AI-Desktop\app\core\video_builder.py", line 31, in <module>
+    from moviepy.config import get_setting            # to find ffmpeg executable
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ImportError: cannot import name 'get_setting' from 'moviepy.config' (C:\Users\DELL\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\moviepy\config.py)
+
