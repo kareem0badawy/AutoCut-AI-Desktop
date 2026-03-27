@@ -1,43 +1,58 @@
-▶ الخطوة 3 — ربط الصور بالتوقيت
-  images_folder: D:\sites\AutoCut-AI-Desktop\session\images
-Using uploaded images folder: D:\sites\AutoCut-AI-Desktop\session\images
-Image index: 10 images across scenes [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-Mapping 10 scenes | 7s per image | 270s audio
-  scene 001 → ['scene_001.png']
-  scene 002 → ['scene_002.png']
-  scene 003 → ['scene_003.png']
-  scene 004 → ['scene_004.png']
-  scene 005 → ['scene_005.png']
-  scene 006 → ['scene_006.png']
-  scene 007 → ['scene_007.png']
-  scene 008 → ['scene_008.png']
-  scene 009 → ['scene_009.png']
-  scene 010 → ['scene_010.png']
-
-Mapping saved → D:\sites\AutoCut-AI-Desktop\mapping.json
-Scenes mapped: 10 | Missing images: 0
-All scenes matched successfully by scene_number ✓
-✓ اكتملت الخطوة بنجاح
-⚡ تشغيل الكل
-  images_folder: D:\sites\AutoCut-AI-Desktop\session\images
-  audio_path: D:\sites\AutoCut-AI-Desktop\source\audio\The Only 6 Assets That Actually Survive Economic C.MP3
-ImportError: cannot import name 'get_setting' from 'moviepy.config' (C:\Users\DELL\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\moviepy\config.py)
-
+2026-03-27 22:09:23 [INFO    ] AutoCut: ============================================================
+2026-03-27 22:09:23 [INFO    ] AutoCut: AutoCut starting up
+2026-03-27 22:09:23 [INFO    ] AutoCut: Python 3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]
+2026-03-27 22:09:23 [INFO    ] AutoCut: Platform: win32
+2026-03-27 22:09:23 [WARNING ] AutoCut: Cairo font not found at D:\sites\AutoCut-AI-Desktop\assets\fonts\Cairo-Bold.ttf — using fallback
+2026-03-27 22:09:23 [INFO    ] AutoCut: Creating main window...
+2026-03-27 22:09:24 [INFO    ] AutoCut: Main window shown — entering event loop
+2026-03-27 22:11:15 [INFO    ] AutoCut: [AutoFlow] ℹ️  وُجدت 10 صورة من جلسة سابقة — عرضها للاختيار...
+2026-03-27 22:11:38 [INFO    ] AutoCut: [AutoFlow] ℹ️  وُجدت 10 صورة من جلسة سابقة — عرضها للاختيار...
+2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] scene_001.png → scene_1.png
+2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] scene_002.png → scene_2.png
+2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] scene_003.png → scene_3.png
+2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] scene_004.png → scene_4.png
+2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] scene_005.png → scene_5.png
+2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] scene_006.png → scene_6.png
+2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] scene_007.png → scene_7.png
+2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] scene_008.png → scene_8.png
+2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] scene_009.png → scene_9.png
+2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] scene_010.png → scene_10.png
+2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] Done — 10 images → D:\sites\AutoCut-AI-Desktop\session\images
+2026-03-27 22:11:59 [INFO    ] AutoCut: [PipelinePanel] Received 10 images from Step 2 → D:\sites\AutoCut-AI-Desktop\session\images
+2026-03-27 22:12:09 [INFO    ] AutoCut: Audio uploaded: D:/sites/AutoCut-AI-Desktop/source/audio/The Only 6 Assets That Actually Survive Economic C.MP3
+2026-03-27 22:12:12 [CRITICAL] AutoCut: _run_step3 CRASH: [WinError 2] The system cannot find the file specified
 Traceback (most recent call last):
-  File "D:\sites\AutoCut-AI-Desktop\app\gui\panels\pipeline_panel.py", line 40, in run
-    self._task_fn(
-    ~~~~~~~~~~~~~^
-        log=lambda msg: self.log.emit(str(msg)),
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        progress=lambda cur, total: self.progress.emit(cur, total),
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    )
-    ^
-  File "D:\sites\AutoCut-AI-Desktop\app\gui\panels\pipeline_panel.py", line 974, in task
-    from app.core.video_builder import run_video_builder
-  File "D:\sites\AutoCut-AI-Desktop\app\core\video_builder.py", line 31, in <module>
-    from moviepy.config import get_setting            # to find ffmpeg executable
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-ImportError: cannot import name 'get_setting' from 'moviepy.config' (C:\Users\DELL\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\moviepy\config.py)
+  File "D:\sites\AutoCut-AI-Desktop\app\gui\panels\pipeline_panel.py", line 921, in _run_step3
+    cfg = self._prepare_session_cfg(load_config())
+  File "D:\sites\AutoCut-AI-Desktop\app\gui\panels\pipeline_panel.py", line 872, in _prepare_session_cfg
+    shutil.copy2(str(img_path), str(dest))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\AppData\Local\Python\pythoncore-3.14-64\Lib\shutil.py", line 514, in copy2
+    _winapi.CopyFile2(src_, dst_, flags)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] The system cannot find the file specified
 
-2026-03-27 21:36:41 [INFO    ] AutoCut: Event loop exited with code 0
+2026-03-27 22:12:17 [CRITICAL] AutoCut: _run_step4 CRASH: [WinError 2] The system cannot find the file specified
+Traceback (most recent call last):
+  File "D:\sites\AutoCut-AI-Desktop\app\gui\panels\pipeline_panel.py", line 943, in _run_step4
+    cfg = self._prepare_session_cfg(load_config())
+  File "D:\sites\AutoCut-AI-Desktop\app\gui\panels\pipeline_panel.py", line 872, in _prepare_session_cfg
+    shutil.copy2(str(img_path), str(dest))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\AppData\Local\Python\pythoncore-3.14-64\Lib\shutil.py", line 514, in copy2
+    _winapi.CopyFile2(src_, dst_, flags)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] The system cannot find the file specified
+
+2026-03-27 22:12:21 [CRITICAL] AutoCut: _run_all CRASH: [WinError 2] The system cannot find the file specified
+Traceback (most recent call last):
+  File "D:\sites\AutoCut-AI-Desktop\app\gui\panels\pipeline_panel.py", line 965, in _run_all
+    cfg = self._prepare_session_cfg(load_config())
+  File "D:\sites\AutoCut-AI-Desktop\app\gui\panels\pipeline_panel.py", line 872, in _prepare_session_cfg
+    shutil.copy2(str(img_path), str(dest))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\AppData\Local\Python\pythoncore-3.14-64\Lib\shutil.py", line 514, in copy2
+    _winapi.CopyFile2(src_, dst_, flags)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] The system cannot find the file specified
+

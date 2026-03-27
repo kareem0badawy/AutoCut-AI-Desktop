@@ -41,6 +41,14 @@ FLOW_DIR = Path.home() / "Downloads" / "AutoCut" / "Flow"
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".gif"}
 
 
+def _make_mini_sep(C: dict) -> QWidget:
+    """Thin horizontal separator line."""
+    line = QWidget()
+    line.setFixedHeight(1)
+    line.setStyleSheet(f"background:{C['border']};")
+    return line
+
+
 def _list_flow_images() -> list[Path]:
     """Return all image files inside FLOW_DIR, sorted by name."""
     if not FLOW_DIR.exists():
@@ -676,9 +684,9 @@ class ImageGenerationStep(QWidget):
     def _build_image_intake_panel(self, C: dict) -> QWidget:
         """
         Panel for:
-          1. Scanning FLOW_DIR for images
-          2. Auto-assigning images to scenes by order
-          3. Showing scan status + per-scene counts
+          1. Downloading images directly from open Chrome / Flow via CDP
+          2. Scanning FLOW_DIR for manually saved images
+          3. Auto-assigning images to scenes
           4. 'Next' handoff button
         """
         self._intake_panel = QWidget()
@@ -695,40 +703,52 @@ class ImageGenerationStep(QWidget):
         )
         title_row.addWidget(title_lbl)
         title_row.addStretch()
-
-        # Flow dir label
         dir_lbl = QLabel(f"📁  {FLOW_DIR}")
-        dir_lbl.setStyleSheet(
-            f"font-size:10px;color:{C['text_dim']};background:transparent;"
-        )
+        dir_lbl.setStyleSheet(f"font-size:10px;color:{C['text_dim']};background:transparent;")
         dir_lbl.setToolTip(str(FLOW_DIR))
         title_row.addWidget(dir_lbl)
         v.addLayout(title_row)
 
-        # Scan row
+        # ── Download from Chrome row ────────────────────────────────────────
+        chrome_dl_row = QHBoxLayout()
+        chrome_dl_row.setSpacing(10)
+
+        self._chrome_dl_btn = QPushButton("📥  تحميل الصور من Chrome")
+        self._chrome_dl_btn.setObjectName("primary")
+        self._chrome_dl_btn.setFixedHeight(36)
+        self._chrome_dl_btn.setToolTip(
+            "يتصل بـ Chrome (port 9222) ويحمّل جميع الصورآلمرئية في\n"
+            "صفحة Flow مباشرةً إلى مجلد Flow"
+        )
+        self._chrome_dl_btn.clicked.connect(self._download_from_chrome)
+
+        self._chrome_dl_status = QLabel("ℹ️  تأكد أن Chrome مفتوح على port 9222 واضغط")
+        self._chrome_dl_status.setStyleSheet(
+            f"font-size:11px;color:{C['text_dim']};background:transparent;"
+        )
+
+        chrome_dl_row.addWidget(self._chrome_dl_btn)
+        chrome_dl_row.addWidget(self._chrome_dl_status, 1)
+        v.addLayout(chrome_dl_row)
+
+        v.addWidget(_make_mini_sep(C))
+
+        # Scan row (local folder)
         scan_row = QHBoxLayout()
         scan_row.setSpacing(10)
-
         self._scan_btn = QPushButton("🔍  مسح مجلد Flow")
         self._scan_btn.setObjectName("secondary")
         self._scan_btn.setFixedHeight(32)
         self._scan_btn.clicked.connect(self._scan_flow_images)
-
-        self._scan_status_lbl = QLabel("اضغط 'مسح' لتحميل الصور من مجلد Flow")
+        self._scan_status_lbl = QLabel("أو اضغط 'مسح' لتحميل صور محفوظة يدوياً")
         self._scan_status_lbl.setStyleSheet(
             f"font-size:11px;color:{C['text_dim']};background:transparent;"
         )
-
-        # Auto-assign toggle
         self._auto_assign_check = QCheckBox("تعيين تلقائي بالترتيب")
         self._auto_assign_check.setChecked(True)
         self._auto_assign_check.setStyleSheet(
             f"color:{C['text_sec']};background:transparent;font-size:11px;"
         )
-        self._auto_assign_check.setToolTip(
-            "عند المسح، يتم تعيين الصورة الأولى للمشهد الأول وهكذا تلقائياً"
-        )
-
         scan_row.addWidget(self._scan_btn)
         scan_row.addWidget(self._auto_assign_check)
         scan_row.addWidget(self._scan_status_lbl, 1)
@@ -737,23 +757,19 @@ class ImageGenerationStep(QWidget):
         # Handoff row
         handoff_row = QHBoxLayout()
         handoff_row.setSpacing(10)
-
         self._next_btn = QPushButton("✅  تسليم للخطوة 3")
         self._next_btn.setObjectName("primary")
         self._next_btn.setFixedHeight(36)
         self._next_btn.setMinimumWidth(180)
         self._next_btn.setEnabled(False)
         self._next_btn.setToolTip(
-            "ينسخ الصور المحددة إلى session/images/ بأسماء scene_N.ext "
-            "ليتعرف عليها AI Mapper تلقائياً"
+            "ينسخ الصور المحددة إلى session/images/ بأسماء scene_N.ext"
         )
         self._next_btn.clicked.connect(self._on_next_clicked)
-
         self._next_status_lbl = QLabel("")
         self._next_status_lbl.setStyleSheet(
             f"font-size:11px;color:{C['text_dim']};background:transparent;"
         )
-
         handoff_row.addWidget(self._next_btn)
         handoff_row.addWidget(self._next_status_lbl, 1)
         v.addLayout(handoff_row)
@@ -962,8 +978,102 @@ class ImageGenerationStep(QWidget):
     # Image Intake logic
     # ─────────────────────────────────────────────────────────────────────────
 
+    def _download_from_chrome(self):
+        """
+        Connect to Chrome on port 9222, find all visible Flow result images,
+        download them to FLOW_DIR, then open the selection gallery.
+        """
+        from PySide6.QtCore import QThread
+        from PySide6.QtCore import Signal as _Sig
+
+        C = get_colors()
+        self._chrome_dl_btn.setEnabled(False)
+        self._chrome_dl_status.setText("⏳  جارٍ الاتصال بـ Chrome...")
+
+        class _DlThread(QThread):
+            done   = _Sig(object)
+            status = _Sig(str)
+
+            def run(self_t):
+                try:
+                    from app.core.chrome_cdp import ChromeCDP
+                    from app.core.flow_automation import IMAGE_RESULT_SELECTORS
+                    self_t.status.emit("🔌  اتصال بـ Chrome DevTools...")
+                    cdp = ChromeCDP(port=9222)
+                    cdp.connect(timeout=5)
+                    self_t.status.emit("🔍  البحث عن الصور في الصفحة...")
+                    best_sel, best_count = None, 0
+                    for sel in IMAGE_RESULT_SELECTORS:
+                        try:
+                            cnt = cdp.get_result_image_count(sel)
+                            if cnt > best_count:
+                                best_sel, best_count = sel, cnt
+                        except Exception:
+                            pass
+                    if not best_sel or best_count == 0:
+                        self_t.done.emit("⚠️  لم تُعثر على صور في صفحة Flow.")
+                        return
+                    self_t.status.emit(f"📊  {best_count} صورة — جارٍ التحميل...")
+                    FLOW_DIR.mkdir(parents=True, exist_ok=True)
+                    saved = []
+                    for i in range(best_count):
+                        self_t.status.emit(f"⬇️  صورة {i+1}/{best_count}...")
+                        img_data = cdp.download_image_at_index(best_sel, i)
+                        if not img_data:
+                            img_data = cdp.screenshot_element_at_index(best_sel, i)
+                        if img_data:
+                            sp = FLOW_DIR / f"flow_{i+1:03d}.png"
+                            with open(sp, "wb") as f:
+                                f.write(img_data)
+                            saved.append(sp)
+                    cdp.close()
+                    self_t.done.emit(saved)
+                except Exception as exc:
+                    self_t.done.emit(f"❌  {exc}")
+
+        t = _DlThread(parent=self)
+
+        def on_status(msg):
+            self._chrome_dl_status.setText(msg)
+
+        def on_done(result):
+            self._chrome_dl_btn.setEnabled(True)
+            C2 = get_colors()
+            if isinstance(result, str):
+                self._chrome_dl_status.setText(result)
+                self._chrome_dl_status.setStyleSheet(
+                    f"font-size:11px;color:{C2['error']};background:transparent;"
+                )
+            else:
+                paths: list = result
+                self._chrome_dl_status.setText(
+                    f"✅  {len(paths)} صورة → {FLOW_DIR}"
+                )
+                self._chrome_dl_status.setStyleSheet(
+                    f"font-size:11px;color:{C2['success']};background:transparent;"
+                )
+                if not paths:
+                    return
+                self._flow_images = paths
+                for sc in self._scene_cards:
+                    sc.update_flow_images(paths)
+                # Group 2 per scene for gallery
+                by_scene: dict = {}
+                per = 2
+                for idx, p in enumerate(paths):
+                    snum = idx // per + 1
+                    by_scene.setdefault(snum, []).append(p)
+                self._show_completion_gallery(by_scene)
+
+        t.status.connect(on_status)
+        t.done.connect(on_done)
+        t.finished.connect(t.deleteLater)
+        t.start()
+        self._dl_thread = t
+
     def _scan_flow_images(self):
         """Scan FLOW_DIR and refresh image list."""
+
         C = get_colors()
         images = _list_flow_images()
         self._flow_images = images

@@ -859,20 +859,41 @@ class PipelinePanel(QWidget):
             session_dir = base / "session" / "images"
             session_dir.mkdir(parents=True, exist_ok=True)
 
-            # Clear previous session images
-            for old in session_dir.iterdir():
-                try:
-                    old.unlink()
-                except Exception:
-                    pass
+            # ── KEY FIX: if images are already IN session_dir (from Step 2
+            #    handoff), skip the delete+copy cycle — it would delete the
+            #    source files before we can copy them (FileNotFoundError).
+            already_there = all(
+                Path(img).resolve().parent == session_dir.resolve()
+                for img in self._uploaded_images
+                if Path(img).exists()
+            )
 
-            # Copy uploaded images (preserve original filenames!)
-            for img_path in self._uploaded_images:
-                dest = session_dir / img_path.name
-                shutil.copy2(str(img_path), str(dest))
+            if already_there:
+                # Nothing to do — files are already in the right place
+                logger.info(
+                    f"Session images already in place: {session_dir} "
+                    f"({len(self._uploaded_images)} files)"
+                )
+            else:
+                # Clear previous session images (only when replacing with new ones)
+                for old in session_dir.iterdir():
+                    try:
+                        old.unlink()
+                    except Exception:
+                        pass
+
+                # Copy uploaded images (preserve original filenames!)
+                for img_path in self._uploaded_images:
+                    p = Path(img_path)
+                    if not p.exists():
+                        logger.warning(f"Skipping missing image: {p}")
+                        continue
+                    dest = session_dir / p.name
+                    shutil.copy2(str(p), str(dest))
 
             cfg["images_folder"] = str(session_dir)
             logger.info(f"Session images folder: {session_dir} ({len(self._uploaded_images)} files)")
+
 
         # ── Uploaded audio → inject path directly ─────────────────────────────
         if self._uploaded_audio:
