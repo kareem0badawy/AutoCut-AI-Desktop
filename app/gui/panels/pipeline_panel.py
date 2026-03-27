@@ -191,6 +191,8 @@ class PipelinePanel(QWidget):
     def _image_generation_section(self) -> QWidget:
         """Wrap ImageGenerationStep inside a labelled container card."""
         self._image_gen_step = ImageGenerationStep()
+        # When Step 2 handoff fires, auto-populate images for Step 3
+        self._image_gen_step.images_ready.connect(self._on_images_from_step2)
         return self._image_gen_step
 
     # ── Section B: Pipeline (images + audio + mapper + builder) ───────────────
@@ -659,6 +661,31 @@ class PipelinePanel(QWidget):
         for refs in self._step_cards:
             if "run_btn" in refs:
                 refs["run_btn"].setEnabled(ready)
+
+    def _on_images_from_step2(self, session_img_dir: str):
+        """
+        Called when ImageGenerationStep emits images_ready.
+        Reads all images from session/images/ and treats them as
+        if the user had uploaded them via the Upload Images slot.
+        """
+        C = get_colors()
+        p = Path(session_img_dir)
+        if not p.exists():
+            return
+        imgs = sorted(
+            f for f in p.iterdir()
+            if f.is_file() and f.suffix.lower() in {".jpg", ".jpeg", ".png", ".webp"}
+        )
+        if not imgs:
+            return
+        self._uploaded_images = imgs
+        count = len(imgs)
+        self._update_slot_status(
+            self._images_slot, done=True,
+            text=f"✅  {count} صورة (من Step 2)", C=C
+        )
+        logger.info(f"[PipelinePanel] Received {count} images from Step 2 → {session_img_dir}")
+        self._update_pipeline_buttons()
 
     # ─────────────────────────────────────────────────────────────────────────
     # Log helpers

@@ -18,19 +18,37 @@ Login flow:
 
 import json
 import os
+import shutil
 from pathlib import Path
 
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import Qt, QTimer, Signal
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
     QScrollArea, QFrame, QSizePolicy, QButtonGroup, QProgressBar,
-    QPlainTextEdit, QLineEdit, QApplication, QFileDialog,
+    QPlainTextEdit, QLineEdit, QApplication, QFileDialog, QDialog,
+    QGridLayout, QCheckBox, QStackedWidget,
 )
+from PySide6.QtGui import QPixmap, QFont
 
 from app.gui.theme import get_colors
 from app.gui.widgets import make_separator
 from app.core.config_manager import BASE_DIR
 from app.logger import logger
+from app.core.flow_automation import SESSION_STATE_FILE
+
+# ── Flow images source dir ────────────────────────────────────────────────────
+FLOW_DIR = Path.home() / "Downloads" / "AutoCut" / "Flow"
+IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".gif"}
+
+
+def _list_flow_images() -> list[Path]:
+    """Return all image files inside FLOW_DIR, sorted by name."""
+    if not FLOW_DIR.exists():
+        return []
+    return sorted(
+        p for p in FLOW_DIR.iterdir()
+        if p.is_file() and p.suffix.lower() in IMAGE_EXTS
+    )
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -83,13 +101,126 @@ def _default_profile_dir() -> str:
 # Scene Card widget
 # ─────────────────────────────────────────────────────────────────────────────
 
-class _SceneCard(QWidget):
-    """One row: badge + title/prompt + Copy button."""
+# ─────────────────────────────────────────────────────────────────────────────
+# Image Picker Dialog
+# ─────────────────────────────────────────────────────────────────────────────
 
-    def __init__(self, index: int, scene_data: dict, C: dict, parent=None):
+class _ImagePickerDialog(QDialog):
+    """
+    Shows all images found in FLOW_DIR as a thumbnail grid.
+    User clicks one to select it.
+    """
+    def __init__(self, images: list[Path], current: Path | None, C: dict, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("اختر صورة للمشهد")
+        self.setMinimumSize(720, 500)
+        self.setStyleSheet(
+            f"background:{C['surface']};color:{C['text']};"
+        )
+        self._selected: Path | None = current
+
+        root = QVBoxLayout(self)
+        root.setContentsMargins(16, 16, 16, 16)
+        root.setSpacing(12)
+
+        # Info bar
+        info = QLabel(f"📁  {FLOW_DIR}   —   {len(images)} صورة")
+        info.setStyleSheet(f"font-size:11px;color:{C['text_sec']};background:transparent;")
+        root.addWidget(info)
+
+        # Grid scroll
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QFrame.NoFrame)
+        grid_w = QWidget()
+        grid_w.setStyleSheet("background:transparent;")
+        grid = QGridLayout(grid_w)
+        grid.setSpacing(8)
+        cols = 4
+        self._thumb_btns: list[QPushButton] = []
+        for i, img_path in enumerate(images):
+            btn = QPushButton()
+            btn.setCheckable(True)
+            btn.setChecked(img_path == current)
+            btn.setFixedSize(150, 130)
+            btn.setToolTip(img_path.name)
+            px = QPixmap(str(img_path))
+            if not px.isNull():
+                btn.setIcon(px.scaled(130, 100, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+                btn.setIconSize(px.scaled(130, 100, Qt.KeepAspectRatio, Qt.SmoothTransformation).size())
+            btn.setText(f"\n{img_path.name[:18]}" if px.isNull() else "")
+            border = C['accent'] if img_path == current else C['border']
+            btn.setStyleSheet(
+                f"background:{C['surface2']};border:2px solid {border};"
+                f"border-radius:8px;color:{C['text_sec']};font-size:9px;"
+                f"text-align:bottom center;"
+            )
+            btn.clicked.connect(lambda checked, p=img_path: self._on_pick(p))
+            grid.addWidget(btn, i // cols, i % cols)
+            self._thumb_btns.append(btn)
+        self._images = images
+        scroll.setWidget(grid_w)
+        root.addWidget(scroll, 1)
+
+        # Action buttons
+        btn_row = QHBoxLayout()
+        cancel_btn = QPushButton("إلغاء")
+        cancel_btn.setObjectName("secondary")
+        cancel_btn.setFixedHeight(34)
+        cancel_btn.clicked.connect(self.reject)
+        clear_btn = QPushButton("🗑  إزالة الاختيار")
+        clear_btn.setObjectName("secondary")
+        clear_btn.setFixedHeight(34)
+        clear_btn.clicked.connect(self._on_clear)
+        self._ok_btn = QPushButton("✅  تأكيد")
+        self._ok_btn.setObjectName("primary")
+        self._ok_btn.setFixedHeight(34)
+        self._ok_btn.clicked.connect(self.accept)
+        btn_row.addWidget(cancel_btn)
+        btn_row.addWidget(clear_btn)
+        btn_row.addStretch()
+        btn_row.addWidget(self._ok_btn)
+        root.addLayout(btn_row)
+
+    def _on_pick(self, path: Path):
+        self._selected = path
+        C = get_colors()
+        for i, btn in enumerate(self._thumb_btns):
+            is_sel = (self._images[i] == path)
+            border = C['accent'] if is_sel else C['border']
+            btn.setStyleSheet(
+                f"background:{C['surface2']};border:2px solid {border};"
+                f"border-radius:8px;color:{C['text_sec']};font-size:9px;"
+                f"text-align:bottom center;"
+            )
+            btn.setChecked(is_sel)
+
+    def _on_clear(self):
+        self._selected = None
+        C = get_colors()
+        for btn in self._thumb_btns:
+            btn.setChecked(False)
+            btn.setStyleSheet(
+                f"background:{C['surface2']};border:2px solid {C['border']};"
+                f"border-radius:8px;color:{C['text_sec']};font-size:9px;"
+                f"text-align:bottom center;"
+            )
+
+    def result_path(self) -> Path | None:
+        return self._selected
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Scene Card widget
+# ─────────────────────────────────────────────────────────────────────────────
+
+class _SceneCard(QWidget):
+    """One row: badge + title/prompt + Copy button + image thumbnail."""
+
+    def __init__(self, index: int, scene_data: dict, C: dict,
+                 flow_images: list[Path], parent=None):
         super().__init__(parent)
         self.setObjectName("step_card")
-        # main_prompt is the image-generation prompt in the actual format
         self._prompt = (
             scene_data.get("main_prompt")
             or scene_data.get("prompt")
@@ -97,6 +228,8 @@ class _SceneCard(QWidget):
             or ""
         )
         self._scene_data = scene_data
+        self._flow_images = flow_images   # shared list reference
+        self._selected_image: Path | None = None
 
         lay = QHBoxLayout(self)
         lay.setContentsMargins(14, 10, 14, 10)
@@ -115,7 +248,6 @@ class _SceneCard(QWidget):
         # Info
         info = QVBoxLayout()
         info.setSpacing(2)
-        # Use label_text as scene title, fallback to scene_number
         scene_name = (
             scene_data.get("label_text")
             or scene_data.get("scene_title")
@@ -127,7 +259,6 @@ class _SceneCard(QWidget):
         title_lbl.setStyleSheet(
             f"font-weight:700;font-size:13px;color:{C['text']};background:transparent;"
         )
-        # Show scene_description (readable) not the long main_prompt
         display_text = (
             scene_data.get("scene_description")
             or self._prompt[:120] + "..." if len(self._prompt) > 120 else self._prompt
@@ -141,12 +272,30 @@ class _SceneCard(QWidget):
         info.addWidget(title_lbl)
         info.addWidget(prompt_lbl)
 
-        # Status icon (updated during auto mode)
+        # Status icon
         self._status_lbl = QLabel("⬜")
         self._status_lbl.setFixedWidth(22)
         self._status_lbl.setStyleSheet("background:transparent;font-size:14px;")
 
-        # Copy — copies the full main_prompt (for image gen tools)
+        # Thumbnail label
+        self._thumb_lbl = QLabel()
+        self._thumb_lbl.setFixedSize(64, 48)
+        self._thumb_lbl.setAlignment(Qt.AlignCenter)
+        self._thumb_lbl.setStyleSheet(
+            f"background:{C['surface2']};border:1px solid {C['border']};"
+            f"border-radius:4px;font-size:9px;color:{C['text_dim']};"
+        )
+        self._thumb_lbl.setText("لا توجد\nصورة")
+
+        # Pick button
+        self._pick_btn = QPushButton("🖼  اختر")
+        self._pick_btn.setObjectName("secondary")
+        self._pick_btn.setFixedHeight(28)
+        self._pick_btn.setFixedWidth(80)
+        self._pick_btn.setToolTip("اختر صورة من مجلد Flow")
+        self._pick_btn.clicked.connect(self._on_pick)
+
+        # Copy prompt button
         copy_btn = QPushButton("📋  Prompt")
         copy_btn.setObjectName("secondary")
         copy_btn.setFixedHeight(28)
@@ -156,11 +305,57 @@ class _SceneCard(QWidget):
 
         lay.addWidget(badge)
         lay.addLayout(info, 1)
+        lay.addWidget(self._thumb_lbl)
         lay.addWidget(self._status_lbl)
+        lay.addWidget(self._pick_btn)
         lay.addWidget(copy_btn)
 
     def _copy(self):
         QApplication.clipboard().setText(self._prompt)
+
+    def _on_pick(self):
+        dlg = _ImagePickerDialog(
+            self._flow_images, self._selected_image,
+            get_colors(), parent=self
+        )
+        if dlg.exec() == QDialog.Accepted:
+            self.set_image(dlg.result_path())
+
+    def set_image(self, path: Path | None):
+        """Assign an image to this scene card and update thumbnail."""
+        self._selected_image = path
+        C = get_colors()
+        if path and path.exists():
+            px = QPixmap(str(path)).scaled(
+                64, 48, Qt.KeepAspectRatio, Qt.SmoothTransformation
+            )
+            self._thumb_lbl.setPixmap(px)
+            self._thumb_lbl.setToolTip(path.name)
+            self._thumb_lbl.setStyleSheet(
+                f"background:{C['surface2']};border:2px solid {C['accent']};"
+                f"border-radius:4px;"
+            )
+            self._status_lbl.setText("✅")
+        else:
+            self._thumb_lbl.clear()
+            self._thumb_lbl.setText("لا توجد\nصورة")
+            self._thumb_lbl.setStyleSheet(
+                f"background:{C['surface2']};border:1px solid {C['border']};"
+                f"border-radius:4px;font-size:9px;color:{C['text_dim']};"
+            )
+            self._status_lbl.setText("⬜")
+
+    def update_flow_images(self, images: list[Path]):
+        """Refresh the shared image list (after scan)."""
+        self._flow_images = images
+
+    @property
+    def selected_image(self) -> Path | None:
+        return self._selected_image
+
+    @property
+    def scene_number(self) -> int:
+        return int(self._scene_data.get("scene_number", 0))
 
     def set_status(self, status: str):
         """status: 'pending' | 'done' | 'error'"""
@@ -179,10 +374,15 @@ class ImageGenerationStep(QWidget):
     Contains:
     • Mode toggle (Manual / Auto)
     • Main prompt display
-    • Scenes list with per-scene Copy buttons
+    • Scenes list with per-scene Copy buttons + image pickers
+    • Image Intake: scan Flow dir, auto-assign or manual-pick
+    • Handoff: rename to scene_{N}.ext and expose to Step 3
     • Auto panel:  Chrome path · output dir · progress · log · Stop btn
     • Login banner: shown when Chrome is waiting for Google login
     """
+
+    # Emitted when user clicks "Next" with the session images folder path
+    images_ready = Signal(str)   # str = session/images/ path
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -190,6 +390,7 @@ class ImageGenerationStep(QWidget):
         self._scenes_data: list[dict] = []
         self._main_prompt_text: str = ""
         self._worker = None          # FlowWorker instance
+        self._flow_images: list[Path] = []   # images found in FLOW_DIR
         self._build_ui()
 
     # ─────────────────────────────────────────────────────────────────────────
@@ -211,6 +412,8 @@ class ImageGenerationStep(QWidget):
         root.addWidget(self._build_login_banner(C))   # hidden by default
         root.addWidget(self._build_main_prompt_bar(C))
         root.addWidget(self._build_scenes_panel(C), 1)
+        root.addWidget(make_separator(C))
+        root.addWidget(self._build_image_intake_panel(C))  # NEW
         root.addWidget(make_separator(C))
         root.addWidget(self._build_auto_panel(C))     # hidden in Manual
         root.addLayout(self._build_action_row(C))
@@ -324,13 +527,17 @@ class ImageGenerationStep(QWidget):
             self._action_btn.setText("⚡  بدء التوليد التلقائي")
             self._action_btn.setObjectName("primary")
             self._action_btn.setEnabled(bool(self._scenes_data))
+            # Check if there's a saved session to resume
+            self._check_resume_available()
         else:
             self._action_btn.setText("🔗  فتح Flow في المتصفح")
             self._action_btn.setObjectName("secondary")
             self._action_btn.setEnabled(True)
+            self._resume_btn.setVisible(False)
         # Re-polish button
         self._action_btn.style().unpolish(self._action_btn)
         self._action_btn.style().polish(self._action_btn)
+
 
     # ── Login banner (shown when waiting for Google login) ────────────────────
 
@@ -460,6 +667,97 @@ class ImageGenerationStep(QWidget):
         scroll.setWidget(self._scenes_container)
         v.addWidget(scroll)
         return outer
+
+    # ── Auto panel (Chrome settings + progress + log) ─────────────────────────
+
+    # ── Image Intake panel ────────────────────────────────────────────────────
+
+    def _build_image_intake_panel(self, C: dict) -> QWidget:
+        """
+        Panel for:
+          1. Scanning FLOW_DIR for images
+          2. Auto-assigning images to scenes by order
+          3. Showing scan status + per-scene counts
+          4. 'Next' handoff button
+        """
+        self._intake_panel = QWidget()
+        self._intake_panel.setObjectName("card_dark")
+        v = QVBoxLayout(self._intake_panel)
+        v.setContentsMargins(16, 14, 16, 14)
+        v.setSpacing(10)
+
+        # Title row
+        title_row = QHBoxLayout()
+        title_lbl = QLabel("🗂  استقبال الصور — Image Intake")
+        title_lbl.setStyleSheet(
+            f"font-weight:700;font-size:13px;color:{C['text']};background:transparent;"
+        )
+        title_row.addWidget(title_lbl)
+        title_row.addStretch()
+
+        # Flow dir label
+        dir_lbl = QLabel(f"📁  {FLOW_DIR}")
+        dir_lbl.setStyleSheet(
+            f"font-size:10px;color:{C['text_dim']};background:transparent;"
+        )
+        dir_lbl.setToolTip(str(FLOW_DIR))
+        title_row.addWidget(dir_lbl)
+        v.addLayout(title_row)
+
+        # Scan row
+        scan_row = QHBoxLayout()
+        scan_row.setSpacing(10)
+
+        self._scan_btn = QPushButton("🔍  مسح مجلد Flow")
+        self._scan_btn.setObjectName("secondary")
+        self._scan_btn.setFixedHeight(32)
+        self._scan_btn.clicked.connect(self._scan_flow_images)
+
+        self._scan_status_lbl = QLabel("اضغط 'مسح' لتحميل الصور من مجلد Flow")
+        self._scan_status_lbl.setStyleSheet(
+            f"font-size:11px;color:{C['text_dim']};background:transparent;"
+        )
+
+        # Auto-assign toggle
+        self._auto_assign_check = QCheckBox("تعيين تلقائي بالترتيب")
+        self._auto_assign_check.setChecked(True)
+        self._auto_assign_check.setStyleSheet(
+            f"color:{C['text_sec']};background:transparent;font-size:11px;"
+        )
+        self._auto_assign_check.setToolTip(
+            "عند المسح، يتم تعيين الصورة الأولى للمشهد الأول وهكذا تلقائياً"
+        )
+
+        scan_row.addWidget(self._scan_btn)
+        scan_row.addWidget(self._auto_assign_check)
+        scan_row.addWidget(self._scan_status_lbl, 1)
+        v.addLayout(scan_row)
+
+        # Handoff row
+        handoff_row = QHBoxLayout()
+        handoff_row.setSpacing(10)
+
+        self._next_btn = QPushButton("✅  تسليم للخطوة 3")
+        self._next_btn.setObjectName("primary")
+        self._next_btn.setFixedHeight(36)
+        self._next_btn.setMinimumWidth(180)
+        self._next_btn.setEnabled(False)
+        self._next_btn.setToolTip(
+            "ينسخ الصور المحددة إلى session/images/ بأسماء scene_N.ext "
+            "ليتعرف عليها AI Mapper تلقائياً"
+        )
+        self._next_btn.clicked.connect(self._on_next_clicked)
+
+        self._next_status_lbl = QLabel("")
+        self._next_status_lbl.setStyleSheet(
+            f"font-size:11px;color:{C['text_dim']};background:transparent;"
+        )
+
+        handoff_row.addWidget(self._next_btn)
+        handoff_row.addWidget(self._next_status_lbl, 1)
+        v.addLayout(handoff_row)
+
+        return self._intake_panel
 
     # ── Auto panel (Chrome settings + progress + log) ─────────────────────────
 
@@ -626,17 +924,143 @@ class ImageGenerationStep(QWidget):
             insert_pos = 0
 
         for idx, scene in enumerate(scenes, start=1):
-            sc = _SceneCard(idx, scene, C, parent=self._scenes_container)
+            sc = _SceneCard(idx, scene, C,
+                            flow_images=self._flow_images,
+                            parent=self._scenes_container)
             self._scenes_layout.insertWidget(insert_pos, sc)
             self._scene_cards.append(sc)
             insert_pos += 1
 
         self._update_action_btn_state()
+        # Re-apply any existing scan so thumbnails show up immediately
+        if self._flow_images:
+            self._apply_scan_to_cards()
 
     def _update_action_btn_state(self):
         if not self._auto_btn.isChecked():
             return
         self._action_btn.setEnabled(bool(self._scenes_data))
+
+    def _update_next_btn_state(self):
+        """Enable Next button when at least one scene has a selected image."""
+        has_any = any(sc.selected_image is not None for sc in self._scene_cards)
+        if hasattr(self, "_next_btn"):
+            self._next_btn.setEnabled(has_any)
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Image Intake logic
+    # ─────────────────────────────────────────────────────────────────────────
+
+    def _scan_flow_images(self):
+        """Scan FLOW_DIR and refresh image list."""
+        C = get_colors()
+        images = _list_flow_images()
+        self._flow_images = images
+
+        # Push updated list to all cards
+        for sc in self._scene_cards:
+            sc.update_flow_images(images)
+
+        count = len(images)
+        if count == 0:
+            self._scan_status_lbl.setText(
+                f"⚠️  لا توجد صور في {FLOW_DIR}"
+            )
+            self._scan_status_lbl.setStyleSheet(
+                f"font-size:11px;color:{get_colors()['warning']};background:transparent;"
+            )
+            return
+
+        self._scan_status_lbl.setText(
+            f"✅  {count} صورة — اضغط على كل مشهد لاختيار صورته"
+        )
+        self._scan_status_lbl.setStyleSheet(
+            f"font-size:11px;color:{C['success']};background:transparent;"
+        )
+        logger.info(f"[ImageIntake] Scanned {count} images from {FLOW_DIR}")
+
+        if self._auto_assign_check.isChecked():
+            self._apply_scan_to_cards()
+
+    def _apply_scan_to_cards(self):
+        """Auto-assign images to scene cards by sequential order."""
+        images = self._flow_images
+        for i, sc in enumerate(self._scene_cards):
+            if i < len(images):
+                sc.set_image(images[i])
+            else:
+                sc.set_image(None)
+        self._update_next_btn_state()
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Handoff: copy renamed images to session/images/
+    # ─────────────────────────────────────────────────────────────────────────
+
+    def _on_next_clicked(self):
+        """
+        For each scene card that has a selected image:
+          1. Copy the image to <base_path>/session/images/
+          2. Rename it to scene_{scene_number}{ext}
+        Then emit images_ready(session_dir) so PipelinePanel can pick it up.
+        """
+        from app.core.config_manager import load_config, BASE_DIR
+        C = get_colors()
+        cfg = load_config()
+        session_dir = Path(cfg.get("base_path", str(BASE_DIR))) / "session" / "images"
+        try:
+            session_dir.mkdir(parents=True, exist_ok=True)
+
+            # Clear previous session images
+            for old in session_dir.iterdir():
+                try:
+                    old.unlink()
+                except Exception:
+                    pass
+
+            copied = 0
+            missing = []
+            for sc in self._scene_cards:
+                img = sc.selected_image
+                if img and img.exists():
+                    dest_name = f"scene_{sc.scene_number}{img.suffix.lower()}"
+                    dest = session_dir / dest_name
+                    shutil.copy2(str(img), str(dest))
+                    copied += 1
+                    logger.info(f"[Handoff] {img.name} → {dest_name}")
+                else:
+                    missing.append(sc.scene_number)
+
+            msg = f"✅  تم نقل {copied} صورة إلى session/images/"
+            if missing:
+                msg += f"  |  ⚠️ مشاهد بدون صورة: {missing}"
+
+            self._next_status_lbl.setText(msg)
+            self._next_status_lbl.setStyleSheet(
+                f"font-size:11px;color:{C['success']};background:transparent;"
+            )
+            logger.info(f"[Handoff] Done — {copied} images → {session_dir}")
+
+            # Emit for PipelinePanel
+            self.images_ready.emit(str(session_dir))
+
+        except Exception as e:
+            self._next_status_lbl.setText(f"❌  خطأ: {e}")
+            self._next_status_lbl.setStyleSheet(
+                f"font-size:11px;color:{C['error']};background:transparent;"
+            )
+            logger.error(f"[Handoff] Error: {e}")
+
+    # ── Public API for PipelinePanel ──────────────────────────────────────────
+
+    def get_selected_images_folder(self) -> str | None:
+        """
+        Returns the session/images/ path if handoff was done,
+        otherwise None.
+        """
+        from app.core.config_manager import load_config, BASE_DIR as _BD
+        cfg = load_config()
+        p = Path(cfg.get("base_path", str(_BD))) / "session" / "images"
+        return str(p) if p.exists() and any(p.iterdir()) else None
 
     # ─────────────────────────────────────────────────────────────────────────
     # Browse dialogs
@@ -669,7 +1093,12 @@ class ImageGenerationStep(QWidget):
     def _open_flow_browser(self):
         """Manual mode: open Flow in default browser."""
         import subprocess, sys
+        # Also ensure FLOW_DIR exists so user knows where to save
+        FLOW_DIR.mkdir(parents=True, exist_ok=True)
         url = "https://labs.google/fx/ar/tools/flow/"
+        self._set_action_status(
+            f"تم فتح Flow — احفظ الصور داخل:  {FLOW_DIR}"
+        )
         if sys.platform == "win32":
             subprocess.Popen(["start", url], shell=True)
         elif sys.platform == "darwin":
@@ -681,6 +1110,141 @@ class ImageGenerationStep(QWidget):
         if self._worker and self._worker.isRunning():
             self._worker.stop()
 
+    def _on_resume_clicked(self):
+        """Launch FlowWorker with resume=True to continue from saved state."""
+        if not self._scenes_data:
+            self._set_action_status("⚠️  لا توجد مشاهد — أعد تحميل الصفحة", error=True)
+            return
+        self._start_auto_mode(resume=True)
+
+    def _show_completion_gallery(self, images: list):
+        """
+        Show a completion dialog with a grid of all generated images.
+        User can review and select images to include in the next step.
+        Styled beautifully with thumbnails and scene labels.
+        """
+        C = get_colors()
+        dlg = QDialog(self)
+        dlg.setWindowTitle("🎉  الصور المولّدة — اختر ما تريد إرساله للخطوة التالية")
+        dlg.setMinimumSize(860, 600)
+        dlg.setStyleSheet(
+            f"background:{C['surface']};color:{C['text']};"
+            f"font-family:'Segoe UI', Arial, sans-serif;"
+        )
+
+        v = QVBoxLayout(dlg)
+        v.setContentsMargins(20, 20, 20, 20)
+        v.setSpacing(16)
+
+        # Title
+        title = QLabel(f"✅  تم توليد {len(images)} صورة بنجاح")
+        title.setStyleSheet(
+            f"font-size:18px;font-weight:700;color:{C['accent']};background:transparent;"
+        )
+        title.setAlignment(Qt.AlignCenter)
+        v.addWidget(title)
+
+        subtitle = QLabel("Scroll لرؤية جميع الصور — كل صورة مرتبطة بمشهدها تلقائياً")
+        subtitle.setStyleSheet(f"font-size:12px;color:{C['text_sec']};background:transparent;")
+        subtitle.setAlignment(Qt.AlignCenter)
+        v.addWidget(subtitle)
+
+        # Scroll grid of images
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QFrame.NoFrame)
+        scroll.setStyleSheet(f"background:{C['surface2']};border-radius:10px;")
+
+        grid_w = QWidget()
+        grid_w.setStyleSheet("background:transparent;")
+        grid = QGridLayout(grid_w)
+        grid.setSpacing(14)
+        cols = 4
+
+        for i, img_p in enumerate(images):
+            cell = QWidget()
+            cell.setStyleSheet(
+                f"background:{C['surface']};border:2px solid {C['border']};"
+                f"border-radius:10px;padding:6px;"
+            )
+            cell_v = QVBoxLayout(cell)
+            cell_v.setContentsMargins(6, 6, 6, 6)
+            cell_v.setSpacing(4)
+
+            # Thumbnail
+            thumb = QLabel()
+            thumb.setFixedSize(160, 120)
+            thumb.setAlignment(Qt.AlignCenter)
+            px = QPixmap(str(img_p))
+            if not px.isNull():
+                thumb.setPixmap(
+                    px.scaled(160, 120, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                )
+            else:
+                thumb.setText("⚠️ لا يمكن تحميل الصورة")
+                thumb.setStyleSheet(f"color:{C['warning']};font-size:10px;")
+            cell_v.addWidget(thumb, alignment=Qt.AlignCenter)
+
+            # Scene label — try to match by index
+            scene_name = f"مشهد {i + 1}"
+            if i < len(self._scene_cards):
+                sc_data = self._scene_cards[i]._scene_data
+                scene_name = (
+                    sc_data.get("label_text")
+                    or sc_data.get("scene_title")
+                    or sc_data.get("title")
+                    or scene_name
+                )
+            name_lbl = QLabel(f"#{i + 1}  {str(scene_name)[:25]}")
+            name_lbl.setStyleSheet(
+                f"font-size:10px;font-weight:600;color:{C['text_sec']};background:transparent;"
+            )
+            name_lbl.setAlignment(Qt.AlignCenter)
+            cell_v.addWidget(name_lbl)
+
+            # File name
+            file_lbl = QLabel(img_p.name)
+            file_lbl.setStyleSheet(
+                f"font-size:9px;color:{C['text_dim']};background:transparent;"
+            )
+            file_lbl.setAlignment(Qt.AlignCenter)
+            cell_v.addWidget(file_lbl)
+
+            grid.addWidget(cell, i // cols, i % cols)
+
+        scroll.setWidget(grid_w)
+        v.addWidget(scroll, 1)
+
+        # Summary line
+        summary = QLabel(
+            f"📁  مجلد الحفظ: {self._output_dir_edit.text().strip() or _default_output_dir()}"
+        )
+        summary.setStyleSheet(
+            f"font-size:11px;color:{C['text_dim']};background:transparent;"
+        )
+        v.addWidget(summary)
+
+        # Buttons
+        btn_row = QHBoxLayout()
+
+        go_next_btn = QPushButton("✅  تسليم للخطوة التالية")
+        go_next_btn.setObjectName("primary")
+        go_next_btn.setFixedHeight(38)
+        go_next_btn.setMinimumWidth(200)
+        go_next_btn.clicked.connect(lambda: (dlg.accept(), self._on_next_clicked()))
+
+        close_btn = QPushButton("إغلاق")
+        close_btn.setObjectName("secondary")
+        close_btn.setFixedHeight(38)
+        close_btn.clicked.connect(dlg.reject)
+
+        btn_row.addWidget(close_btn)
+        btn_row.addStretch()
+        btn_row.addWidget(go_next_btn)
+        v.addLayout(btn_row)
+
+        dlg.exec()
+
     def _on_continue_after_login(self):
         """
         User clicked 'Continue' after logging in.
@@ -689,12 +1253,34 @@ class ImageGenerationStep(QWidget):
         self._login_banner.setVisible(False)
         self._log_auto("ℹ️  متابعة — سيتحقق النظام من تسجيل الدخول...")
 
+
+
+    # ── WebSocket / CDP error friendly display ────────────────────────────────
+    def _handle_ws_error(self, msg: str):
+        """
+        Show a friendly message when WebSocket 403 is detected
+        (Chrome not started with --remote-debugging-port).
+        """
+        if "403" in msg or "Forbidden" in msg or "WebSocket" in msg:
+            self._set_action_status(
+                "❌  Chrome غير متصل — شغّل Chrome بخيار --remote-debugging-port=9222",
+                error=True
+            )
+            self._log_auto(
+                "⚠️  خطأ في الاتصال بـ Chrome DevTools:\n"
+                "  الحل: شغّل Chrome من الـ Terminal بهذا الأمر:\n"
+                '  chrome.exe --remote-debugging-port=9222 --user-data-dir=C:\\AutoCutProfile\n'
+                "  أو استخدم Manual Mode بدلاً من Auto."
+            )
+            self._show_auto_log(True)
+            self._worker.stop() if self._worker else None
+
     # ─────────────────────────────────────────────────────────────────────────
     # Auto Mode
     # ─────────────────────────────────────────────────────────────────────────
 
-    def _start_auto_mode(self):
-        """Validate inputs and launch FlowWorker."""
+    def _start_auto_mode(self, resume: bool = False):
+        """Validate inputs and launch FlowWorker. If resume=True, continues from saved state."""
         if not self._scenes_data:
             self._set_action_status("⚠️  لا توجد مشاهد — شغّل الخطوة التحضيرية أولاً", error=True)
             return
@@ -726,11 +1312,13 @@ class ImageGenerationStep(QWidget):
             output_dir=output_dir,
             chrome_exe=chrome_exe,
             chrome_profile=profile_dir,
+            resume=resume,
             parent=self,
         )
 
         # Connect signals
         self._worker.log.connect(self._log_auto)
+        self._worker.log.connect(self._handle_ws_error)   # intercept WS errors
         self._worker.progress.connect(self._on_auto_progress)
         self._worker.scene_done.connect(self._on_scene_done)
         self._worker.fallback.connect(self._on_auto_fallback)
@@ -744,10 +1332,15 @@ class ImageGenerationStep(QWidget):
         self._show_auto_log(True)
         self._auto_pbar.setVisible(True)
         self._auto_pbar.setRange(0, 0)   # indeterminate
-        self._log_auto("🚀  بدء Auto Mode...")
-        self._set_action_status("جارٍ التوليد...")
+        if resume:
+            self._log_auto("▶️  استئناف Auto Mode من حيث توقف...")
+            self._set_action_status("جارٍ الاستئناف...")
+        else:
+            self._log_auto("🚀  بدء Auto Mode...")
+            self._set_action_status("جارٍ التوليد...")
 
         self._worker.start()
+
 
     # ─────────────────────────────────────────────────────────────────────────
     # Worker signal handlers
@@ -767,22 +1360,82 @@ class ImageGenerationStep(QWidget):
 
     def _on_scene_done(self, idx: int, img_path: str):
         if 0 <= idx < len(self._scene_cards):
-            self._scene_cards[idx].set_status("done" if img_path else "error")
+            sc = self._scene_cards[idx]
+            if img_path:
+                sc.set_status("done")
+                # Auto-assign the generated image to the scene card
+                p = Path(img_path)
+                if p.exists():
+                    sc.set_image(p)
+                    self._update_next_btn_state()
+            else:
+                sc.set_status("error")
 
     def _on_auto_fallback(self, reason: str):
         self._log_auto(f"⚠️  Fallback → Manual Mode\nالسبب: {reason}")
         self._set_action_status(f"تحويل لـ Manual: {reason}", error=True)
         # Switch to Manual mode
         self._manual_btn.setChecked(True)
+        # Show resume button if there's a session state
+        self._check_resume_available()
+
+    def _check_resume_available(self):
+        """
+        Show/hide the Resume button based on whether a session state file exists.
+        Only relevant in Auto mode.
+        """
+        # Guard: auto panel may not be built yet during initial _set_mode call
+        if not hasattr(self, "_output_dir_edit") or not hasattr(self, "_resume_btn"):
+            return
+        if not self._auto_btn.isChecked():
+            self._resume_btn.setVisible(False)
+            return
+        output_dir = Path(self._output_dir_edit.text().strip() or _default_output_dir())
+        state_file = output_dir / SESSION_STATE_FILE
+        has_state = state_file.exists()
+        self._resume_btn.setVisible(has_state)
+        if has_state:
+            try:
+                with open(state_file, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                done = len(data.get("completed", []))
+                total = data.get("total", 0)
+                self._resume_btn.setToolTip(
+                    f"استئناف — تم {done}/{total} مشهد — اضغط للمتابعة"
+                )
+                self._set_action_status(
+                    f"ℹ️  توجد جلسة محفوظة ({done}/{total} مشهد) — اضغط 'استئناف' للمتابعة"
+                )
+            except Exception:
+                pass
 
     def _on_auto_finished(self):
         self._log_auto("🎉  اكتمل التوليد التلقائي!")
         self._auto_pbar.setRange(0, 100)
         self._auto_pbar.setValue(100)
         self._set_action_status("✅  اكتمل بنجاح")
+        # Hide resume button after full completion
+        self._resume_btn.setVisible(False)
+        # Trigger auto scan of generated images
+        output_dir = Path(self._output_dir_edit.text().strip() or _default_output_dir())
+        if output_dir.exists():
+            images = sorted(
+                p for p in output_dir.iterdir()
+                if p.is_file() and p.suffix.lower() in IMAGE_EXTS
+            )
+            if images:
+                self._flow_images = images
+                for sc in self._scene_cards:
+                    sc.update_flow_images(images)
+                self._apply_scan_to_cards()
+                self._show_completion_gallery(images)
 
     def _on_worker_finished(self):
         self._set_running_ui(False)
+        # After any stop (user-initiated or error), check if we can resume
+        if self._auto_btn.isChecked():
+            self._check_resume_available()
+
 
     # ─────────────────────────────────────────────────────────────────────────
     # UI state helpers
@@ -791,6 +1444,7 @@ class ImageGenerationStep(QWidget):
     def _set_running_ui(self, running: bool):
         self._action_btn.setEnabled(not running)
         self._stop_btn.setVisible(running)
+        self._resume_btn.setVisible(False)  # hide while running
         self._manual_btn.setEnabled(not running)
         self._auto_btn.setEnabled(not running)
 
@@ -820,3 +1474,8 @@ class ImageGenerationStep(QWidget):
     def refresh(self):
         """Called by PipelinePanel.refresh()."""
         self.reload_scenes()
+        # Also auto-scan if FLOW_DIR already has images
+        if FLOW_DIR.exists() and any(
+            p.suffix.lower() in IMAGE_EXTS for p in FLOW_DIR.iterdir() if p.is_file()
+        ):
+            self._scan_flow_images()
