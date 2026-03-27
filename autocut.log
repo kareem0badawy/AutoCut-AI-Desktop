@@ -267,3 +267,50 @@ AttributeError: 'function' object has no attribute 'shape'
 2026-03-26 01:44:43 [INFO    ] AutoCut: Starting Video Builder | audio=J:\Coding\Desktop\AutoCut\source\audio\The Only 6 Assets That Actually Survive Economic C.MP3
 2026-03-26 01:46:21 [INFO    ] AutoCut: Step finished successfully [pbar_2]
 2026-03-26 01:50:14 [INFO    ] AutoCut: Event loop exited with code 0
+2026-03-27 00:27:29 [INFO    ] AutoCut: ============================================================
+2026-03-27 00:27:29 [INFO    ] AutoCut: AutoCut starting up
+2026-03-27 00:27:29 [INFO    ] AutoCut: Python 3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]
+2026-03-27 00:27:29 [INFO    ] AutoCut: Platform: win32
+2026-03-27 00:27:44 [INFO    ] AutoCut: ============================================================
+2026-03-27 00:27:44 [INFO    ] AutoCut: AutoCut starting up
+2026-03-27 00:27:44 [INFO    ] AutoCut: Python 3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]
+2026-03-27 00:27:44 [INFO    ] AutoCut: Platform: win32
+2026-03-27 00:55:48 [INFO    ] AutoCut: ============================================================
+2026-03-27 00:55:48 [INFO    ] AutoCut: AutoCut starting up
+2026-03-27 00:55:48 [INFO    ] AutoCut: Python 3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]
+2026-03-27 00:55:48 [INFO    ] AutoCut: Platform: win32
+2026-03-27 00:55:50 [WARNING ] AutoCut: Cairo font not found at D:\sites\AutoCut-AI-Desktop\assets\fonts\Cairo-Bold.ttf — using fallback
+2026-03-27 00:55:50 [INFO    ] AutoCut: Creating main window...
+2026-03-27 00:55:51 [INFO    ] AutoCut: Main window shown — entering event loop
+2026-03-27 00:58:14 [INFO    ] AutoCut: Script uploaded: D:/sites/AutoCut-AI-Desktop/script.txt
+2026-03-27 01:08:22 [INFO    ] AutoCut: Audio uploaded: D:/sites/AutoCut-AI-Desktop/source/audio/The Only 6 Assets That Actually Survive Economic.mpeg
+2026-03-27 01:14:22 [INFO    ] AutoCut: Audio uploaded: D:/sites/AutoCut-AI-Desktop/source/audio/The Only 6 Assets That Actually Survive Economic C.MP3
+2026-03-27 01:19:13 [INFO    ] AutoCut: ============================================================
+2026-03-27 01:19:13 [INFO    ] AutoCut: AutoCut starting up
+2026-03-27 01:19:13 [INFO    ] AutoCut: Python 3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]
+2026-03-27 01:19:13 [INFO    ] AutoCut: Platform: win32
+2026-03-27 01:19:13 [WARNING ] AutoCut: Cairo font not found at D:\sites\AutoCut-AI-Desktop\assets\fonts\Cairo-Bold.ttf — using fallback
+2026-03-27 01:19:13 [INFO    ] AutoCut: Creating main window...
+2026-03-27 01:19:14 [INFO    ] AutoCut: Main window shown — entering event loop
+2026-03-27 01:19:50 [INFO    ] AutoCut: Script uploaded: D:/sites/AutoCut-AI-Desktop/script.txt
+2026-03-27 01:19:52 [INFO    ] AutoCut: Starting prompt generation — reset=True, limit=10
+2026-03-27 01:20:00 [INFO    ] AutoCut: Step finished successfully [pbar_prompts]
+2026-03-27 01:21:41 [CRITICAL] AutoCut: UNHANDLED EXCEPTION:
+Traceback (most recent call last):
+  File "D:\sites\AutoCut-AI-Desktop\app\gui\panels\image_generation_step.py", line 554, in reload_scenes
+    self._main_prompt_text = data.get("main_prompt", "")
+                             ^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+
+2026-03-27 01:29:11 [INFO    ] AutoCut: Event loop exited with code 0
+2026-03-27 01:29:25 [INFO    ] AutoCut: ============================================================
+2026-03-27 01:29:25 [INFO    ] AutoCut: AutoCut starting up
+2026-03-27 01:29:25 [INFO    ] AutoCut: Python 3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]
+2026-03-27 01:29:25 [INFO    ] AutoCut: Platform: win32
+2026-03-27 01:29:25 [WARNING ] AutoCut: Cairo font not found at D:\sites\AutoCut-AI-Desktop\assets\fonts\Cairo-Bold.ttf — using fallback
+2026-03-27 01:29:25 [INFO    ] AutoCut: Creating main window...
+2026-03-27 01:29:25 [INFO    ] AutoCut: Main window shown — entering event loop
+2026-03-27 01:29:50 [INFO    ] AutoCut: Script uploaded: D:/sites/AutoCut-AI-Desktop/script.txt
+2026-03-27 01:29:53 [INFO    ] AutoCut: Starting prompt generation — reset=True, limit=10
+2026-03-27 01:30:01 [INFO    ] AutoCut: Step finished successfully [pbar_prompts]
+2026-03-27 01:35:59 [INFO    ] AutoCut: Event loop exited with code 0

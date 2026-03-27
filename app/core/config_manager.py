@@ -118,6 +118,7 @@ def parse_duration(duration_str: str) -> int:
 
 
 def validate_config(config: dict) -> list:
+    """Full validation — requires all fields (for Mapper + Video Builder)."""
     errors = []
     if not config.get("groq_api_key"):
         errors.append("Groq API key is missing.")
@@ -126,6 +127,38 @@ def validate_config(config: dict) -> list:
     script_path = config.get("script_path", "")
     if not script_path or not Path(script_path).exists():
         errors.append(f"Script file not found: {script_path}")
+    audio_path = config.get("audio_path", "")
+    if not audio_path or not Path(audio_path).exists():
+        errors.append(f"Audio file not found: {audio_path}")
+    return errors
+
+
+def validate_config_step1(config: dict) -> list:
+    """
+    Validation for Step 1 — Prompt Generation.
+    Only needs: Groq API key + script file.
+    Audio is NOT required at this stage.
+    """
+    errors = []
+    if not config.get("groq_api_key"):
+        errors.append("Groq API key is missing.")
+    script_path = config.get("script_path", "")
+    if not script_path or not Path(script_path).exists():
+        errors.append(f"Script file not found: {script_path}")
+    return errors
+
+
+def validate_config_pipeline(config: dict) -> list:
+    """
+    Validation for pipeline steps (AI Mapper + Video Builder).
+    Needs: API keys + audio file.
+    Images folder is checked at runtime (uploaded by user).
+    """
+    errors = []
+    if not config.get("groq_api_key"):
+        errors.append("Groq API key is missing.")
+    if not config.get("hf_api_key"):
+        errors.append("HuggingFace API key is missing.")
     audio_path = config.get("audio_path", "")
     if not audio_path or not Path(audio_path).exists():
         errors.append(f"Audio file not found: {audio_path}")

@@ -13,8 +13,13 @@ from PySide6.QtWidgets import (
 from app.i18n import lang_manager, t
 from app.gui.theme import get_colors
 from app.gui.widgets import make_separator, make_badge, NoScrollSpinBox
-from app.core.config_manager import load_config, load_style, validate_config, BASE_DIR
+from app.core.config_manager import (
+    load_config, load_style, validate_config,
+    validate_config_step1, validate_config_pipeline,
+    BASE_DIR,
+)
 from app.logger import logger
+from app.gui.panels.image_generation_step import ImageGenerationStep
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -76,6 +81,7 @@ class PipelinePanel(QWidget):
 
         layout.addWidget(self._header_section())
         layout.addWidget(self._preparation_section())   # Section A
+        layout.addWidget(self._image_generation_section())  # Section C – Step 2
         layout.addWidget(self._pipeline_section())      # Section B
         layout.addWidget(self._export_section())
         layout.addWidget(self._log_section())
@@ -179,6 +185,13 @@ class PipelinePanel(QWidget):
         content_row.addLayout(opts_col, 3)
         root.addLayout(content_row)
         return card
+
+    # ── Section C: Image Generation (Step 2) ──────────────────────────────────
+
+    def _image_generation_section(self) -> QWidget:
+        """Wrap ImageGenerationStep inside a labelled container card."""
+        self._image_gen_step = ImageGenerationStep()
+        return self._image_gen_step
 
     # ── Section B: Pipeline (images + audio + mapper + builder) ───────────────
 
@@ -848,7 +861,8 @@ class PipelinePanel(QWidget):
     def _run_step1(self):
         """Run prompt generator (Preparation section)."""
         try:
-            errors = self._validate()
+            # Step 1 only needs script + Groq key — NO audio required
+            errors = validate_config_step1(load_config())
             if errors:
                 QMessageBox.warning(self, t("config_errors"), "\n".join(errors))
                 return
@@ -873,7 +887,7 @@ class PipelinePanel(QWidget):
     def _run_step3(self):
         """Run AI Mapper (pipeline step 1)."""
         try:
-            errors = self._validate()
+            errors = validate_config_pipeline(load_config())
             if errors:
                 QMessageBox.warning(self, t("config_errors"), "\n".join(errors))
                 return
@@ -895,7 +909,7 @@ class PipelinePanel(QWidget):
     def _run_step4(self):
         """Run Video Builder (pipeline step 2)."""
         try:
-            errors = self._validate()
+            errors = validate_config_pipeline(load_config())
             if errors:
                 QMessageBox.warning(self, t("config_errors"), "\n".join(errors))
                 return
@@ -917,7 +931,7 @@ class PipelinePanel(QWidget):
     def _run_all(self):
         """Run AI Mapper then Video Builder sequentially."""
         try:
-            errors = self._validate()
+            errors = validate_config_pipeline(load_config())
             if errors:
                 QMessageBox.warning(self, t("config_errors"), "\n".join(errors))
                 return
@@ -962,7 +976,11 @@ class PipelinePanel(QWidget):
     # ─────────────────────────────────────────────────────────────────────────
 
     def refresh(self):
-        pass
+        if hasattr(self, "_image_gen_step"):
+            try:
+                self._image_gen_step.refresh()
+            except Exception as e:
+                logger.error(f"ImageGenerationStep.refresh error: {e}")
 
     def retranslate(self):
         for key, widget in self._translatable.items():

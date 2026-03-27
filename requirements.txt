@@ -7,3 +7,4 @@ huggingface_hub
 PySide6
 numpy
 requests
+websocket-client
