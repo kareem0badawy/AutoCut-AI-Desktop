@@ -1,58 +1,215 @@
-2026-03-27 22:09:23 [INFO    ] AutoCut: ============================================================
-2026-03-27 22:09:23 [INFO    ] AutoCut: AutoCut starting up
-2026-03-27 22:09:23 [INFO    ] AutoCut: Python 3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]
-2026-03-27 22:09:23 [INFO    ] AutoCut: Platform: win32
-2026-03-27 22:09:23 [WARNING ] AutoCut: Cairo font not found at D:\sites\AutoCut-AI-Desktop\assets\fonts\Cairo-Bold.ttf — using fallback
-2026-03-27 22:09:23 [INFO    ] AutoCut: Creating main window...
-2026-03-27 22:09:24 [INFO    ] AutoCut: Main window shown — entering event loop
-2026-03-27 22:11:15 [INFO    ] AutoCut: [AutoFlow] ℹ️  وُجدت 10 صورة من جلسة سابقة — عرضها للاختيار...
-2026-03-27 22:11:38 [INFO    ] AutoCut: [AutoFlow] ℹ️  وُجدت 10 صورة من جلسة سابقة — عرضها للاختيار...
-2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] scene_001.png → scene_1.png
-2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] scene_002.png → scene_2.png
-2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] scene_003.png → scene_3.png
-2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] scene_004.png → scene_4.png
-2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] scene_005.png → scene_5.png
-2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] scene_006.png → scene_6.png
-2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] scene_007.png → scene_7.png
-2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] scene_008.png → scene_8.png
-2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] scene_009.png → scene_9.png
-2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] scene_010.png → scene_10.png
-2026-03-27 22:11:59 [INFO    ] AutoCut: [Handoff] Done — 10 images → D:\sites\AutoCut-AI-Desktop\session\images
-2026-03-27 22:11:59 [INFO    ] AutoCut: [PipelinePanel] Received 10 images from Step 2 → D:\sites\AutoCut-AI-Desktop\session\images
-2026-03-27 22:12:09 [INFO    ] AutoCut: Audio uploaded: D:/sites/AutoCut-AI-Desktop/source/audio/The Only 6 Assets That Actually Survive Economic C.MP3
-2026-03-27 22:12:12 [CRITICAL] AutoCut: _run_step3 CRASH: [WinError 2] The system cannot find the file specified
-Traceback (most recent call last):
-  File "D:\sites\AutoCut-AI-Desktop\app\gui\panels\pipeline_panel.py", line 921, in _run_step3
-    cfg = self._prepare_session_cfg(load_config())
-  File "D:\sites\AutoCut-AI-Desktop\app\gui\panels\pipeline_panel.py", line 872, in _prepare_session_cfg
-    shutil.copy2(str(img_path), str(dest))
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\DELL\AppData\Local\Python\pythoncore-3.14-64\Lib\shutil.py", line 514, in copy2
-    _winapi.CopyFile2(src_, dst_, flags)
-    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+2026-03-27 23:36:37 [INFO    ] AutoCut: ============================================================
+2026-03-27 23:36:37 [INFO    ] AutoCut: AutoCut starting up
+2026-03-27 23:36:37 [INFO    ] AutoCut: Python 3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]
+2026-03-27 23:36:37 [INFO    ] AutoCut: Platform: win32
+2026-03-27 23:36:37 [WARNING ] AutoCut: Cairo font not found at D:\sites\AutoCut-AI-Desktop\assets\fonts\Cairo-Bold.ttf — using fallback
+2026-03-27 23:36:37 [INFO    ] AutoCut: Creating main window...
+2026-03-27 23:36:37 [INFO    ] AutoCut: Main window shown — entering event loop
+2026-03-27 23:36:54 [INFO    ] AutoCut: [ImageIntake] Scanned 10 images from C:\Users\DELL\Downloads\AutoCut\Flow
+2026-03-27 23:36:56 [INFO    ] AutoCut: [ImageIntake] Scanned 10 images from C:\Users\DELL\Downloads\AutoCut\Flow
+2026-03-27 23:37:12 [INFO    ] AutoCut: 🔗  Chrome يعمل على المنفذ 9222 — الاتصال بالجلسة الحالية...
+2026-03-27 23:37:16 [INFO    ] AutoCut: ✅  CDP متصل بنجاح.
+2026-03-27 23:37:22 [INFO    ] AutoCut: [ChromeDL] img 1/12: saved ok
+2026-03-27 23:37:26 [INFO    ] AutoCut: [ChromeDL] img 2/12: saved ok
+2026-03-27 23:37:29 [INFO    ] AutoCut: [ChromeDL] img 3/12: saved ok
+2026-03-27 23:37:32 [INFO    ] AutoCut: [ChromeDL] img 4/12: saved ok
+2026-03-27 23:37:35 [INFO    ] AutoCut: [ChromeDL] img 5/12: saved ok
+2026-03-27 23:37:39 [INFO    ] AutoCut: [ChromeDL] img 6/12: saved ok
+2026-03-27 23:37:42 [INFO    ] AutoCut: [ChromeDL] img 7/12: saved ok
+2026-03-27 23:37:46 [INFO    ] AutoCut: [ChromeDL] img 8/12: saved ok
+2026-03-27 23:37:49 [INFO    ] AutoCut: [ChromeDL] img 9/12: saved ok
+2026-03-27 23:37:52 [INFO    ] AutoCut: [ChromeDL] img 10/12: saved ok
+2026-03-27 23:37:55 [INFO    ] AutoCut: [ChromeDL] img 11/12: saved ok
+2026-03-27 23:37:56 [WARNING ] AutoCut: [ChromeDL] img 12: download_image failed, trying screenshot...
+2026-03-27 23:37:57 [INFO    ] AutoCut: [ChromeDL] img 12/12: saved ok
+2026-03-27 23:54:26 [INFO    ] AutoCut: Event loop exited with code 0
+2026-03-27 23:54:55 [INFO    ] AutoCut: ============================================================
+2026-03-27 23:54:55 [INFO    ] AutoCut: AutoCut starting up
+2026-03-27 23:54:55 [INFO    ] AutoCut: Python 3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]
+2026-03-27 23:54:55 [INFO    ] AutoCut: Platform: win32
+2026-03-27 23:54:55 [WARNING ] AutoCut: Cairo font not found at D:\sites\AutoCut-AI-Desktop\assets\fonts\Cairo-Bold.ttf — using fallback
+2026-03-27 23:54:55 [INFO    ] AutoCut: Creating main window...
+2026-03-27 23:54:56 [INFO    ] AutoCut: Main window shown — entering event loop
+2026-03-27 23:54:59 [INFO    ] AutoCut: [ImageIntake] Scanned 12 images from C:\Users\DELL\Downloads\AutoCut\Flow
+2026-03-27 23:55:05 [INFO    ] AutoCut: 🔗  Chrome يعمل على المنفذ 9222 — الاتصال بالجلسة الحالية...
+2026-03-27 23:55:09 [INFO    ] AutoCut: ✅  CDP متصل بنجاح.
+2026-03-27 23:56:00 [INFO    ] AutoCut: 🔗  Chrome يعمل على المنفذ 9222 — الاتصال بالجلسة الحالية...
+2026-03-27 23:56:04 [INFO    ] AutoCut: ✅  CDP متصل بنجاح.
+2026-03-27 23:56:11 [INFO    ] AutoCut: [ChromeDL] img 1/16: saved ok
+2026-03-27 23:56:15 [INFO    ] AutoCut: [ChromeDL] img 2/16: saved ok
+2026-03-27 23:56:19 [INFO    ] AutoCut: [ChromeDL] img 3/16: saved ok
+2026-03-27 23:56:22 [INFO    ] AutoCut: [ChromeDL] img 4/16: saved ok
+2026-03-27 23:56:26 [INFO    ] AutoCut: [ChromeDL] img 5/16: saved ok
+2026-03-27 23:56:30 [INFO    ] AutoCut: [ChromeDL] img 6/16: saved ok
+2026-03-27 23:56:33 [INFO    ] AutoCut: [ChromeDL] img 7/16: saved ok
+2026-03-27 23:56:37 [INFO    ] AutoCut: [ChromeDL] img 8/16: saved ok
+2026-03-27 23:56:41 [INFO    ] AutoCut: [ChromeDL] img 9/16: saved ok
+2026-03-27 23:56:45 [INFO    ] AutoCut: [ChromeDL] img 10/16: saved ok
+2026-03-27 23:56:49 [INFO    ] AutoCut: [ChromeDL] img 11/16: saved ok
+2026-03-27 23:56:49 [WARNING ] AutoCut: [ChromeDL] img 12: download_image failed, trying screenshot...
+2026-03-27 23:56:50 [INFO    ] AutoCut: [ChromeDL] img 12/16: saved ok
+2026-03-27 23:56:50 [WARNING ] AutoCut: [ChromeDL] img 13: download_image failed, trying screenshot...
+2026-03-27 23:56:52 [INFO    ] AutoCut: [ChromeDL] img 13/16: saved ok
+2026-03-27 23:56:52 [WARNING ] AutoCut: [ChromeDL] img 14: download_image failed, trying screenshot...
+2026-03-27 23:56:53 [INFO    ] AutoCut: [ChromeDL] img 14/16: saved ok
+2026-03-27 23:56:53 [WARNING ] AutoCut: [ChromeDL] img 15: download_image failed, trying screenshot...
+2026-03-27 23:56:54 [INFO    ] AutoCut: [ChromeDL] img 15/16: saved ok
+2026-03-27 23:56:54 [WARNING ] AutoCut: [ChromeDL] img 16: download_image failed, trying screenshot...
+2026-03-27 23:56:55 [INFO    ] AutoCut: [ChromeDL] img 16/16: saved ok
+2026-03-28 00:18:11 [INFO    ] AutoCut: ============================================================
+2026-03-28 00:18:11 [INFO    ] AutoCut: AutoCut starting up
+2026-03-28 00:18:11 [INFO    ] AutoCut: Python 3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]
+2026-03-28 00:18:11 [INFO    ] AutoCut: Platform: win32
+2026-03-28 00:18:11 [WARNING ] AutoCut: Cairo font not found at D:\sites\AutoCut-AI-Desktop\assets\fonts\Cairo-Bold.ttf — using fallback
+2026-03-28 00:18:11 [INFO    ] AutoCut: Creating main window...
+2026-03-28 00:18:11 [INFO    ] AutoCut: Main window shown — entering event loop
+2026-03-28 00:19:01 [INFO    ] AutoCut: [ImageIntake] Scanned 16 images from C:\Users\DELL\Downloads\AutoCut\Flow
+2026-03-28 00:19:07 [INFO    ] AutoCut: 🔗  Chrome يعمل على المنفذ 9222 — الاتصال بالجلسة الحالية...
+2026-03-28 00:19:11 [INFO    ] AutoCut: ✅  CDP متصل بنجاح.
+2026-03-28 00:19:57 [INFO    ] AutoCut: 🔗  Chrome يعمل على المنفذ 9222 — الاتصال بالجلسة الحالية...
+2026-03-28 00:20:01 [INFO    ] AutoCut: ✅  CDP متصل بنجاح.
+2026-03-28 00:20:08 [INFO    ] AutoCut: [ChromeDL] img 1/10: saved ok
+2026-03-28 00:20:12 [INFO    ] AutoCut: [ChromeDL] img 2/10: saved ok
+2026-03-28 00:20:17 [INFO    ] AutoCut: [ChromeDL] img 3/10: saved ok
+2026-03-28 00:20:22 [INFO    ] AutoCut: [ChromeDL] img 4/10: saved ok
+2026-03-28 00:20:26 [INFO    ] AutoCut: [ChromeDL] img 5/10: saved ok
+2026-03-28 00:20:30 [INFO    ] AutoCut: [ChromeDL] img 6/10: saved ok
+2026-03-28 00:20:35 [INFO    ] AutoCut: [ChromeDL] img 7/10: saved ok
+2026-03-28 00:20:40 [INFO    ] AutoCut: [ChromeDL] img 8/10: saved ok
+2026-03-28 00:20:44 [INFO    ] AutoCut: [ChromeDL] img 9/10: saved ok
+2026-03-28 00:20:49 [INFO    ] AutoCut: [ChromeDL] img 10/10: saved ok
+2026-03-28 00:30:30 [INFO    ] AutoCut: ============================================================
+2026-03-28 00:30:30 [INFO    ] AutoCut: AutoCut starting up
+2026-03-28 00:30:30 [INFO    ] AutoCut: Python 3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]
+2026-03-28 00:30:30 [INFO    ] AutoCut: Platform: win32
+2026-03-28 00:30:30 [WARNING ] AutoCut: Cairo font not found at D:\sites\AutoCut-AI-Desktop\assets\fonts\Cairo-Bold.ttf — using fallback
+2026-03-28 00:30:30 [INFO    ] AutoCut: Creating main window...
+2026-03-28 00:30:31 [INFO    ] AutoCut: Main window shown — entering event loop
+2026-03-28 00:30:33 [INFO    ] AutoCut: [ImageIntake] Scanned 16 images from C:\Users\DELL\Downloads\AutoCut\Flow
+2026-03-28 00:30:47 [INFO    ] AutoCut: 🔗  Chrome يعمل على المنفذ 9222 — الاتصال بالجلسة الحالية...
+2026-03-28 00:30:51 [INFO    ] AutoCut: ✅  CDP متصل بنجاح.
+2026-03-28 00:30:54 [INFO    ] AutoCut: [ChromeDL] Virtuoso rows: 5, total images: 10
+2026-03-28 00:30:55 [ERROR   ] AutoCut: [ChromeDL] row 1 img 1: FAILED
+2026-03-28 00:30:55 [ERROR   ] AutoCut: [ChromeDL] row 1 img 2: FAILED
+2026-03-28 00:30:56 [ERROR   ] AutoCut: [ChromeDL] row 2 img 1: FAILED
+2026-03-28 00:30:56 [ERROR   ] AutoCut: [ChromeDL] row 2 img 2: FAILED
+2026-03-28 00:30:57 [ERROR   ] AutoCut: [ChromeDL] row 3 img 1: FAILED
+2026-03-28 00:30:57 [ERROR   ] AutoCut: [ChromeDL] row 3 img 2: FAILED
+2026-03-28 00:30:59 [ERROR   ] AutoCut: [ChromeDL] row 4 img 1: FAILED
+2026-03-28 00:30:59 [ERROR   ] AutoCut: [ChromeDL] row 4 img 2: FAILED
+2026-03-28 00:31:00 [ERROR   ] AutoCut: [ChromeDL] row 5 img 1: FAILED
+2026-03-28 00:31:00 [ERROR   ] AutoCut: [ChromeDL] row 5 img 2: FAILED
+2026-03-28 00:31:04 [INFO    ] AutoCut: 🔗  Chrome يعمل على المنفذ 9222 — الاتصال بالجلسة الحالية...
+2026-03-28 00:31:08 [INFO    ] AutoCut: ✅  CDP متصل بنجاح.
+2026-03-28 00:31:10 [INFO    ] AutoCut: [ChromeDL] Virtuoso rows: 5, total images: 14
+2026-03-28 00:31:11 [ERROR   ] AutoCut: [ChromeDL] row 1 img 1: FAILED
+2026-03-28 00:31:11 [ERROR   ] AutoCut: [ChromeDL] row 1 img 2: FAILED
+2026-03-28 00:31:13 [ERROR   ] AutoCut: [ChromeDL] row 2 img 1: FAILED
+2026-03-28 00:31:13 [ERROR   ] AutoCut: [ChromeDL] row 2 img 2: FAILED
+2026-03-28 00:31:14 [ERROR   ] AutoCut: [ChromeDL] row 3 img 1: FAILED
+2026-03-28 00:31:14 [ERROR   ] AutoCut: [ChromeDL] row 3 img 2: FAILED
+2026-03-28 00:31:15 [ERROR   ] AutoCut: [ChromeDL] row 4 img 1: FAILED
+2026-03-28 00:31:15 [ERROR   ] AutoCut: [ChromeDL] row 4 img 2: FAILED
+2026-03-28 00:31:16 [ERROR   ] AutoCut: [ChromeDL] row 5 img 1: FAILED
+2026-03-28 00:31:16 [ERROR   ] AutoCut: [ChromeDL] row 5 img 2: FAILED
+2026-03-28 00:32:05 [INFO    ] AutoCut: ============================================================
+2026-03-28 00:32:05 [INFO    ] AutoCut: AutoCut starting up
+2026-03-28 00:32:05 [INFO    ] AutoCut: Python 3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]
+2026-03-28 00:32:05 [INFO    ] AutoCut: Platform: win32
+2026-03-28 00:32:05 [WARNING ] AutoCut: Cairo font not found at D:\sites\AutoCut-AI-Desktop\assets\fonts\Cairo-Bold.ttf — using fallback
+2026-03-28 00:32:05 [INFO    ] AutoCut: Creating main window...
+2026-03-28 00:32:06 [INFO    ] AutoCut: Main window shown — entering event loop
+2026-03-28 00:32:08 [INFO    ] AutoCut: [ImageIntake] Scanned 16 images from C:\Users\DELL\Downloads\AutoCut\Flow
+2026-03-28 00:32:13 [INFO    ] AutoCut: 🔗  Chrome يعمل على المنفذ 9222 — الاتصال بالجلسة الحالية...
+2026-03-28 00:32:17 [INFO    ] AutoCut: ✅  CDP متصل بنجاح.
+2026-03-28 00:32:25 [INFO    ] AutoCut: [ChromeDL] img 1/14: saved ok
+2026-03-28 00:32:29 [INFO    ] AutoCut: [ChromeDL] img 2/14: saved ok
+2026-03-28 00:32:34 [INFO    ] AutoCut: [ChromeDL] img 3/14: saved ok
+2026-03-28 00:32:38 [INFO    ] AutoCut: [ChromeDL] img 4/14: saved ok
+2026-03-28 00:32:43 [INFO    ] AutoCut: [ChromeDL] img 5/14: saved ok
+2026-03-28 00:32:47 [INFO    ] AutoCut: [ChromeDL] img 6/14: saved ok
+2026-03-28 00:32:52 [INFO    ] AutoCut: [ChromeDL] img 7/14: saved ok
+2026-03-28 00:32:57 [INFO    ] AutoCut: [ChromeDL] img 8/14: saved ok
+2026-03-28 00:33:01 [INFO    ] AutoCut: [ChromeDL] img 9/14: saved ok
+2026-03-28 00:33:06 [INFO    ] AutoCut: [ChromeDL] img 10/14: saved ok
+2026-03-28 00:33:06 [WARNING ] AutoCut: [ChromeDL] img 11: download_image failed, trying screenshot...
+2026-03-28 00:33:08 [INFO    ] AutoCut: [ChromeDL] img 11/14: saved ok
+2026-03-28 00:33:08 [WARNING ] AutoCut: [ChromeDL] img 12: download_image failed, trying screenshot...
+2026-03-28 00:33:09 [INFO    ] AutoCut: [ChromeDL] img 12/14: saved ok
+2026-03-28 00:33:09 [WARNING ] AutoCut: [ChromeDL] img 13: download_image failed, trying screenshot...
+2026-03-28 00:33:10 [INFO    ] AutoCut: [ChromeDL] img 13/14: saved ok
+2026-03-28 00:33:10 [WARNING ] AutoCut: [ChromeDL] img 14: download_image failed, trying screenshot...
+2026-03-28 00:33:11 [INFO    ] AutoCut: [ChromeDL] img 14/14: saved ok
+2026-03-28 00:33:53 [INFO    ] AutoCut: [Handoff] flow_001.png → scene_1.png
+2026-03-28 00:33:53 [INFO    ] AutoCut: [Handoff] flow_004.png → scene_2.png
+2026-03-28 00:33:53 [INFO    ] AutoCut: [Handoff] flow_005.png → scene_3.png
+2026-03-28 00:33:53 [INFO    ] AutoCut: [Handoff] flow_008.png → scene_4.png
+2026-03-28 00:33:53 [INFO    ] AutoCut: [Handoff] flow_009.png → scene_5.png
+2026-03-28 00:33:53 [INFO    ] AutoCut: [Handoff] flow_011.png → scene_6.png
+2026-03-28 00:33:53 [INFO    ] AutoCut: [Handoff] flow_014.png → scene_7.png
+2026-03-28 00:33:53 [INFO    ] AutoCut: [Handoff] flow_008.png → scene_8.png
+2026-03-28 00:33:53 [INFO    ] AutoCut: [Handoff] flow_009.png → scene_9.png
+2026-03-28 00:33:53 [INFO    ] AutoCut: [Handoff] flow_010.png → scene_10.png
+2026-03-28 00:33:53 [INFO    ] AutoCut: [Handoff] Done — 10 images → D:\sites\AutoCut-AI-Desktop\session\images
+2026-03-28 00:33:53 [INFO    ] AutoCut: [PipelinePanel] Received 10 images from Step 2 → D:\sites\AutoCut-AI-Desktop\session\images
+2026-03-28 00:34:07 [INFO    ] AutoCut: Audio uploaded: D:/sites/AutoCut-AI-Desktop/source/audio/The Only 6 Assets That Actually Survive Economic C.MP3
+2026-03-28 00:34:19 [INFO    ] AutoCut: Session images already in place: D:\sites\AutoCut-AI-Desktop\session\images (10 files)
+2026-03-28 00:34:19 [INFO    ] AutoCut: Session images folder: D:\sites\AutoCut-AI-Desktop\session\images (10 files)
+2026-03-28 00:34:19 [INFO    ] AutoCut: Session audio: D:\sites\AutoCut-AI-Desktop\source\audio\The Only 6 Assets That Actually Survive Economic C.MP3
+2026-03-28 00:34:19 [INFO    ] AutoCut: Starting AI Mapper | images_folder=D:\sites\AutoCut-AI-Desktop\session\images
+2026-03-28 00:34:19 [INFO    ] AutoCut: Step finished successfully [pbar_1]
+2026-03-28 00:34:22 [INFO    ] AutoCut: Session images already in place: D:\sites\AutoCut-AI-Desktop\session\images (10 files)
+2026-03-28 00:34:22 [INFO    ] AutoCut: Session images folder: D:\sites\AutoCut-AI-Desktop\session\images (10 files)
+2026-03-28 00:34:22 [INFO    ] AutoCut: Session audio: D:\sites\AutoCut-AI-Desktop\source\audio\The Only 6 Assets That Actually Survive Economic C.MP3
+2026-03-28 00:34:22 [INFO    ] AutoCut: Starting Video Builder | audio=D:\sites\AutoCut-AI-Desktop\source\audio\The Only 6 Assets That Actually Survive Economic C.MP3
+2026-03-28 00:34:24 [ERROR   ] AutoCut: Step failed [pbar_2]:
 FileNotFoundError: [WinError 2] The system cannot find the file specified
 
-2026-03-27 22:12:17 [CRITICAL] AutoCut: _run_step4 CRASH: [WinError 2] The system cannot find the file specified
 Traceback (most recent call last):
-  File "D:\sites\AutoCut-AI-Desktop\app\gui\panels\pipeline_panel.py", line 943, in _run_step4
-    cfg = self._prepare_session_cfg(load_config())
-  File "D:\sites\AutoCut-AI-Desktop\app\gui\panels\pipeline_panel.py", line 872, in _prepare_session_cfg
-    shutil.copy2(str(img_path), str(dest))
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\DELL\AppData\Local\Python\pythoncore-3.14-64\Lib\shutil.py", line 514, in copy2
-    _winapi.CopyFile2(src_, dst_, flags)
-    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "D:\sites\AutoCut-AI-Desktop\app\gui\panels\pipeline_panel.py", line 40, in run
+    self._task_fn(
+    ~~~~~~~~~~~~~^
+        log=lambda msg: self.log.emit(str(msg)),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        progress=lambda cur, total: self.progress.emit(cur, total),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\sites\AutoCut-AI-Desktop\app\gui\panels\pipeline_panel.py", line 972, in task
+    run_video_builder(cfg, log=log, progress=progress)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\sites\AutoCut-AI-Desktop\app\core\video_builder.py", line 527, in run_video_builder
+    build_video(config, log=log, progress=progress)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\sites\AutoCut-AI-Desktop\app\core\video_builder.py", line 457, in build_video
+    _frames_to_mp4(all_frames, fps, temp_path, ffmpeg, fade_duration, dur)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\sites\AutoCut-AI-Desktop\app\core\video_builder.py", line 273, in _frames_to_mp4
+    proc = subprocess.Popen(
+        cmd,
+    ...<2 lines>...
+        stderr=subprocess.PIPE,
+    )
+  File "C:\Users\DELL\AppData\Local\Python\pythoncore-3.14-64\Lib\subprocess.py", line 1038, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        pass_fds, cwd, env,
+                        ^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+                        gid, gids, uid, umask,
+                        ^^^^^^^^^^^^^^^^^^^^^^
+                        start_new_session, process_group)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\AppData\Local\Python\pythoncore-3.14-64\Lib\subprocess.py", line 1552, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+                             # no special security
+                             ^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+                             cwd,
+                             ^^^^
+                             startupinfo)
+                             ^^^^^^^^^^^^
 FileNotFoundError: [WinError 2] The system cannot find the file specified
 
-2026-03-27 22:12:21 [CRITICAL] AutoCut: _run_all CRASH: [WinError 2] The system cannot find the file specified
-Traceback (most recent call last):
-  File "D:\sites\AutoCut-AI-Desktop\app\gui\panels\pipeline_panel.py", line 965, in _run_all
-    cfg = self._prepare_session_cfg(load_config())
-  File "D:\sites\AutoCut-AI-Desktop\app\gui\panels\pipeline_panel.py", line 872, in _prepare_session_cfg
-    shutil.copy2(str(img_path), str(dest))
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\DELL\AppData\Local\Python\pythoncore-3.14-64\Lib\shutil.py", line 514, in copy2
-    _winapi.CopyFile2(src_, dst_, flags)
-    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
-FileNotFoundError: [WinError 2] The system cannot find the file specified
-
+2026-03-28 00:35:22 [INFO    ] AutoCut: Event loop exited with code 0

@@ -704,53 +704,52 @@ class ChromeCDP:
         return base64.b64decode(result.get("data", ""))
 
     def download_image_at_index(self, selector: str, index: int) -> bytes | None:
-        """
-        Download the image at position `index` within querySelectorAll(selector).
-
-        Strategy (most reliable first):
-          1. Canvas drawImage → toDataURL  (works for blob: and same-origin CDN)
-          2. fetch() → FileReader blob → base64  (works for CDN with credentials)
-          3. None  (caller should fall back to screenshot_element_at_index)
-        """
         js = f"""
         (async function() {{
             var els = document.querySelectorAll({json.dumps(selector)});
             var el  = els[{index}];
             if (!el || el.tagName !== 'IMG') return null;
 
-            // Wait for image to load
+            // Scroll into view and wait for load
+            el.scrollIntoView({{block: 'center'}});
+            await new Promise(function(resolve) {{ setTimeout(resolve, 800); }});
+
             if (!el.complete || el.naturalWidth === 0) {{
                 await new Promise(function(resolve) {{
                     el.addEventListener('load',  resolve, {{once: true}});
                     el.addEventListener('error', resolve, {{once: true}});
-                    setTimeout(resolve, 4000);
+                    setTimeout(resolve, 5000);
                 }});
             }}
 
-            // Strategy 1: canvas drawImage → PNG data URL
-            try {{
-                var nw = el.naturalWidth  || el.width  || 512;
-                var nh = el.naturalHeight || el.height || 512;
-                var canvas = document.createElement('canvas');
-                canvas.width  = nw;
-                canvas.height = nh;
-                var ctx = canvas.getContext('2d');
-                ctx.drawImage(el, 0, 0, nw, nh);
-                var data = canvas.toDataURL('image/png');
-                if (data && data.length > 100) return data;
-            }} catch(e1) {{}}
+            var src = el.src || el.getAttribute('src') || '';
+            if (!src) return null;
 
-            // Strategy 2: fetch blob → FileReader
+            // Strategy 1: fetch directly (works for CDN URLs with credentials)
             try {{
-                var src = el.src;
-                if (src) {{
-                    var resp = await fetch(src, {{credentials: 'include'}});
+                var resp = await fetch(src, {{credentials: 'include', cache: 'force-cache'}});
+                if (resp.ok) {{
                     var blob = await resp.blob();
                     return await new Promise(function(resolve) {{
                         var reader = new FileReader();
                         reader.onloadend = function() {{ resolve(reader.result); }};
                         reader.readAsDataURL(blob);
                     }});
+                }}
+            }} catch(e1) {{}}
+
+            // Strategy 2: canvas drawImage (fallback — may fail for cross-origin)
+            try {{
+                var nw = el.naturalWidth  || el.width  || 512;
+                var nh = el.naturalHeight || el.height || 512;
+                if (nw > 0 && nh > 0) {{
+                    var canvas = document.createElement('canvas');
+                    canvas.width  = nw;
+                    canvas.height = nh;
+                    var ctx = canvas.getContext('2d');
+                    ctx.drawImage(el, 0, 0, nw, nh);
+                    var data = canvas.toDataURL('image/png');
+                    if (data && data.length > 200) return data;
                 }}
             }} catch(e2) {{}}
 
@@ -765,7 +764,7 @@ class ChromeCDP:
         if result and isinstance(result, str) and result.startswith("data:"):
             _, encoded = result.split(",", 1)
             return base64.b64decode(encoded)
-        return None  # caller falls back to screenshot_element_at_index
+        return None
 
     def download_blob_image(self, selector: str) -> bytes | None:
         """

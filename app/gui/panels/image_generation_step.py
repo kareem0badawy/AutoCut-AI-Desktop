@@ -1000,7 +1000,33 @@ class ImageGenerationStep(QWidget):
                     from app.core.flow_automation import IMAGE_RESULT_SELECTORS
                     self_t.status.emit("🔌  اتصال بـ Chrome DevTools...")
                     cdp = ChromeCDP(port=9222)
-                    cdp.connect(timeout=5)
+                    # cdp.connect(timeout=5)
+                    cdp.launch()
+                    # self_t.status.emit("🔍  البحث عن الصور في الصفحة...")
+                    # best_sel, best_count = None, 0
+                    # for sel in IMAGE_RESULT_SELECTORS:
+                    #     try:
+                    #         cnt = cdp.get_result_image_count(sel)
+                    #         if cnt > best_count:
+                    #             best_sel, best_count = sel, cnt
+                    #     except Exception:
+                    #         pass
+                    # if not best_sel or best_count == 0:
+                    #     self_t.done.emit("⚠️  لم تُعثر على صور في صفحة Flow.")
+                    #     return
+                    # self_t.status.emit(f"📊  {best_count} صورة — جارٍ التحميل...")
+                    # FLOW_DIR.mkdir(parents=True, exist_ok=True)
+                    # saved = []
+                    # for i in range(best_count):
+                    #     self_t.status.emit(f"⬇️  صورة {i+1}/{best_count}...")
+                    #     img_data = cdp.download_image_at_index(best_sel, i)
+                    #     if not img_data:
+                    #         img_data = cdp.screenshot_element_at_index(best_sel, i)
+                    #     if img_data:
+                    #         sp = FLOW_DIR / f"flow_{i+1:03d}.png"
+                    #         with open(sp, "wb") as f:
+                    #             f.write(img_data)
+                    #         saved.append(sp)
                     self_t.status.emit("🔍  البحث عن الصور في الصفحة...")
                     best_sel, best_count = None, 0
                     for sel in IMAGE_RESULT_SELECTORS:
@@ -1013,22 +1039,107 @@ class ImageGenerationStep(QWidget):
                     if not best_sel or best_count == 0:
                         self_t.done.emit("⚠️  لم تُعثر على صور في صفحة Flow.")
                         return
+
+                    # ── Scroll page to load all lazy images ──────────────────────
+                    self_t.status.emit("📜  تحميل كل الصور (scroll)...")
+                    try:
+                        cdp.evaluate("""
+                            (async function() {
+                                const delay = ms => new Promise(r => setTimeout(r, ms));
+
+                                // Virtuoso scroller — scroll inside the virtual list container
+                                const scroller = document.querySelector('[data-virtuoso-scroller="true"]')
+                                            || document.documentElement;
+
+                                let lastHeight = 0;
+                                for (let attempt = 0; attempt < 30; attempt++) {
+                                    scroller.scrollTop = scroller.scrollHeight;
+                                    await delay(1000);
+
+                                    // Wait for all visible images to load
+                                    const imgs = document.querySelectorAll('img[alt="صورة تم إنشاؤها"]');
+                                    await Promise.all(Array.from(imgs).map(img =>
+                                        img.complete ? Promise.resolve() :
+                                        new Promise(r => {
+                                            img.addEventListener('load',  r, {once: true});
+                                            img.addEventListener('error', r, {once: true});
+                                            setTimeout(r, 3000);
+                                        })
+                                    ));
+
+                                    if (scroller.scrollHeight === lastHeight) break;
+                                    lastHeight = scroller.scrollHeight;
+                                }
+
+                                // Scroll back to top
+                                scroller.scrollTop = 0;
+                                await delay(500);
+                            })()
+                        """, await_promise=True)
+                    except Exception:
+                        pass
+
+                    # Re-count after scroll
+                    for sel in IMAGE_RESULT_SELECTORS:
+                        try:
+                            cnt = cdp.get_result_image_count(sel)
+                            if cnt > best_count:
+                                best_sel, best_count = sel, cnt
+                        except Exception:
+                            pass
+
+                    # Re-count after scroll (lazy images now visible)
+                    for sel in IMAGE_RESULT_SELECTORS:
+                        try:
+                            cnt = cdp.get_result_image_count(sel)
+                            if cnt > best_count:
+                                best_sel, best_count = sel, cnt
+                        except Exception:
+                            pass
+
                     self_t.status.emit(f"📊  {best_count} صورة — جارٍ التحميل...")
                     FLOW_DIR.mkdir(parents=True, exist_ok=True)
                     saved = []
                     for i in range(best_count):
                         self_t.status.emit(f"⬇️  صورة {i+1}/{best_count}...")
+                        # Scroll element into view before downloading
+                        try:
+                            cdp.evaluate(f"""
+                                (async function() {{
+                                    const el = document.querySelectorAll({repr(best_sel)})[{i}];
+                                    if (!el) return;
+                                    el.scrollIntoView({{block:'center'}});
+                                    await new Promise(r => setTimeout(r, 800));
+                                    // Wait for image inside to load
+                                    const img = el.tagName === 'IMG' ? el : el.querySelector('img');
+                                    if (img && !img.complete) {{
+                                        await new Promise(r => {{
+                                            img.addEventListener('load',  r, {{once: true}});
+                                            img.addEventListener('error', r, {{once: true}});
+                                            setTimeout(r, 3000);
+                                        }});
+                                    }}
+                                }})()
+                            """, await_promise=True)
+                        except Exception:
+                            pass
                         img_data = cdp.download_image_at_index(best_sel, i)
                         if not img_data:
+                            logger.warning(f"[ChromeDL] img {i+1}: download_image failed, trying screenshot...")
                             img_data = cdp.screenshot_element_at_index(best_sel, i)
                         if img_data:
+                            logger.info(f"[ChromeDL] img {i+1}/{best_count}: saved ok")
                             sp = FLOW_DIR / f"flow_{i+1:03d}.png"
                             with open(sp, "wb") as f:
                                 f.write(img_data)
                             saved.append(sp)
+                        else:
+                            logger.error(f"[ChromeDL] img {i+1}/{best_count}: FAILED both methods")
                     cdp.close()
                     self_t.done.emit(saved)
                 except Exception as exc:
+                    import traceback
+                    logger.error(f"[ChromeDL] CRASH: {exc}\n{traceback.format_exc()}")
                     self_t.done.emit(f"❌  {exc}")
 
         t = _DlThread(parent=self)
@@ -1471,8 +1582,18 @@ class ImageGenerationStep(QWidget):
         ok_btn.setFixedHeight(38)
         ok_btn.setMinimumWidth(220)
         ok_btn.setEnabled(False)
+        
+
+        ok_simple = QPushButton("✅  موافق")
+        ok_simple.setObjectName("primary")
+        ok_simple.setFixedHeight(36)
+        ok_simple.setFixedWidth(100)
+        # ok_simple.clicked.connect(lambda: ok_btn.click())
+        ok_simple.clicked.connect(lambda: on_confirm())
+
 
         btn_row.addWidget(cancel_btn2)
+        btn_row.addWidget(ok_simple)        # ← زرار موافق جنب إلغاء مباشرة
         btn_row.addWidget(select_all_btn)
         btn_row.addStretch()
         btn_row.addWidget(ok_btn)
