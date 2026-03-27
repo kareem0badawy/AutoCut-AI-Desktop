@@ -269,7 +269,7 @@ class ChromeCDP:
                 raise ChromeCDPError(f"CDP send فشل بعد إعادة المحاولة: {e}") from e
         raise ChromeCDPError(f"CDP send فشل بعد كل المحاولات")
 
-    def evaluate(self, js: str, await_promise: bool = False) -> Any:
+    def evaluate(self, js: str, await_promise: bool = False, timeout_ms: int = 8000) -> Any:
         """Execute JavaScript in the page context and return the value."""
         result = self._send(
             "Runtime.evaluate",
@@ -277,7 +277,7 @@ class ChromeCDP:
                 "expression": js,
                 "returnByValue": True,
                 "awaitPromise": await_promise,
-                "timeout": 8000,
+                "timeout": timeout_ms,
             },
         )
         if result.get("exceptionDetails"):
@@ -285,6 +285,7 @@ class ChromeCDP:
             raise ChromeCDPError(f"JS exception: {msg}")
         val = result.get("result", {})
         return val.get("value")
+
 
     # ── Navigation ────────────────────────────────────────────────────────────
 
@@ -801,6 +802,218 @@ class ChromeCDP:
         except Exception:
             pass
         return None
+
+    def collect_all_flow_image_urls(self) -> list:
+        """
+        Scroll through Virtuoso virtual list and collect ALL image URLs.
+
+        Strategy:
+          1. Find the Virtuoso scroller container.
+          2. Scroll to TOP first (to ensure we start from the beginning).
+          3. Scroll DOWNWARD incrementally — wait after each step for DOM to update.
+          4. After each scroll step, collect visible img srcs.
+          5. Continue until scrollHeight stops growing.
+          6. Return de-duplicated list of URLs in discovery order.
+
+        NOTE: Flow shows newest images at the BOTTOM, so we scroll down
+        to discover all images. The order returned is top→bottom (oldest first
+        at top, newest at bottom).
+        """
+        try:
+            result = self.evaluate("""
+            (async function() {
+                const delay = ms => new Promise(r => setTimeout(r, ms));
+
+                // Find the Virtuoso scroller
+                const scroller = document.querySelector('[data-virtuoso-scroller="true"]')
+                               || document.querySelector('[data-testid="virtuoso-scroller"]')
+                               || document.documentElement;
+
+                // Scroll to very top first
+                scroller.scrollTop = 0;
+                await delay(800);
+
+                const seen = new Set();
+                const ordered = [];
+
+                function harvestCurrent() {
+                    // Collect all img elements that are result images
+                    const imgs = document.querySelectorAll('img[alt="صورة تم إنشاؤها"]');
+                    imgs.forEach(img => {
+                        const src = img.src || img.getAttribute('src') || '';
+                        if (src && !seen.has(src)) {
+                            seen.add(src);
+                            ordered.push(src);
+                        }
+                    });
+                }
+
+                // Initial harvest at top
+                harvestCurrent();
+
+                // Scroll down incrementally
+                let prevHeight = -1;
+                let stuckCount = 0;
+                const STEP = Math.max(200, scroller.clientHeight * 0.7);
+
+                for (let i = 0; i < 80; i++) {
+                    scroller.scrollTop += STEP;
+                    await delay(600);   // let Virtuoso render new rows
+
+                    harvestCurrent();
+
+                    const sh = scroller.scrollHeight;
+                    if (sh === prevHeight) {
+                        stuckCount++;
+                        if (stuckCount >= 4) break;  // truly end of list
+                    } else {
+                        stuckCount = 0;
+                        prevHeight = sh;
+                    }
+
+                    // Also check if we've reached the bottom
+                    if (scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 5) {
+                        await delay(800);
+                        harvestCurrent();  // one final harvest
+                        break;
+                    }
+                }
+
+                // Scroll back to top for user convenience
+                scroller.scrollTop = 0;
+                await delay(300);
+
+                return ordered;
+            })()
+            """, await_promise=True)
+            if isinstance(result, list):
+                return result
+            return []
+        except Exception as exc:
+            logger.warning(f"[CDP] collect_all_flow_image_urls failed: {exc}")
+            return []
+
+    def download_url_directly(self, url: str) -> bytes | None:
+        """
+        Download an image URL via in-browser canvas capture.
+
+        Why canvas instead of fetch:
+          - Flow image URLs are tRPC redirect endpoints (media.getMediaUrlRedirect)
+            that redirect to third-party CDNs which don't send CORS headers.
+          - fetch() with credentials fails due to CORS on the final CDN URL.
+          - img.onload works for any URL (no CORS needed) — the browser renders it.
+          - We draw the loaded img to canvas WITHOUT crossOrigin attribute.
+            The canvas becomes "tainted" but toDataURL still works in most cases.
+          - If SecurityError (strict CORS enforcement), we fall back to XHR blob.
+        """
+        js = f"""
+        (async function() {{
+            var src = {json.dumps(url)};
+            if (!src) return null;
+
+            // Load via img WITHOUT crossOrigin (avoids CORS preflight error).
+            // The image will load because browsers always allow img.src for any URL.
+            var img = await new Promise(function(resolve) {{
+                var i = new Image();
+                i.onload  = function() {{ resolve(i); }};
+                i.onerror = function() {{ resolve(null); }};
+                setTimeout(function() {{ resolve(null); }}, 10000);
+                i.src = src;
+            }});
+
+            if (!img || img.naturalWidth === 0) return null;
+
+            // Draw to offscreen canvas
+            var c = document.createElement('canvas');
+            c.width  = img.naturalWidth  || 1024;
+            c.height = img.naturalHeight || 1024;
+            var ctx = c.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+
+            // toDataURL may throw SecurityError if canvas is tainted by strict CORB
+            try {{
+                return c.toDataURL('image/png');
+            }} catch(secErr) {{
+                // Tainted canvas — try XHR blob approach (works if server allows)
+                return await new Promise(function(resolve) {{
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('GET', src, true);
+                    xhr.responseType = 'blob';
+                    xhr.withCredentials = true;
+                    xhr.onload = function() {{
+                        if (xhr.status >= 200 && xhr.status < 300) {{
+                            var reader = new FileReader();
+                            reader.onloadend = function() {{ resolve(reader.result); }};
+                            reader.readAsDataURL(xhr.response);
+                        }} else {{ resolve(null); }}
+                    }};
+                    xhr.onerror = function() {{ resolve(null); }};
+                    xhr.send();
+                }});
+            }}
+        }})()
+        """
+        try:
+            result = self.evaluate(js, await_promise=True, timeout_ms=30000)
+            if result and isinstance(result, str) and result.startswith("data:"):
+                _, encoded = result.split(",", 1)
+                return base64.b64decode(encoded)
+        except Exception as exc:
+            logger.debug(f"[CDP] download_url_directly failed: {exc}")
+        return None
+
+
+
+    def screenshot_url_via_element(self, url: str) -> bytes | None:
+        """
+        Fallback: inject img overlay into DOM, wait for load, capture via CDP screenshot.
+        Used when canvas is tainted (cross-origin without CORS headers).
+        Returns PNG bytes of the image rendered full-screen.
+        """
+        import time
+        try:
+            # Inject full-screen img overlay
+            self.evaluate(f"""
+            (function() {{
+                var existing = document.getElementById('__ac_dl_overlay__');
+                if (existing) existing.remove();
+                var overlay = document.createElement('div');
+                overlay.id = '__ac_dl_overlay__';
+                overlay.style.cssText = (
+                    'position:fixed;top:0;left:0;width:100vw;height:100vh;'
+                    + 'background:#000;z-index:2147483647;display:flex;'
+                    + 'align-items:center;justify-content:center;'
+                );
+                var img = document.createElement('img');
+                img.src = {json.dumps(url)};
+                img.style.cssText = 'max-width:100%;max-height:100%;object-fit:contain;';
+                overlay.appendChild(img);
+                document.body.appendChild(overlay);
+            }})()
+            """)
+            time.sleep(3)  # wait for image to load in overlay
+
+            # Capture via CDP Page.captureScreenshot
+            resp = self._send("Page.captureScreenshot", {"format": "png", "quality": 100})
+            raw_b64 = resp.get("data", "")
+            if raw_b64:
+                png_bytes = base64.b64decode(raw_b64)
+            else:
+                png_bytes = None
+
+            # Clean up overlay
+            self.evaluate(
+                "var el=document.getElementById('__ac_dl_overlay__');"
+                "if(el)el.remove();"
+            )
+            return png_bytes
+        except Exception as exc:
+            logger.debug(f"[CDP] screenshot_url_via_element failed: {exc}")
+            return None
+
+
+
+
 
     # ── Cleanup ───────────────────────────────────────────────────────────────
 

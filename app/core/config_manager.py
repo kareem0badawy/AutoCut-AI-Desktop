@@ -150,7 +150,7 @@ def validate_config_step1(config: dict) -> list:
 
 def validate_config_pipeline(config: dict) -> list:
     """
-    Validation for pipeline steps (AI Mapper + Video Builder).
+    Validation for Video Builder step ONLY.
     Needs: API keys + audio file.
     Images folder is checked at runtime (uploaded by user).
     """
@@ -162,4 +162,18 @@ def validate_config_pipeline(config: dict) -> list:
     audio_path = config.get("audio_path", "")
     if not audio_path or not Path(audio_path).exists():
         errors.append(f"Audio file not found: {audio_path}")
+    return errors
+
+
+def validate_config_ai_mapper(config: dict) -> list:
+    """
+    Validation for AI Mapper step.
+    Only needs: Groq API key + HuggingFace key.
+    Audio is NOT required for Mapper — only for Video Builder.
+    """
+    errors = []
+    if not config.get("groq_api_key"):
+        errors.append("Groq API key is missing.")
+    if not config.get("hf_api_key"):
+        errors.append("HuggingFace API key is missing.")
     return errors

@@ -15,7 +15,7 @@ from app.gui.theme import get_colors
 from app.gui.widgets import make_separator, make_badge, NoScrollSpinBox
 from app.core.config_manager import (
     load_config, load_style, validate_config,
-    validate_config_step1, validate_config_pipeline,
+    validate_config_step1, validate_config_pipeline, validate_config_ai_mapper,
     BASE_DIR,
 )
 from app.logger import logger
@@ -935,7 +935,7 @@ class PipelinePanel(QWidget):
     def _run_step3(self):
         """Run AI Mapper (pipeline step 1)."""
         try:
-            errors = validate_config_pipeline(load_config())
+            errors = validate_config_ai_mapper(load_config())
             if errors:
                 QMessageBox.warning(self, t("config_errors"), "\n".join(errors))
                 return

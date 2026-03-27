@@ -160,8 +160,17 @@ def _find_image(folders: List[Path], name: str) -> Optional[Path]:
 def _get_ffmpeg() -> str:
     """
     Find ffmpeg binary.
-    Order: shutil.which → moviepy v1 config → common paths → "ffmpeg".
+    Order: imageio_ffmpeg → shutil.which → moviepy v1 config → common paths → "ffmpeg".
     """
+    # 0. imageio_ffmpeg — bundled with the package (highest priority, always works)
+    try:
+        import imageio_ffmpeg                           # type: ignore
+        path = imageio_ffmpeg.get_ffmpeg_exe()
+        if path and os.path.exists(path):
+            return path
+    except Exception:
+        pass
+
     # 1. shutil.which — covers any PATH installation
     found = shutil.which("ffmpeg")
     if found:
