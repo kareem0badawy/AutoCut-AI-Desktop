@@ -19,3 +19,6 @@ groq_keys.txt
 __pycache__/
 *.pyc
 *.pyo
+
+
+autocut.log
