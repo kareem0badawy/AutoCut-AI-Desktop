@@ -31,8 +31,8 @@ import numpy as np
 from PIL import Image
 
 IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".webp")
-RENDER_SCALE = 1.12   # over-size render buffer — prevents black borders
-MOTION_RANGE = 0.05   # max pan = 5 % of dimension (cinematic, not aggressive)
+RENDER_SCALE = 1.10   # over-size render buffer — prevents black borders
+MOTION_RANGE = 0.04   # max pan = 4 % of dimension (cinematic, not aggressive)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -40,9 +40,12 @@ MOTION_RANGE = 0.05   # max pan = 5 % of dimension (cinematic, not aggressive)
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _lerp(a: float, b: float, t: float, dur: float) -> float:
+    """Linear interpolation with ease-out-quad to eliminate start-lag."""
     if dur <= 0:
         return b
+    # Use ease-out-quad so motion starts immediately at full speed and decelerates
     p = max(0.0, min(1.0, t / dur))
+    p = 1.0 - (1.0 - p) ** 2   # ease-out-quad: fast start, smooth end
     return a + (b - a) * p
 
 
@@ -313,6 +316,22 @@ def _frames_to_mp4(
 # Frame rendering (Ken Burns)
 # ─────────────────────────────────────────────────────────────────────────────
 
+def _cover_resize(pil_img: "Image.Image", target_w: int, target_h: int) -> "Image.Image":
+    """
+    Resize image to COVER target_w × target_h completely (no black bars).
+    Scales by the LARGER ratio so the image always fills the entire frame,
+    then center-crops to the exact target size.
+    """
+    src_w, src_h = pil_img.size
+    scale = max(target_w / src_w, target_h / src_h)
+    new_w = max(target_w, int(round(src_w * scale)))
+    new_h = max(target_h, int(round(src_h * scale)))
+    pil_img = pil_img.resize((new_w, new_h), Image.LANCZOS)
+    left = (new_w - target_w) // 2
+    top  = (new_h - target_h) // 2
+    return pil_img.crop((left, top, left + target_w, top + target_h))
+
+
 def _render_scene_frames(
     img_path: Path,
     duration: float,
@@ -323,19 +342,26 @@ def _render_scene_frames(
     """
     Pre-render all frames for one scene as numpy arrays (H×W×3 uint8).
     Each frame is computed at the correct time offset for smooth motion.
+
+    Image is cover-resized into the render buffer (rW × rH) so it always
+    fills the frame completely — zero black bars regardless of aspect ratio.
+    Ken Burns motion is then applied by cropping the W×H viewport from the
+    slightly larger render buffer, giving parallax/zoom effects.
     """
     W, H = resolution
     rW   = int(W * RENDER_SCALE)
     rH   = int(H * RENDER_SCALE)
     dur  = max(duration, 0.001)
 
-    pil = Image.open(img_path).convert("RGB").resize((rW, rH), Image.LANCZOS)
+    # Cover-fill: image fills rW×rH completely (no letterbox / pillarbox)
+    pil = _cover_resize(Image.open(img_path).convert("RGB"), rW, rH)
     buf = np.array(pil)     # shape: (rH, rW, 3)
 
     n_frames = max(1, int(round(duration * fps)))
     frames   = []
 
     for fi in range(n_frames):
+        # t uses fps-accurate time; first frame t=0 → start position instantly
         t = fi / fps
         if preset_fn is not None:
             x0, y0 = preset_fn(t, dur, rW, rH, W, H)
@@ -346,7 +372,7 @@ def _render_scene_frames(
             cx = (rW - W) // 2
             cy = (rH - H) // 2
             frame = buf[cy : cy + H, cx : cx + W]
-        frames.append(frame)
+        frames.append(frame.copy())   # .copy() prevents aliasing when buf is large
 
     return frames
 

@@ -813,11 +813,12 @@ class ChromeCDP:
           3. Scroll DOWNWARD incrementally — wait after each step for DOM to update.
           4. After each scroll step, collect visible img srcs.
           5. Continue until scrollHeight stops growing.
-          6. Return de-duplicated list of URLs in discovery order.
+          6. Return de-duplicated list of URLs reversed to oldest-first order.
 
-        NOTE: Flow shows newest images at the BOTTOM, so we scroll down
-        to discover all images. The order returned is top→bottom (oldest first
-        at top, newest at bottom).
+        NOTE: Flow shows NEWEST images at the TOP (like a chat interface), so
+        scrolling top→bottom discovers newest first.  We REVERSE the collected
+        list before returning, so index 0 = oldest/first scene,
+        index N-1 = newest/last scene.  This matches the narration order.
         """
         try:
             result = self.evaluate("""
@@ -883,6 +884,9 @@ class ChromeCDP:
                 scroller.scrollTop = 0;
                 await delay(300);
 
+                // Flow shows NEWEST at TOP, so 'ordered' is [newest...oldest].
+                // Reverse so index 0 = oldest (scene 1) → natural story order.
+                ordered.reverse();
                 return ordered;
             })()
             """, await_promise=True)
@@ -891,6 +895,21 @@ class ChromeCDP:
             return []
         except Exception as exc:
             logger.warning(f"[CDP] collect_all_flow_image_urls failed: {exc}")
+            return []
+
+    def get_cookies_for_url(self, url: str = "https://labs.google") -> list:
+        """
+        Export Chrome's cookies for *url* via CDP Network.getCookies.
+
+        Returns a list of dicts with keys: name, value, domain, path, secure, httpOnly.
+        Pass these to a requests.Session to authenticate Python downloads as the
+        logged-in Google user — no in-browser fetch/canvas needed at all.
+        """
+        try:
+            result = self._send("Network.getCookies", {"urls": [url]})
+            return result.get("cookies", [])
+        except Exception as exc:
+            logger.warning(f"[CDP] get_cookies_for_url failed: {exc}")
             return []
 
     def download_url_directly(self, url: str) -> bytes | None:

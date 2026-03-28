@@ -1,99 +1,100 @@
-2026-03-28 01:34:50 [INFO    ] AutoCut: 🔗  Chrome يعمل على المنفذ 9222 — الاتصال بالجلسة الحالية...
-2026-03-28 01:34:54 [INFO    ] AutoCut: ✅  CDP متصل بنجاح.
-2026-03-28 01:35:01 [INFO    ] AutoCut: [ChromeDL] Found 20 image URLs
-2026-03-28 01:35:01 [WARNING ] AutoCut: [ChromeDL] ✗ 1/20: failed → https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=9fd07d40-1a49-40e
-2026-03-28 01:35:02 [WARNING ] AutoCut: [ChromeDL] ✗ 2/20: failed → https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=d98c639a-7e43-47f
-2026-03-28 01:35:02 [WARNING ] AutoCut: [ChromeDL] ✗ 3/20: failed → https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=96322fdc-7035-422
-2026-03-28 01:35:03 [WARNING ] AutoCut: [ChromeDL] ✗ 4/20: failed → https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=64f8922f-fc0a-44d
-2026-03-28 01:35:04 [WARNING ] AutoCut: [ChromeDL] ✗ 5/20: failed → https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=0556dc3b-d947-432
-2026-03-28 01:35:04 [WARNING ] AutoCut: [ChromeDL] ✗ 6/20: failed → https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=ae89c99f-6a66-45c
-2026-03-28 01:35:07 [WARNING ] AutoCut: [ChromeDL] ✗ 7/20: failed → https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=2a4ad68d-dd7e-481
-2026-03-28 01:35:07 [WARNING ] AutoCut: [ChromeDL] ✗ 8/20: failed → https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=4ae23b7b-918c-4f8
-2026-03-28 01:35:08 [WARNING ] AutoCut: [ChromeDL] ✗ 9/20: failed → https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=cc66b2e1-c7eb-45d
-2026-03-28 01:35:09 [WARNING ] AutoCut: [ChromeDL] ✗ 10/20: failed → https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=028b0c49-5dd1-46d
-2026-03-28 01:35:09 [WARNING ] AutoCut: [ChromeDL] ✗ 11/20: failed → https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=8e3d7473-cde0-4cc
-2026-03-28 01:35:10 [WARNING ] AutoCut: [ChromeDL] ✗ 12/20: failed → https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=5ede98f4-ba79-4b5
-2026-03-28 01:35:11 [WARNING ] AutoCut: [ChromeDL] ✗ 13/20: failed → https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=1b2eae57-0db3-4bd
-2026-03-28 01:35:11 [WARNING ] AutoCut: [ChromeDL] ✗ 14/20: failed → https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=06ac8518-ee1d-4d4
-2026-03-28 01:35:12 [WARNING ] AutoCut: [ChromeDL] ✗ 15/20: failed → https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=485c593b-4385-4d4
-2026-03-28 01:35:13 [WARNING ] AutoCut: [ChromeDL] ✗ 16/20: failed → https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=c3871fa2-2925-4b3
-2026-03-28 01:35:13 [WARNING ] AutoCut: [ChromeDL] ✗ 17/20: failed → https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=ee1c9087-0d0d-434
-2026-03-28 01:35:14 [WARNING ] AutoCut: [ChromeDL] ✗ 18/20: failed → https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=4044eeba-7c8d-414
-2026-03-28 01:35:15 [WARNING ] AutoCut: [ChromeDL] ✗ 19/20: failed → https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=40ccf9ba-6e16-4ae
-2026-03-28 01:35:15 [WARNING ] AutoCut: [ChromeDL] ✗ 20/20: failed → https://labs.google/fx/api/trpc/media.getMediaUrlRedirect?name=7b0a7f69-28c2-439
-2026-03-28 01:43:20 [INFO    ] AutoCut: ============================================================
-2026-03-28 01:43:20 [INFO    ] AutoCut: AutoCut starting up
-2026-03-28 01:43:20 [INFO    ] AutoCut: Python 3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]
-2026-03-28 01:43:20 [INFO    ] AutoCut: Platform: win32
-2026-03-28 01:43:20 [WARNING ] AutoCut: Cairo font not found at D:\sites\AutoCut-AI-Desktop\assets\fonts\Cairo-Bold.ttf — using fallback
-2026-03-28 01:43:20 [INFO    ] AutoCut: Creating main window...
-2026-03-28 01:43:21 [INFO    ] AutoCut: Main window shown — entering event loop
-2026-03-28 01:43:34 [INFO    ] AutoCut: [ImageIntake] Scanned 16 images from C:\Users\DELL\Downloads\AutoCut\Flow
-2026-03-28 01:43:46 [INFO    ] AutoCut: 🔗  Chrome يعمل على المنفذ 9222 — الاتصال بالجلسة الحالية...
-2026-03-28 01:43:50 [INFO    ] AutoCut: ✅  CDP متصل بنجاح.
-2026-03-28 01:43:56 [INFO    ] AutoCut: [ChromeDL] Found 20 image URLs
-2026-03-28 01:43:57 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 1, trying DOM screenshot...
-2026-03-28 01:44:02 [INFO    ] AutoCut: [ChromeDL] ✓ 1/20: flow_001.png
-2026-03-28 01:44:02 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 2, trying DOM screenshot...
-2026-03-28 01:44:07 [INFO    ] AutoCut: [ChromeDL] ✓ 2/20: flow_002.png
-2026-03-28 01:44:07 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 3, trying DOM screenshot...
-2026-03-28 01:44:12 [INFO    ] AutoCut: [ChromeDL] ✓ 3/20: flow_003.png
-2026-03-28 01:44:13 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 4, trying DOM screenshot...
-2026-03-28 01:44:17 [INFO    ] AutoCut: [ChromeDL] ✓ 4/20: flow_004.png
-2026-03-28 01:44:18 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 5, trying DOM screenshot...
-2026-03-28 01:44:22 [INFO    ] AutoCut: [ChromeDL] ✓ 5/20: flow_005.png
-2026-03-28 01:44:23 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 6, trying DOM screenshot...
-2026-03-28 01:44:27 [INFO    ] AutoCut: [ChromeDL] ✓ 6/20: flow_006.png
-2026-03-28 01:44:28 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 7, trying DOM screenshot...
-2026-03-28 01:44:33 [INFO    ] AutoCut: [ChromeDL] ✓ 7/20: flow_007.png
-2026-03-28 01:44:33 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 8, trying DOM screenshot...
-2026-03-28 01:44:38 [INFO    ] AutoCut: [ChromeDL] ✓ 8/20: flow_008.png
-2026-03-28 01:44:39 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 9, trying DOM screenshot...
-2026-03-28 01:44:43 [INFO    ] AutoCut: [ChromeDL] ✓ 9/20: flow_009.png
-2026-03-28 01:44:44 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 10, trying DOM screenshot...
-2026-03-28 01:44:48 [INFO    ] AutoCut: [ChromeDL] ✓ 10/20: flow_010.png
-2026-03-28 01:44:49 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 11, trying DOM screenshot...
-2026-03-28 01:44:53 [INFO    ] AutoCut: [ChromeDL] ✓ 11/20: flow_011.png
-2026-03-28 01:44:54 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 12, trying DOM screenshot...
-2026-03-28 01:44:58 [INFO    ] AutoCut: [ChromeDL] ✓ 12/20: flow_012.png
-2026-03-28 01:44:59 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 13, trying DOM screenshot...
-2026-03-28 01:45:03 [INFO    ] AutoCut: [ChromeDL] ✓ 13/20: flow_013.png
-2026-03-28 01:45:04 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 14, trying DOM screenshot...
-2026-03-28 01:45:09 [INFO    ] AutoCut: [ChromeDL] ✓ 14/20: flow_014.png
-2026-03-28 01:45:09 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 15, trying DOM screenshot...
-2026-03-28 01:45:14 [INFO    ] AutoCut: [ChromeDL] ✓ 15/20: flow_015.png
-2026-03-28 01:45:15 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 16, trying DOM screenshot...
-2026-03-28 01:45:19 [INFO    ] AutoCut: [ChromeDL] ✓ 16/20: flow_016.png
-2026-03-28 01:45:20 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 17, trying DOM screenshot...
-2026-03-28 01:45:24 [INFO    ] AutoCut: [ChromeDL] ✓ 17/20: flow_017.png
-2026-03-28 01:45:25 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 18, trying DOM screenshot...
-2026-03-28 01:45:29 [INFO    ] AutoCut: [ChromeDL] ✓ 18/20: flow_018.png
-2026-03-28 01:45:30 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 19, trying DOM screenshot...
-2026-03-28 01:45:35 [INFO    ] AutoCut: [ChromeDL] ✓ 19/20: flow_019.png
-2026-03-28 01:45:35 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 20, trying DOM screenshot...
-2026-03-28 01:45:40 [INFO    ] AutoCut: [ChromeDL] ✓ 20/20: flow_020.png
-2026-03-28 01:46:34 [INFO    ] AutoCut: [Handoff] flow_001.png → scene_1.png
-2026-03-28 01:46:34 [INFO    ] AutoCut: [Handoff] flow_004.png → scene_2.png
-2026-03-28 01:46:34 [INFO    ] AutoCut: [Handoff] flow_005.png → scene_3.png
-2026-03-28 01:46:34 [INFO    ] AutoCut: [Handoff] flow_004.png → scene_4.png
-2026-03-28 01:46:34 [INFO    ] AutoCut: [Handoff] flow_009.png → scene_5.png
-2026-03-28 01:46:34 [INFO    ] AutoCut: [Handoff] flow_012.png → scene_6.png
-2026-03-28 01:46:34 [INFO    ] AutoCut: [Handoff] flow_014.png → scene_7.png
-2026-03-28 01:46:34 [INFO    ] AutoCut: [Handoff] flow_016.png → scene_8.png
-2026-03-28 01:46:34 [INFO    ] AutoCut: [Handoff] flow_009.png → scene_9.png
-2026-03-28 01:46:34 [INFO    ] AutoCut: [Handoff] flow_020.png → scene_10.png
-2026-03-28 01:46:34 [INFO    ] AutoCut: [Handoff] Done — 10 images → D:\sites\AutoCut-AI-Desktop\session\images
-2026-03-28 01:46:34 [INFO    ] AutoCut: [PipelinePanel] Received 10 images from Step 2 → D:\sites\AutoCut-AI-Desktop\session\images
-2026-03-28 01:47:38 [INFO    ] AutoCut: Audio uploaded: D:/sites/AutoCut-AI-Desktop/source/audio/The Only 6 Assets That Actually Survive Economic C.MP3
-2026-03-28 01:47:42 [INFO    ] AutoCut: Session images already in place: D:\sites\AutoCut-AI-Desktop\session\images (10 files)
-2026-03-28 01:47:42 [INFO    ] AutoCut: Session images folder: D:\sites\AutoCut-AI-Desktop\session\images (10 files)
-2026-03-28 01:47:42 [INFO    ] AutoCut: Session audio: D:\sites\AutoCut-AI-Desktop\source\audio\The Only 6 Assets That Actually Survive Economic C.MP3
-2026-03-28 01:47:42 [INFO    ] AutoCut: Starting AI Mapper | images_folder=D:\sites\AutoCut-AI-Desktop\session\images
-2026-03-28 01:47:42 [INFO    ] AutoCut: Step finished successfully [pbar_1]
-
-=========================
-2026-03-28 01:47:56 [INFO    ] AutoCut: Session images already in place: D:\sites\AutoCut-AI-Desktop\session\images (10 files)
-2026-03-28 01:47:56 [INFO    ] AutoCut: Session images folder: D:\sites\AutoCut-AI-Desktop\session\images (10 files)
-2026-03-28 01:47:56 [INFO    ] AutoCut: Session audio: D:\sites\AutoCut-AI-Desktop\source\audio\The Only 6 Assets That Actually Survive Economic C.MP3
-2026-03-28 01:47:56 [INFO    ] AutoCut: Starting Video Builder | audio=D:\sites\AutoCut-AI-Desktop\source\audio\The Only 6 Assets That Actually Survive Economic C.MP3
-2026-03-28 01:48:21 [INFO    ] AutoCut: Step finished successfully [pbar_2]
+2026-03-28 02:37:05 [INFO    ] AutoCut: ============================================================
+2026-03-28 02:37:05 [INFO    ] AutoCut: AutoCut starting up
+2026-03-28 02:37:05 [INFO    ] AutoCut: Python 3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]
+2026-03-28 02:37:05 [INFO    ] AutoCut: Platform: win32
+2026-03-28 02:37:05 [WARNING ] AutoCut: Cairo font not found at D:\sites\AutoCut-AI-Desktop\assets\fonts\Cairo-Bold.ttf — using fallback
+2026-03-28 02:37:05 [INFO    ] AutoCut: Creating main window...
+2026-03-28 02:37:06 [INFO    ] AutoCut: Main window shown — entering event loop
+2026-03-28 02:37:10 [INFO    ] AutoCut: [ImageIntake] Scanned 20 images from C:\Users\DELL\Downloads\AutoCut\Flow
+2026-03-28 02:37:17 [INFO    ] AutoCut: 🔗  Chrome يعمل على المنفذ 9222 — الاتصال بالجلسة الحالية...
+2026-03-28 02:37:21 [INFO    ] AutoCut: ✅  CDP متصل بنجاح.
+2026-03-28 02:37:27 [INFO    ] AutoCut: [ChromeDL] Found 20 image URLs
+2026-03-28 02:37:28 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 2, trying DOM screenshot...
+2026-03-28 02:37:28 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 3, trying DOM screenshot...
+2026-03-28 02:37:28 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 1, trying DOM screenshot...
+2026-03-28 02:38:06 [INFO    ] AutoCut: ⚠️  انقطع الاتصال بـ CDP (WebSocketTimeoutException) — إعادة الاتصال...
+2026-03-28 02:38:06 [INFO    ] AutoCut: ⚠️  انقطع الاتصال بـ CDP (JSONDecodeError) — إعادة الاتصال...
+2026-03-28 02:38:11 [INFO    ] AutoCut: ✅  CDP متصل بنجاح.
+2026-03-28 02:38:11 [INFO    ] AutoCut: ✅  CDP متصل بنجاح.
+2026-03-28 02:38:26 [DEBUG   ] AutoCut: [CDP] screenshot_url_via_element failed: CDP send فشل بعد إعادة المحاولة: Connection timed out
+2026-03-28 02:38:28 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 6, trying DOM screenshot...
+2026-03-28 02:38:28 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 4, trying DOM screenshot...
+2026-03-28 02:38:28 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 5, trying DOM screenshot...
+2026-03-28 02:39:01 [INFO    ] AutoCut: Event loop exited with code 0
+2026-03-28 02:46:39 [INFO    ] AutoCut: ============================================================
+2026-03-28 02:46:39 [INFO    ] AutoCut: AutoCut starting up
+2026-03-28 02:46:39 [INFO    ] AutoCut: Python 3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]
+2026-03-28 02:46:39 [INFO    ] AutoCut: Platform: win32
+2026-03-28 02:46:40 [WARNING ] AutoCut: Cairo font not found at D:\sites\AutoCut-AI-Desktop\assets\fonts\Cairo-Bold.ttf — using fallback
+2026-03-28 02:46:40 [INFO    ] AutoCut: Creating main window...
+2026-03-28 02:46:41 [INFO    ] AutoCut: Main window shown — entering event loop
+2026-03-28 02:46:53 [INFO    ] AutoCut: 🔗  Chrome يعمل على المنفذ 9222 — الاتصال بالجلسة الحالية...
+2026-03-28 02:46:57 [INFO    ] AutoCut: ✅  CDP متصل بنجاح.
+2026-03-28 02:47:04 [INFO    ] AutoCut: [ChromeDL] Found 20 image URLs
+2026-03-28 02:47:04 [INFO    ] AutoCut: [ChromeDL] Exported 6 cookies — CDP closed
+2026-03-28 02:47:14 [INFO    ] AutoCut: [ChromeDL] ✓ 5/20 — 3568KB
+2026-03-28 02:47:14 [INFO    ] AutoCut: [ChromeDL] ✓ 1/20 — 3614KB
+2026-03-28 02:47:14 [INFO    ] AutoCut: [ChromeDL] ✓ 2/20 — 3475KB
+2026-03-28 02:47:15 [INFO    ] AutoCut: [ChromeDL] ✓ 4/20 — 3298KB
+2026-03-28 02:47:15 [INFO    ] AutoCut: [ChromeDL] ✓ 3/20 — 3608KB
+2026-03-28 02:47:19 [INFO    ] AutoCut: [ChromeDL] ✓ 7/20 — 3410KB
+2026-03-28 02:47:20 [INFO    ] AutoCut: [ChromeDL] ✓ 6/20 — 3379KB
+2026-03-28 02:47:20 [INFO    ] AutoCut: [ChromeDL] ✓ 8/20 — 3316KB
+2026-03-28 02:47:21 [INFO    ] AutoCut: [ChromeDL] ✓ 10/20 — 3156KB
+2026-03-28 02:47:21 [INFO    ] AutoCut: [ChromeDL] ✓ 9/20 — 3354KB
+2026-03-28 02:47:25 [INFO    ] AutoCut: [ChromeDL] ✓ 11/20 — 3495KB
+2026-03-28 02:47:27 [INFO    ] AutoCut: [ChromeDL] ✓ 14/20 — 3411KB
+2026-03-28 02:47:27 [INFO    ] AutoCut: [ChromeDL] ✓ 12/20 — 3666KB
+2026-03-28 02:47:27 [INFO    ] AutoCut: [ChromeDL] ✓ 13/20 — 3678KB
+2026-03-28 02:47:28 [INFO    ] AutoCut: [ChromeDL] ✓ 15/20 — 3135KB
+2026-03-28 02:47:30 [INFO    ] AutoCut: [ChromeDL] ✓ 16/20 — 3294KB
+2026-03-28 02:47:33 [INFO    ] AutoCut: [ChromeDL] ✓ 17/20 — 3400KB
+2026-03-28 02:47:33 [INFO    ] AutoCut: [ChromeDL] ✓ 19/20 — 3684KB
+2026-03-28 02:47:34 [INFO    ] AutoCut: [ChromeDL] ✓ 18/20 — 3491KB
+2026-03-28 02:47:34 [INFO    ] AutoCut: [ChromeDL] ✓ 20/20 — 3382KB
+2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] flow_002.png → scene_1.png
+2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] flow_004.png → scene_2.png
+2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] flow_006.png → scene_3.png
+2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] flow_007.png → scene_4.png
+2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] flow_009.png → scene_5.png
+2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] flow_012.png → scene_6.png
+2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] flow_014.png → scene_7.png
+2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] flow_016.png → scene_8.png
+2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] flow_018.png → scene_9.png
+2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] flow_019.png → scene_10.png
+2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] Done — 10 images → D:\sites\AutoCut-AI-Desktop\session\images
+2026-03-28 02:48:40 [INFO    ] AutoCut: [PipelinePanel] Received 10 images from Step 2 → D:\sites\AutoCut-AI-Desktop\session\images
+2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] flow_002.png → scene_1.png
+2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] flow_004.png → scene_2.png
+2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] flow_006.png → scene_3.png
+2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] flow_007.png → scene_4.png
+2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] flow_009.png → scene_5.png
+2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] flow_012.png → scene_6.png
+2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] flow_014.png → scene_7.png
+2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] flow_016.png → scene_8.png
+2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] flow_018.png → scene_9.png
+2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] flow_019.png → scene_10.png
+2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] Done — 10 images → D:\sites\AutoCut-AI-Desktop\session\images
+2026-03-28 02:48:57 [INFO    ] AutoCut: [PipelinePanel] Received 10 images from Step 2 → D:\sites\AutoCut-AI-Desktop\session\images
+2026-03-28 02:49:05 [INFO    ] AutoCut: Audio uploaded: D:/sites/AutoCut-AI-Desktop/source/audio/The Only 6 Assets That Actually Survive Economic C.MP3
+2026-03-28 02:49:09 [INFO    ] AutoCut: Session images already in place: D:\sites\AutoCut-AI-Desktop\session\images (10 files)
+2026-03-28 02:49:09 [INFO    ] AutoCut: Session images folder: D:\sites\AutoCut-AI-Desktop\session\images (10 files)
+2026-03-28 02:49:09 [INFO    ] AutoCut: Session audio: D:\sites\AutoCut-AI-Desktop\source\audio\The Only 6 Assets That Actually Survive Economic C.MP3
+2026-03-28 02:49:09 [INFO    ] AutoCut: Starting AI Mapper | images_folder=D:\sites\AutoCut-AI-Desktop\session\images
+2026-03-28 02:49:09 [INFO    ] AutoCut: Step finished successfully [pbar_1]
+2026-03-28 02:49:17 [INFO    ] AutoCut: Session images already in place: D:\sites\AutoCut-AI-Desktop\session\images (10 files)
+2026-03-28 02:49:17 [INFO    ] AutoCut: Session images folder: D:\sites\AutoCut-AI-Desktop\session\images (10 files)
+2026-03-28 02:49:17 [INFO    ] AutoCut: Session audio: D:\sites\AutoCut-AI-Desktop\source\audio\The Only 6 Assets That Actually Survive Economic C.MP3
+2026-03-28 02:49:17 [INFO    ] AutoCut: Starting Video Builder | audio=D:\sites\AutoCut-AI-Desktop\source\audio\The Only 6 Assets That Actually Survive Economic C.MP3
+2026-03-28 02:49:49 [INFO    ] AutoCut: Step finished successfully [pbar_2]
+2026-03-28 02:54:09 [INFO    ] AutoCut: Script uploaded: D:/sites/AutoCut-AI-Desktop/script.txt
+2026-03-28 02:54:11 [INFO    ] AutoCut: Starting prompt generation — reset=True, limit=5
+2026-03-28 02:54:17 [INFO    ] AutoCut: Step finished successfully [pbar_prompts]
+2026-03-28 02:55:23 [INFO    ] AutoCut: [ImageIntake] Scanned 20 images from C:\Users\DELL\Downloads\AutoCut\Flow
+2026-03-28 02:55:27 [INFO    ] AutoCut: [ImageIntake] Scanned 20 images from C:\Users\DELL\Downloads\AutoCut\Flow
+2026-03-28 02:55:27 [INFO    ] AutoCut: [ImageIntake] Scanned 20 images from C:\Users\DELL\Downloads\AutoCut\Flow
+2026-03-28 02:55:28 [INFO    ] AutoCut: [ImageIntake] Scanned 20 images from C:\Users\DELL\Downloads\AutoCut\Flow
+2026-03-28 02:55:29 [INFO    ] AutoCut: [ImageIntake] Scanned 20 images from C:\Users\DELL\Downloads\AutoCut\Flow
+2026-03-28 02:56:31 [INFO    ] AutoCut: [AutoFlow] ℹ️  وُجدت 10 صورة من جلسة سابقة — عرضها للاختيار...
+2026-03-28 02:56:36 [INFO    ] AutoCut: [AutoFlow] ℹ️  وُجدت 10 صورة من جلسة سابقة — عرضها للاختيار...
+2026-03-28 02:56:44 [INFO    ] AutoCut: [AutoFlow] ℹ️  وُجدت 10 صورة من جلسة سابقة — عرضها للاختيار...

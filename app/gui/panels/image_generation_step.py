@@ -995,7 +995,10 @@ class ImageGenerationStep(QWidget):
 
             def run(self_t):
                 try:
+                    import requests as _req
+                    from concurrent.futures import ThreadPoolExecutor, as_completed
                     from app.core.chrome_cdp import ChromeCDP
+
                     self_t.status.emit("🔌  اتصال بـ Chrome DevTools...")
                     cdp = ChromeCDP(port=9222)
                     cdp.launch()
@@ -1003,9 +1006,6 @@ class ImageGenerationStep(QWidget):
                     self_t.status.emit("📜  Scroll تدريجي لجمع URLs الصور (Virtuoso)...")
 
                     # ── Step 1: Collect ALL image URLs via incremental scroll ───────
-                    # collect_all_flow_image_urls scrolls Virtuoso step-by-step,
-                    # harvests img[alt="صورة تم إنشاؤها"] srcs after each step,
-                    # deduplicates, returns ordered list (oldest→newest).
                     urls = cdp.collect_all_flow_image_urls()
 
                     if not urls:
@@ -1017,35 +1017,82 @@ class ImageGenerationStep(QWidget):
                         return
 
                     total = len(urls)
-                    self_t.status.emit(f"📊  وُجد {total} رابط صورة — جارٍ التحميل...")
                     logger.info(f"[ChromeDL] Found {total} image URLs")
+                    self_t.status.emit(f"📋  {total} رابط — جارٍ تصدير الـ cookies...")
 
-                    # ── Step 2: Download each URL via in-browser fetch ──────────────
-                    # download_url_directly uses fetch() with credentials=include
-                    # so CDN auth cookies are sent → 200 OK instead of 403.
+                    # ── Step 2: Export Chrome session cookies via CDP ───────────────
+                    # We ask for cookies for the labs.google origin so that Python's
+                    # requests session can authenticate exactly like the browser.
+                    raw_cookies = cdp.get_cookies_for_url("https://labs.google")
+
+                    # Close CDP NOW — we no longer need the WebSocket for downloads
+                    cdp.close()
+                    logger.info(f"[ChromeDL] Exported {len(raw_cookies)} cookies — CDP closed")
+
+                    # ── Step 3: Build authenticated requests.Session ────────────────
+                    # Python doesn't have CORS restrictions, so it can follow the
+                    # tRPC → CDN redirect chain and download the image bytes directly.
+                    session = _req.Session()
+                    session.headers.update({
+                        "User-Agent": (
+                            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                            "AppleWebKit/537.36 (KHTML, like Gecko) "
+                            "Chrome/122.0.0.0 Safari/537.36"
+                        ),
+                        "Referer": "https://labs.google/",
+                    })
+                    for ck in raw_cookies:
+                        session.cookies.set(
+                            ck["name"], ck["value"],
+                            domain=ck.get("domain", "labs.google").lstrip("."),
+                        )
+
+                    # ── Step 4: Parallel download with ThreadPoolExecutor ───────────
+                    # True parallel because we're outside CDP's single WebSocket now.
+                    # 5 workers = fast without hammering the server.
                     FLOW_DIR.mkdir(parents=True, exist_ok=True)
-                    saved = []
+                    WORKERS = 5
+                    results: dict[int, bytes | None] = {}
 
-                    for i, url in enumerate(urls):
-                        self_t.status.emit(f"⬇️  تحميل {i+1}/{total}...")
-                        img_data = cdp.download_url_directly(url)
-                        if not img_data:
-                            # Canvas was tainted (CORS) — use DOM screenshot fallback
-                            logger.debug(f"[ChromeDL] canvas failed {i+1}, trying DOM screenshot...")
-                            img_data = cdp.screenshot_url_via_element(url)
+                    def _fetch_one(idx: int, url: str):
+                        self_t.status.emit(f"⬇️  تحميل {idx+1}/{total}...")
+                        try:
+                            r = session.get(url, timeout=30, allow_redirects=True)
+                            if r.ok and len(r.content) > 1000:
+                                logger.info(f"[ChromeDL] ✓ {idx+1}/{total} — {len(r.content)//1024}KB")
+                                return idx, r.content
+                            else:
+                                logger.warning(
+                                    f"[ChromeDL] ✗ {idx+1}/{total} — HTTP {r.status_code} "
+                                    f"({len(r.content)} bytes)"
+                                )
+                        except Exception as ex:
+                            logger.warning(f"[ChromeDL] ✗ {idx+1}/{total} — {ex}")
+                        return idx, None
+
+                    with ThreadPoolExecutor(max_workers=WORKERS) as ex:
+                        futs = {
+                            ex.submit(_fetch_one, i, url): i
+                            for i, url in enumerate(urls)
+                        }
+                        for fut in as_completed(futs):
+                            idx, data = fut.result()
+                            results[idx] = data
+
+                    # ── Step 5: Write files in scene order ─────────────────────────
+                    saved = []
+                    for i in range(total):
+                        img_data = results.get(i)
                         if img_data:
                             sp = FLOW_DIR / f"flow_{i+1:03d}.png"
                             with open(sp, "wb") as fh:
                                 fh.write(img_data)
                             saved.append(sp)
-                            logger.info(f"[ChromeDL] ✓ {i+1}/{total}: {sp.name}")
                         else:
-                            logger.warning(
-                                f"[ChromeDL] ✗ {i+1}/{total}: BOTH methods failed → {url[:80]}"
-                            )
+                            logger.warning(f"[ChromeDL] ✗ {i+1}/{total}: download failed → {urls[i][:80]}")
 
-                    cdp.close()
                     self_t.done.emit(saved)
+
                 except Exception as exc:
                     import traceback
                     logger.error(f"[ChromeDL] CRASH: {exc}\n{traceback.format_exc()}")
