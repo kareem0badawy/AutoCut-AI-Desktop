@@ -9,6 +9,10 @@ from typing import Callable, Optional
 from groq import Groq
 
 
+# ─────────────────────────────────────────────
+# JSON helpers
+# ─────────────────────────────────────────────
+
 def _clean_and_parse_json(raw: str) -> list:
     raw = re.sub(r"```json", "", raw)
     raw = re.sub(r"```", "", raw)
@@ -26,42 +30,180 @@ def _clean_and_parse_json(raw: str) -> list:
         return json.loads(raw)
 
 
+# ─────────────────────────────────────────────
+# Whisper transcription
+# ─────────────────────────────────────────────
+
+def _transcribe_audio(audio_path: str, model_size: str = "base", log=print):
+    """
+    يشغّل Whisper على الصوت ويرجع:
+      segments : [{"text": str, "start": float, "end": float}, ...]
+      duration : float  (مدة الصوت بالثواني)
+    """
+    try:
+        from faster_whisper import WhisperModel
+    except ImportError:
+        raise ImportError(
+            "faster-whisper مش مثبت. شغّل: pip install faster-whisper"
+        )
+
+    log(f"Loading Whisper model ({model_size})...")
+    model = WhisperModel(model_size, compute_type="int8")
+
+    log(f"Transcribing: {audio_path}")
+    segments_iter, info = model.transcribe(audio_path, language="en")
+
+    segments = []
+    for seg in segments_iter:
+        segments.append({
+            "text":  seg.text.strip(),
+            "start": round(seg.start, 2),
+            "end":   round(seg.end,   2),
+        })
+
+    log(f"Transcription done: {len(segments)} segments | duration={info.duration:.1f}s")
+    return segments, info.duration
+
+
+# ─────────────────────────────────────────────
+# Group Whisper segments into scene chunks
+# ─────────────────────────────────────────────
+
+def _group_segments_into_scenes(segments: list, seconds_per_image: int) -> list:
+    """
+    يجمع الـ Whisper segments في groups.
+    كل group بيغطي seconds_per_image تقريباً.
+
+    Output:
+    [
+      {"scene_index": 0, "start": 0.0, "end": 7.4, "text": "..."},
+      ...
+    ]
+    """
+    if not segments:
+        return []
+
+    scenes        = []
+    current_text  = []
+    current_start = segments[0]["start"]
+    scene_index   = 0
+
+    for seg in segments:
+        current_text.append(seg["text"])
+        elapsed = seg["end"] - current_start
+
+        if elapsed >= seconds_per_image:
+            scenes.append({
+                "scene_index": scene_index,
+                "start":       current_start,
+                "end":         seg["end"],
+                "text":        " ".join(current_text).strip(),
+            })
+            scene_index  += 1
+            current_text  = []
+            current_start = seg["end"]
+
+    # آخر group لو في كلام متبقي
+    if current_text:
+        scenes.append({
+            "scene_index": scene_index,
+            "start":       current_start,
+            "end":         segments[-1]["end"],
+            "text":        " ".join(current_text).strip(),
+        })
+
+    return scenes
+
+
+# ─────────────────────────────────────────────
+# Scene prompt fixer
+# ─────────────────────────────────────────────
+
+REQUIRED_OPENING = (
+    "Editorial collage illustration. "
+    "A hand-drawn watercolor subject with clear visual focus, "
+    "richly illustrated with relevant details subtly sketched. "
+    "Background is aged parchment paper, dark brown stained, "
+    "heavily textured with natural grain, slightly darker at edges."
+)
+REQUIRED_STYLE_TAGS = (
+    " Minimal clutter, strong focal composition, "
+    "vintage documentary feel, aged documentary mixed media illustration."
+)
+
+FIXED_NEGATIVE = (
+    "white background, white margins, blank areas, empty space, "
+    "white corners, white edges, photographic realism, photograph, "
+    "3D render, anime, neon, modern digital art, glossy, black and white, "
+    "monochrome, grayscale, washed out, blurry, futuristic"
+)
+
+
+def _fix_scene(scene: dict) -> dict:
+    prompt = scene.get("main_prompt", "")
+    if not prompt.startswith("Editorial collage illustration."):
+        prompt = REQUIRED_OPENING + " " + prompt
+    if "vintage documentary feel" not in prompt.lower():
+        prompt = prompt.rstrip(".") + "." + REQUIRED_STYLE_TAGS
+    scene["main_prompt"] = prompt
+    scene["negative_prompt"] = FIXED_NEGATIVE
+    return scene
+
+
+# ─────────────────────────────────────────────
+# Previous scenes summary (for variety)
+# ─────────────────────────────────────────────
+
 def _build_previous_summary(all_scenes: list, last_n: int = 5) -> str:
     if not all_scenes:
         return "No previous scenes yet."
-    last = all_scenes[-last_n:]
     lines = []
-    for s in last:
-        desc = s.get("scene_description", "")
-        label = s.get("label_text", "")
-        lines.append(f"- Scene {s.get('scene_number', '?')}: [{label}] {desc}")
+    for s in all_scenes[-last_n:]:
+        lines.append(
+            f"- Scene {s.get('scene_number', '?')}: "
+            f"[{s.get('label_text', '')}] {s.get('scene_description', '')}"
+        )
     return "\n".join(lines)
 
 
+# ─────────────────────────────────────────────
+# LLM batch generation
+# ─────────────────────────────────────────────
+
 def _generate_batch(
-    client: Groq,
-    script_chunk: str,
-    style: dict,
-    batch_num: int,
-    total_batches: int,
-    scenes_in_batch: int,
+    client:           Groq,
+    scene_chunks:     list,
+    style:            dict,
+    batch_num:        int,
+    total_batches:    int,
+    template:         str,
+    all_scenes:       list,
     seconds_per_image: int,
-    template: str,
-    all_scenes: list,
-    log: Callable[[str], None],
+    log:              Callable[[str], None],
 ) -> list:
-    previous_summary = _build_previous_summary(all_scenes)
-    prompt = template.format(
-        batch_num=batch_num,
-        total_batches=total_batches,
-        scenes_in_batch=scenes_in_batch,
-        seconds_per_image=seconds_per_image,
-        script_chunk=script_chunk,
-        style_lock=style["style_lock"],
-        mood=style["mood"],
-        negative_prompt=style["negative_prompt"],
-        previous_scenes=previous_summary,
+
+    scenes_in_batch = len(scene_chunks)
+
+    # الـ script_chunk يحتوي على النص الفعلي من الصوت لكل scene
+    script_chunk = "\n".join(
+        f"[Scene {sc['scene_index'] + 1} | {sc['start']:.1f}s–{sc['end']:.1f}s]: {sc['text']}"
+        for sc in scene_chunks
     )
+
+    previous_summary = _build_previous_summary(all_scenes)
+
+    prompt = template.format(
+        batch_num         = batch_num,
+        total_batches     = total_batches,
+        scenes_in_batch   = scenes_in_batch,
+        seconds_per_image = seconds_per_image,
+        script_chunk      = script_chunk,
+        style_lock        = style["style_lock"],
+        mood              = style["mood"],
+        negative_prompt   = style["negative_prompt"],
+        previous_scenes   = previous_summary,
+    )
+
     max_tokens = min(scenes_in_batch * 500, 8000)
 
     for attempt in range(3):
@@ -69,19 +211,21 @@ def _generate_batch(
             response = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
                 messages=[{"role": "user", "content": prompt}],
-                temperature=0.7,
+                temperature=0.4,
                 max_tokens=max_tokens,
             )
             raw = response.choices[0].message.content.strip()
+            log(f"  RAW (first 400): {raw[:400]}")
             result = _clean_and_parse_json(raw)
             log(f"  Batch {batch_num}: parsed {len(result)} scenes")
             return result
+
         except json.JSONDecodeError as e:
-            log(f"  Attempt {attempt + 1}: JSON parse error — {e}")
+            log(f"  Attempt {attempt + 1}: JSON error — {e}")
             if attempt < 2:
                 time.sleep(3)
             else:
-                log(f"  Failed after 3 attempts, skipping batch.")
+                log("  Failed after 3 attempts, skipping batch.")
                 return []
         except Exception as e:
             log(f"  Attempt {attempt + 1}: Error — {e}")
@@ -92,41 +236,66 @@ def _generate_batch(
     return []
 
 
+# ─────────────────────────────────────────────
+# Main generate function
+# ─────────────────────────────────────────────
+
 def generate_prompts(
-    config: dict,
-    style: dict,
+    config:   dict,
+    style:    dict,
     template: str,
-    limit: Optional[int] = None,
-    reset: bool = False,
-    log: Callable[[str], None] = print,
+    limit:    Optional[int]                        = None,
+    reset:    bool                                 = False,
+    log:      Callable[[str], None]                = print,
     progress: Optional[Callable[[int, int], None]] = None,
 ):
-    base_path = Path(config["base_path"])
-    script_path = Path(config.get("script_path", base_path / "script.txt"))
-    output_path = base_path / "output" / "prompts.json"
+    base_path   = Path(config["base_path"])
+    audio_path  = config.get("audio_path", str(base_path / "assets/audio/audio.mp3"))
+    output_path     = base_path / "output" / "prompts.json"
     output_txt_path = base_path / "output" / "prompts_output.txt"
-
-    if not script_path.exists():
-        raise FileNotFoundError(f"Script file not found: {script_path}")
-
-    with open(script_path, "r", encoding="utf-8-sig") as f:
-        script = f.read().strip()
+    whisper_cache   = base_path / "output" / "whisper_segments.json"
 
     seconds_per_image = int(config.get("seconds_per_image", 7))
-    audio_duration = _parse_duration(str(config.get("audio_duration", "4.30")))
-    total_images = math.ceil(audio_duration / seconds_per_image)
-
-    if limit:
-        total_images = min(limit, total_images)
-        log(f"Limit active — generating {total_images} scenes only")
-
-    scenes_per_batch = int(config.get("scenes_per_batch", 10))
-    total_batches = math.ceil(total_images / scenes_per_batch)
-
-    log(f"Audio duration: {audio_duration}s | {seconds_per_image}s per image | {total_images} total scenes | {total_batches} batches")
+    scenes_per_batch  = int(config.get("scenes_per_batch",  10))
+    whisper_model     = config.get("whisper_model", "base")
 
     os.makedirs(output_path.parent, exist_ok=True)
 
+    # ── Step 1: Transcribe (أو load من الـ cache) ──
+    if whisper_cache.exists() and not reset:
+        log("Loading cached Whisper segments...")
+        with open(whisper_cache, "r", encoding="utf-8") as f:
+            cached = json.load(f)
+        segments       = cached["segments"]
+        audio_duration = cached["duration"]
+    else:
+        if not Path(audio_path).exists():
+            raise FileNotFoundError(f"Audio file not found: {audio_path}")
+        segments, audio_duration = _transcribe_audio(audio_path, whisper_model, log)
+        with open(whisper_cache, "w", encoding="utf-8") as f:
+            json.dump(
+                {"segments": segments, "duration": audio_duration},
+                f, indent=2, ensure_ascii=False
+            )
+        log(f"Whisper segments cached → {whisper_cache}")
+
+    # ── Step 2: Group segments into scenes ──
+    all_scene_chunks = _group_segments_into_scenes(segments, seconds_per_image)
+    total_images     = len(all_scene_chunks)
+
+    if limit:
+        total_images     = min(limit, total_images)
+        all_scene_chunks = all_scene_chunks[:total_images]
+        log(f"Limit active — generating {total_images} scenes only")
+
+    total_batches = math.ceil(total_images / scenes_per_batch)
+
+    log(
+        f"Audio: {audio_duration:.1f}s | {seconds_per_image}s/image | "
+        f"{total_images} scenes | {total_batches} batches"
+    )
+
+    # ── Step 3: Resume logic ──
     if reset and output_path.exists():
         output_path.unlink()
         log("Reset: deleted old prompts file")
@@ -142,44 +311,56 @@ def generate_prompts(
     else:
         all_scenes, resume_from = [], 0
 
+    log(
+        f"DEBUG: resume_from={resume_from} | total_images={total_images} | "
+        f"whisper_segments={len(segments)}"
+    )
+
     if not config.get("groq_api_key"):
         raise ValueError("Groq API key is missing in settings.")
 
-    client = Groq(api_key=config["groq_api_key"])
-    words = script.split()
-    words_per_batch = math.ceil(len(words) / total_batches)
+    client        = Groq(api_key=config["groq_api_key"])
     scene_counter = resume_from + 1
 
+    # ── Step 4: Generate batches ──
     for i in range(total_batches):
-        batch_start_scene = i * scenes_per_batch
-        if batch_start_scene < resume_from:
+        batch_start = i * scenes_per_batch
+        batch_end   = min(batch_start + scenes_per_batch, total_images)
+
+        if batch_start < resume_from:
             log(f"Batch {i + 1}/{total_batches} — already done, skipping")
             continue
 
-        start_word = i * words_per_batch
-        end_word = min((i + 1) * words_per_batch, len(words))
-        chunk = " ".join(words[start_word:end_word])
-
-        remaining = total_images - len(all_scenes)
+        batch_chunks = all_scene_chunks[batch_start:batch_end]
+        remaining    = total_images - len(all_scenes)
         if remaining <= 0:
             break
-        batch_size = min(scenes_per_batch, remaining)
 
-        log(f"Batch {i + 1}/{total_batches} — {batch_size} scenes...")
-
-        batch = _generate_batch(
-            client, chunk, style,
-            batch_num=i + 1,
-            total_batches=total_batches,
-            scenes_in_batch=batch_size,
-            seconds_per_image=seconds_per_image,
-            template=template,
-            all_scenes=all_scenes,
-            log=log,
+        log(
+            f"Batch {i + 1}/{total_batches} — {len(batch_chunks)} scenes "
+            f"({batch_chunks[0]['start']:.1f}s → {batch_chunks[-1]['end']:.1f}s)..."
         )
 
-        for s in batch:
+        batch = _generate_batch(
+            client            = client,
+            scene_chunks      = batch_chunks,
+            style             = style,
+            batch_num         = i + 1,
+            total_batches     = total_batches,
+            template          = template,
+            all_scenes        = all_scenes,
+            seconds_per_image = seconds_per_image,
+            log               = log,
+        )
+
+        for j, s in enumerate(batch):
             s["scene_number"] = scene_counter
+            # نضيف timestamps الحقيقية من Whisper في كل scene
+            if j < len(batch_chunks):
+                s["start_time"] = batch_chunks[j]["start"]
+                s["end_time"]   = batch_chunks[j]["end"]
+                s["audio_text"] = batch_chunks[j]["text"]
+            s = _fix_scene(s)
             all_scenes.append(s)
             scene_counter += 1
 
@@ -194,12 +375,19 @@ def generate_prompts(
             log("Waiting 4 seconds...")
             time.sleep(4)
 
-    txt = "=" * 60 + "\n"
+    # ── Step 5: Save readable txt ──
+    txt  = "=" * 60 + "\n"
     txt += "AUTOCUT - PROMPTS OUTPUT\n"
-    txt += f"Total Scenes: {len(all_scenes)} | Seconds per image: {seconds_per_image}\n"
+    txt += f"Total Scenes: {len(all_scenes)} | {seconds_per_image}s/image\n"
     txt += "=" * 60 + "\n\n"
+
     for s in all_scenes:
-        txt += f"SCENE {s['scene_number']}\n"
+        txt += f"SCENE {s['scene_number']}"
+        if "start_time" in s:
+            txt += f"  [{s['start_time']:.1f}s – {s['end_time']:.1f}s]"
+        txt += "\n"
+        if "audio_text" in s:
+            txt += f"Audio: {s['audio_text']}\n"
         txt += f"Description: {s.get('scene_description', '')}\n"
         txt += "-" * 40 + "\n"
         txt += f"MAIN PROMPT:\n{s['main_prompt']}\n\n"
@@ -215,17 +403,29 @@ def generate_prompts(
     log(f"Output saved to: {output_path.parent}/")
 
 
-def _parse_duration(duration_str: str) -> int:
-    parts = str(duration_str).strip().split(".")
-    minutes = int(parts[0]) if parts and parts[0] else 0
-    seconds = int(parts[1]) if len(parts) > 1 and parts[1] else 0
-    return minutes * 60 + seconds
+# ─────────────────────────────────────────────
+# Public entry point (called from GUI)
+# ─────────────────────────────────────────────
 
+def run_prompt_generation(
+    config:   dict,
+    style:    dict,
+    reset:    bool             = False,
+    limit:    Optional[int]    = None,
+    log:      Callable         = print,
+    progress: Optional[Callable] = None,
+):
+    base_path     = Path(config["base_path"])
+    template_path = base_path / "prompts_template.txt"
 
-def run_prompt_generation(config: dict, style: dict, reset: bool = False, limit=None,
-                          log=print, progress=None):
-    template = style.get("template", "")
-    if not template:
-        from app.core.config_manager import DEFAULT_STYLE
-        template = DEFAULT_STYLE.get("template", "")
-    generate_prompts(config, style, template, limit=limit, reset=reset, log=log, progress=progress)
+    if template_path.exists():
+        with open(template_path, "r", encoding="utf-8-sig") as f:
+            template = f.read().strip()
+    else:
+        template = style.get("template", "")
+
+    generate_prompts(
+        config, style, template,
+        limit=limit, reset=reset,
+        log=log, progress=progress,
+    )

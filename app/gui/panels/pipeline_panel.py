@@ -1,3 +1,4 @@
+# app\gui\panels\pipeline_panel.py
 import subprocess
 import sys
 import traceback
@@ -923,9 +924,15 @@ class PipelinePanel(QWidget):
             self._set_running(True, "pbar_prompts")
 
             def task(log, progress):
-                from app.core.prompt_generator import run_prompt_generation
+                from app.core.V1_prompt_generator import run_prompt_generation
+                # from app.core.prompt_generator import run_prompt_generation
+                
+                def combined_log(msg):
+                    log(msg)
+                    logger.info(msg)
+                
                 run_prompt_generation(cfg, style, reset=reset, limit=limit,
-                                      log=log, progress=progress)
+                                    log=combined_log, progress=progress)
 
             self._start_task(task, pbar_key="pbar_prompts", step_idx=-1)
         except Exception as e:

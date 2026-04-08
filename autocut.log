@@ -1,100 +1,314 @@
-2026-03-28 02:37:05 [INFO    ] AutoCut: ============================================================
-2026-03-28 02:37:05 [INFO    ] AutoCut: AutoCut starting up
-2026-03-28 02:37:05 [INFO    ] AutoCut: Python 3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]
-2026-03-28 02:37:05 [INFO    ] AutoCut: Platform: win32
-2026-03-28 02:37:05 [WARNING ] AutoCut: Cairo font not found at D:\sites\AutoCut-AI-Desktop\assets\fonts\Cairo-Bold.ttf — using fallback
-2026-03-28 02:37:05 [INFO    ] AutoCut: Creating main window...
-2026-03-28 02:37:06 [INFO    ] AutoCut: Main window shown — entering event loop
-2026-03-28 02:37:10 [INFO    ] AutoCut: [ImageIntake] Scanned 20 images from C:\Users\DELL\Downloads\AutoCut\Flow
-2026-03-28 02:37:17 [INFO    ] AutoCut: 🔗  Chrome يعمل على المنفذ 9222 — الاتصال بالجلسة الحالية...
-2026-03-28 02:37:21 [INFO    ] AutoCut: ✅  CDP متصل بنجاح.
-2026-03-28 02:37:27 [INFO    ] AutoCut: [ChromeDL] Found 20 image URLs
-2026-03-28 02:37:28 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 2, trying DOM screenshot...
-2026-03-28 02:37:28 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 3, trying DOM screenshot...
-2026-03-28 02:37:28 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 1, trying DOM screenshot...
-2026-03-28 02:38:06 [INFO    ] AutoCut: ⚠️  انقطع الاتصال بـ CDP (WebSocketTimeoutException) — إعادة الاتصال...
-2026-03-28 02:38:06 [INFO    ] AutoCut: ⚠️  انقطع الاتصال بـ CDP (JSONDecodeError) — إعادة الاتصال...
-2026-03-28 02:38:11 [INFO    ] AutoCut: ✅  CDP متصل بنجاح.
-2026-03-28 02:38:11 [INFO    ] AutoCut: ✅  CDP متصل بنجاح.
-2026-03-28 02:38:26 [DEBUG   ] AutoCut: [CDP] screenshot_url_via_element failed: CDP send فشل بعد إعادة المحاولة: Connection timed out
-2026-03-28 02:38:28 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 6, trying DOM screenshot...
-2026-03-28 02:38:28 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 4, trying DOM screenshot...
-2026-03-28 02:38:28 [DEBUG   ] AutoCut: [ChromeDL] canvas failed 5, trying DOM screenshot...
-2026-03-28 02:39:01 [INFO    ] AutoCut: Event loop exited with code 0
-2026-03-28 02:46:39 [INFO    ] AutoCut: ============================================================
-2026-03-28 02:46:39 [INFO    ] AutoCut: AutoCut starting up
-2026-03-28 02:46:39 [INFO    ] AutoCut: Python 3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]
-2026-03-28 02:46:39 [INFO    ] AutoCut: Platform: win32
-2026-03-28 02:46:40 [WARNING ] AutoCut: Cairo font not found at D:\sites\AutoCut-AI-Desktop\assets\fonts\Cairo-Bold.ttf — using fallback
-2026-03-28 02:46:40 [INFO    ] AutoCut: Creating main window...
-2026-03-28 02:46:41 [INFO    ] AutoCut: Main window shown — entering event loop
-2026-03-28 02:46:53 [INFO    ] AutoCut: 🔗  Chrome يعمل على المنفذ 9222 — الاتصال بالجلسة الحالية...
-2026-03-28 02:46:57 [INFO    ] AutoCut: ✅  CDP متصل بنجاح.
-2026-03-28 02:47:04 [INFO    ] AutoCut: [ChromeDL] Found 20 image URLs
-2026-03-28 02:47:04 [INFO    ] AutoCut: [ChromeDL] Exported 6 cookies — CDP closed
-2026-03-28 02:47:14 [INFO    ] AutoCut: [ChromeDL] ✓ 5/20 — 3568KB
-2026-03-28 02:47:14 [INFO    ] AutoCut: [ChromeDL] ✓ 1/20 — 3614KB
-2026-03-28 02:47:14 [INFO    ] AutoCut: [ChromeDL] ✓ 2/20 — 3475KB
-2026-03-28 02:47:15 [INFO    ] AutoCut: [ChromeDL] ✓ 4/20 — 3298KB
-2026-03-28 02:47:15 [INFO    ] AutoCut: [ChromeDL] ✓ 3/20 — 3608KB
-2026-03-28 02:47:19 [INFO    ] AutoCut: [ChromeDL] ✓ 7/20 — 3410KB
-2026-03-28 02:47:20 [INFO    ] AutoCut: [ChromeDL] ✓ 6/20 — 3379KB
-2026-03-28 02:47:20 [INFO    ] AutoCut: [ChromeDL] ✓ 8/20 — 3316KB
-2026-03-28 02:47:21 [INFO    ] AutoCut: [ChromeDL] ✓ 10/20 — 3156KB
-2026-03-28 02:47:21 [INFO    ] AutoCut: [ChromeDL] ✓ 9/20 — 3354KB
-2026-03-28 02:47:25 [INFO    ] AutoCut: [ChromeDL] ✓ 11/20 — 3495KB
-2026-03-28 02:47:27 [INFO    ] AutoCut: [ChromeDL] ✓ 14/20 — 3411KB
-2026-03-28 02:47:27 [INFO    ] AutoCut: [ChromeDL] ✓ 12/20 — 3666KB
-2026-03-28 02:47:27 [INFO    ] AutoCut: [ChromeDL] ✓ 13/20 — 3678KB
-2026-03-28 02:47:28 [INFO    ] AutoCut: [ChromeDL] ✓ 15/20 — 3135KB
-2026-03-28 02:47:30 [INFO    ] AutoCut: [ChromeDL] ✓ 16/20 — 3294KB
-2026-03-28 02:47:33 [INFO    ] AutoCut: [ChromeDL] ✓ 17/20 — 3400KB
-2026-03-28 02:47:33 [INFO    ] AutoCut: [ChromeDL] ✓ 19/20 — 3684KB
-2026-03-28 02:47:34 [INFO    ] AutoCut: [ChromeDL] ✓ 18/20 — 3491KB
-2026-03-28 02:47:34 [INFO    ] AutoCut: [ChromeDL] ✓ 20/20 — 3382KB
-2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] flow_002.png → scene_1.png
-2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] flow_004.png → scene_2.png
-2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] flow_006.png → scene_3.png
-2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] flow_007.png → scene_4.png
-2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] flow_009.png → scene_5.png
-2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] flow_012.png → scene_6.png
-2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] flow_014.png → scene_7.png
-2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] flow_016.png → scene_8.png
-2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] flow_018.png → scene_9.png
-2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] flow_019.png → scene_10.png
-2026-03-28 02:48:40 [INFO    ] AutoCut: [Handoff] Done — 10 images → D:\sites\AutoCut-AI-Desktop\session\images
-2026-03-28 02:48:40 [INFO    ] AutoCut: [PipelinePanel] Received 10 images from Step 2 → D:\sites\AutoCut-AI-Desktop\session\images
-2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] flow_002.png → scene_1.png
-2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] flow_004.png → scene_2.png
-2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] flow_006.png → scene_3.png
-2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] flow_007.png → scene_4.png
-2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] flow_009.png → scene_5.png
-2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] flow_012.png → scene_6.png
-2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] flow_014.png → scene_7.png
-2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] flow_016.png → scene_8.png
-2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] flow_018.png → scene_9.png
-2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] flow_019.png → scene_10.png
-2026-03-28 02:48:57 [INFO    ] AutoCut: [Handoff] Done — 10 images → D:\sites\AutoCut-AI-Desktop\session\images
-2026-03-28 02:48:57 [INFO    ] AutoCut: [PipelinePanel] Received 10 images from Step 2 → D:\sites\AutoCut-AI-Desktop\session\images
-2026-03-28 02:49:05 [INFO    ] AutoCut: Audio uploaded: D:/sites/AutoCut-AI-Desktop/source/audio/The Only 6 Assets That Actually Survive Economic C.MP3
-2026-03-28 02:49:09 [INFO    ] AutoCut: Session images already in place: D:\sites\AutoCut-AI-Desktop\session\images (10 files)
-2026-03-28 02:49:09 [INFO    ] AutoCut: Session images folder: D:\sites\AutoCut-AI-Desktop\session\images (10 files)
-2026-03-28 02:49:09 [INFO    ] AutoCut: Session audio: D:\sites\AutoCut-AI-Desktop\source\audio\The Only 6 Assets That Actually Survive Economic C.MP3
-2026-03-28 02:49:09 [INFO    ] AutoCut: Starting AI Mapper | images_folder=D:\sites\AutoCut-AI-Desktop\session\images
-2026-03-28 02:49:09 [INFO    ] AutoCut: Step finished successfully [pbar_1]
-2026-03-28 02:49:17 [INFO    ] AutoCut: Session images already in place: D:\sites\AutoCut-AI-Desktop\session\images (10 files)
-2026-03-28 02:49:17 [INFO    ] AutoCut: Session images folder: D:\sites\AutoCut-AI-Desktop\session\images (10 files)
-2026-03-28 02:49:17 [INFO    ] AutoCut: Session audio: D:\sites\AutoCut-AI-Desktop\source\audio\The Only 6 Assets That Actually Survive Economic C.MP3
-2026-03-28 02:49:17 [INFO    ] AutoCut: Starting Video Builder | audio=D:\sites\AutoCut-AI-Desktop\source\audio\The Only 6 Assets That Actually Survive Economic C.MP3
-2026-03-28 02:49:49 [INFO    ] AutoCut: Step finished successfully [pbar_2]
-2026-03-28 02:54:09 [INFO    ] AutoCut: Script uploaded: D:/sites/AutoCut-AI-Desktop/script.txt
-2026-03-28 02:54:11 [INFO    ] AutoCut: Starting prompt generation — reset=True, limit=5
-2026-03-28 02:54:17 [INFO    ] AutoCut: Step finished successfully [pbar_prompts]
-2026-03-28 02:55:23 [INFO    ] AutoCut: [ImageIntake] Scanned 20 images from C:\Users\DELL\Downloads\AutoCut\Flow
-2026-03-28 02:55:27 [INFO    ] AutoCut: [ImageIntake] Scanned 20 images from C:\Users\DELL\Downloads\AutoCut\Flow
-2026-03-28 02:55:27 [INFO    ] AutoCut: [ImageIntake] Scanned 20 images from C:\Users\DELL\Downloads\AutoCut\Flow
-2026-03-28 02:55:28 [INFO    ] AutoCut: [ImageIntake] Scanned 20 images from C:\Users\DELL\Downloads\AutoCut\Flow
-2026-03-28 02:55:29 [INFO    ] AutoCut: [ImageIntake] Scanned 20 images from C:\Users\DELL\Downloads\AutoCut\Flow
-2026-03-28 02:56:31 [INFO    ] AutoCut: [AutoFlow] ℹ️  وُجدت 10 صورة من جلسة سابقة — عرضها للاختيار...
-2026-03-28 02:56:36 [INFO    ] AutoCut: [AutoFlow] ℹ️  وُجدت 10 صورة من جلسة سابقة — عرضها للاختيار...
-2026-03-28 02:56:44 [INFO    ] AutoCut: [AutoFlow] ℹ️  وُجدت 10 صورة من جلسة سابقة — عرضها للاختيار...
+2026-04-05 15:14:38 [INFO    ] AutoCut: Starting prompt generation — reset=True, limit=70
+2026-04-05 15:14:38 [INFO    ] AutoCut: Limit active — generating 70 scenes only
+2026-04-05 15:14:38 [INFO    ] AutoCut: Audio duration: 566s | 7s per image | 70 total scenes | 7 batches
+2026-04-05 15:14:38 [INFO    ] AutoCut: Reset: deleted old prompts file
+2026-04-05 15:14:38 [INFO    ] AutoCut: DEBUG: resume_from=0 | total_images=70 | all_scenes=0
+2026-04-05 15:14:38 [INFO    ] AutoCut: DEBUG: script words=1121 | scenes_per_batch=10
+2026-04-05 15:14:38 [INFO    ] AutoCut: Batch 1/7 — 10 scenes...
+2026-04-05 15:14:42 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "A senator moves through his torchlit courtyard in the dark",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor-illustrated senator is shown walking in the dark, with a thin, vibrant red hand-drawn ink line circling his torch. Soft directional lighting and smooth shading evoke a sense of urgency. Large bold text THE SENATOR in a heavy vintage s
+2026-04-05 15:14:42 [INFO    ] AutoCut:   Batch 1: parsed 10 scenes
+2026-04-05 15:14:42 [INFO    ] AutoCut:   Saved 10/70 scenes
+2026-04-05 15:14:42 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-05 15:14:46 [INFO    ] AutoCut: Batch 2/7 — 10 scenes...
+2026-04-05 15:14:50 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "The collapse of the Western empire's tax system in the 400s",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor-illustrated broken tax scroll with a thin, vibrant red hand-drawn ink line striking through it. Soft directional lighting and smooth shading. Large bold text TAX SYSTEM in a heavy vintage serif font on a torn paper strip. No white ba
+2026-04-05 15:14:50 [INFO    ] AutoCut:   Batch 2: parsed 10 scenes
+2026-04-05 15:14:50 [INFO    ] AutoCut:   Saved 20/70 scenes
+2026-04-05 15:14:50 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-05 15:14:54 [INFO    ] AutoCut: Batch 3/7 — 10 scenes...
+2026-04-05 15:15:12 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "The lesson that productive assets have internal logic",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor illustration of a grain field with a thin, vibrant red hand-drawn ink line circling it, symbolizing the internal logic of productive assets. Soft directional lighting and smooth shading. Large bold text PRODUCTIVE ASSETS in a heavy vintage
+2026-04-05 15:15:12 [INFO    ] AutoCut:   Batch 3: parsed 10 scenes
+2026-04-05 15:15:12 [INFO    ] AutoCut:   Saved 30/70 scenes
+2026-04-05 15:15:12 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-05 15:15:16 [INFO    ] AutoCut: Batch 4/7 — 10 scenes...
+2026-04-05 15:15:48 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "The Jurchen army taking the treasury, but not the reputation of a merchant",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor-illustrated merchant's ledger is circled by a thin, vibrant red hand-drawn ink line, symbolizing the preservation of reputation. Soft directional lighting and smooth shading emphasize the texture of the parchment. Larg
+2026-04-05 15:15:48 [INFO    ] AutoCut:   Batch 4: parsed 10 scenes
+2026-04-05 15:15:48 [INFO    ] AutoCut:   Saved 40/70 scenes
+2026-04-05 15:15:48 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-05 15:15:52 [INFO    ] AutoCut: Batch 5/7 — 10 scenes...
+2026-04-05 15:16:05 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "The Church maintaining its landholdings despite the conquest",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor-illustrated church building with a thin, vibrant red hand-drawn ink line circling its perimeter, symbolizing protection. Soft, warm lighting and smooth shading. Large bold text CHURCH LANDHOLDINGS in a heavy vintage serif font on a 
+2026-04-05 15:16:05 [INFO    ] AutoCut:   Batch 5: parsed 10 scenes
+2026-04-05 15:16:05 [INFO    ] AutoCut:   Saved 50/70 scenes
+2026-04-05 15:16:05 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-05 15:16:09 [INFO    ] AutoCut: Batch 6/7 — 10 scenes...
+2026-04-05 15:16:22 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "Visualizing the concept of stored abstract wealth evaporating during a catastrophic event",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor illustration of a bursting bubble with a thin, vibrant red hand-drawn ink line striking through it, symbolizing the evaporation of wealth. Soft directional lighting and smooth shading. Large bold text WE
+2026-04-05 15:16:22 [INFO    ] AutoCut:   Batch 6: parsed 10 scenes
+2026-04-05 15:16:22 [INFO    ] AutoCut:   Saved 60/70 scenes
+2026-04-05 15:16:22 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-05 15:16:26 [INFO    ] AutoCut: Batch 7/7 — 10 scenes...
+2026-04-05 15:16:31 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "Visualizing the concept of most families having fewer than three months of expenses in accessible reserve",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor illustration of a nearly empty piggy bank is centered, with a thin, vibrant red hand-drawn ink line striking through it. Soft directional lighting and smooth shading emphasize the subject
+2026-04-05 15:16:31 [INFO    ] AutoCut:   Batch 7: parsed 10 scenes
+2026-04-05 15:16:31 [INFO    ] AutoCut:   Saved 70/70 scenes
+2026-04-05 15:16:31 [INFO    ] AutoCut: 
+Done! Total scenes: 70
+2026-04-05 15:16:31 [INFO    ] AutoCut: Output saved to: J:\Coding\Desktop\AutoCut\output/
+2026-04-05 15:16:31 [INFO    ] AutoCut: Step finished successfully [pbar_prompts]
+2026-04-05 15:21:00 [INFO    ] AutoCut: Event loop exited with code 0
+2026-04-05 21:19:52 [INFO    ] AutoCut: ============================================================
+2026-04-05 21:19:52 [INFO    ] AutoCut: AutoCut starting up
+2026-04-05 21:19:52 [INFO    ] AutoCut: Python 3.10.10 (tags/v3.10.10:aad5f6a, Feb  7 2023, 17:20:36) [MSC v.1929 64 bit (AMD64)]
+2026-04-05 21:19:52 [INFO    ] AutoCut: Platform: win32
+2026-04-05 21:19:53 [INFO    ] AutoCut: Cairo font loaded — families: ['Cairo', 'Cairo ExtraLight', 'Cairo', 'Cairo Light', 'Cairo', 'Cairo', 'Cairo Medium', 'Cairo', 'Cairo SemiBold', 'Cairo', 'Cairo', 'Cairo ExtraBold', 'Cairo', 'Cairo Black']
+2026-04-05 21:19:53 [INFO    ] AutoCut: Creating main window...
+2026-04-05 21:19:55 [INFO    ] AutoCut: Main window shown — entering event loop
+2026-04-05 21:25:48 [INFO    ] AutoCut: Script uploaded: J:/Coding/Desktop/AutoCut/script.txt
+2026-04-05 21:25:51 [INFO    ] AutoCut: Starting prompt generation — reset=True, limit=70
+2026-04-05 21:25:52 [INFO    ] AutoCut: Limit active — generating 70 scenes only
+2026-04-05 21:25:52 [INFO    ] AutoCut: Audio duration: 566s | 7s per image | 70 total scenes | 7 batches
+2026-04-05 21:25:52 [INFO    ] AutoCut: Reset: deleted old prompts file
+2026-04-05 21:25:52 [INFO    ] AutoCut: DEBUG: resume_from=0 | total_images=70 | all_scenes=0
+2026-04-05 21:25:52 [INFO    ] AutoCut: DEBUG: script words=1040 | scenes_per_batch=10
+2026-04-05 21:25:52 [INFO    ] AutoCut: Batch 1/7 — 10 scenes...
+2026-04-05 21:25:57 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "The mountain of Cerro Rico in Potosí, Bolivia, is introduced as a peak containing a vast amount of silver ore.",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor illustration of a mountain range with a large, stylized silver ore vein running through it, intersected by a thin, vibrant red hand-drawn ink line that underlines the vein. Soft, war
+2026-04-05 21:25:57 [INFO    ] AutoCut:   Batch 1: parsed 10 scenes
+2026-04-05 21:25:57 [INFO    ] AutoCut:   Saved 10/70 scenes
+2026-04-05 21:25:57 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-05 21:26:01 [INFO    ] AutoCut: Batch 2/7 — 10 scenes...
+2026-04-05 21:26:11 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "A heavy leather sack overflowing with raw silver ore",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor-illustrated leather sack overflows with silver ore, with a thin, vibrant red hand-drawn ink line circling the sack. Soft directional lighting and smooth shading illuminate the scene. Large bold text SILVER ORE in a heavy vintage serif font.
+2026-04-05 21:26:11 [INFO    ] AutoCut:   Batch 2: parsed 10 scenes
+2026-04-05 21:26:11 [INFO    ] AutoCut:   Saved 20/70 scenes
+2026-04-05 21:26:11 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-05 21:26:15 [INFO    ] AutoCut: Batch 3/7 — 10 scenes...
+2026-04-05 21:26:45 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "Spanish empire's treasure strangles its economy",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor-illustrated mountain of debt is circled by a thin, vibrant red hand-drawn ink line, symbolizing the suffocating effect of wealth. Soft directional lighting and smooth shading evoke a sense of aged, historical significance. Large bold text THE DE
+2026-04-05 21:26:45 [INFO    ] AutoCut:   Batch 3: parsed 10 scenes
+2026-04-05 21:26:46 [INFO    ] AutoCut:   Saved 30/70 scenes
+2026-04-05 21:26:46 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-05 21:26:50 [INFO    ] AutoCut: Batch 4/7 — 10 scenes...
+2026-04-05 21:27:03 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "The Ming Dynasty's tax revenues vanished overnight due to disrupted global flows",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor-illustrated empty treasure chest with a thin, vibrant red hand-drawn ink line striking through it. Soft directional lighting and smooth shading. Large bold text EMPTY COFFERS in a heavy vintage serif font on a to
+2026-04-05 21:27:03 [INFO    ] AutoCut:   Batch 4: parsed 10 scenes
+2026-04-05 21:27:03 [INFO    ] AutoCut:   Saved 40/70 scenes
+2026-04-05 21:27:03 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-05 21:27:07 [INFO    ] AutoCut: Batch 5/7 — 10 scenes...
+2026-04-05 21:27:26 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "The Roman coin still looked like silver but was actually debased",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor-illustrated Roman coin with a thin, vibrant red hand-drawn ink line striking through it, symbolizing debasement. Soft directional lighting and smooth shading. Large bold text DEBASED COIN in a heavy vintage serif font on a torn 
+2026-04-05 21:27:26 [INFO    ] AutoCut:   Batch 5: parsed 10 scenes
+2026-04-05 21:27:26 [INFO    ] AutoCut:   Saved 50/70 scenes
+2026-04-05 21:27:26 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-05 21:27:30 [INFO    ] AutoCut: Batch 6/7 — 10 scenes...
+2026-04-05 21:27:42 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "Visualizing the concept of feeling richer at first due to increased currency",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor illustration of a treasure chest overflowing with gold coins, with a thin, vibrant red hand-drawn ink line circling the chest, on a soft, warm, directional lighting, with faint, period ink marks layered lightly in th
+2026-04-05 21:27:42 [INFO    ] AutoCut:   Batch 6: parsed 10 scenes
+2026-04-05 21:27:42 [INFO    ] AutoCut:   Saved 60/70 scenes
+2026-04-05 21:27:42 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-05 21:27:46 [INFO    ] AutoCut: Batch 7/7 — 10 scenes...
+2026-04-05 21:27:59 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "Visualizing the 20% rise in groceries",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor illustration of a grocery basket with a thin, vibrant red hand-drawn ink line circling it, emphasizing the increase. Soft directional lighting and smooth shading. Large bold text GROCERY PRICE in a heavy vintage serif font on a torn paper strip. No white 
+2026-04-05 21:27:59 [INFO    ] AutoCut:   Batch 7: parsed 10 scenes
+2026-04-05 21:27:59 [INFO    ] AutoCut:   Saved 70/70 scenes
+2026-04-05 21:27:59 [INFO    ] AutoCut: 
+Done! Total scenes: 70
+2026-04-05 21:27:59 [INFO    ] AutoCut: Output saved to: J:\Coding\Desktop\AutoCut\output/
+2026-04-05 21:27:59 [INFO    ] AutoCut: Step finished successfully [pbar_prompts]
+2026-04-05 21:34:30 [INFO    ] AutoCut: Audio uploaded: J:/Coding/Desktop/AutoCut/assets/audio/audio.mp3
+2026-04-05 21:34:43 [INFO    ] AutoCut: Images uploaded: 72 files
+2026-04-05 21:34:50 [INFO    ] AutoCut: Session images already in place: J:\Coding\Desktop\AutoCut\session\images (72 files)
+2026-04-05 21:34:50 [INFO    ] AutoCut: Session images folder: J:\Coding\Desktop\AutoCut\session\images (72 files)
+2026-04-05 21:34:50 [INFO    ] AutoCut: Session audio: J:\Coding\Desktop\AutoCut\assets\audio\audio.mp3
+2026-04-05 21:34:50 [INFO    ] AutoCut: Starting Video Builder | audio=J:\Coding\Desktop\AutoCut\assets\audio\audio.mp3
+2026-04-05 21:38:22 [INFO    ] AutoCut: Step finished successfully [pbar_2]
+2026-04-05 21:48:40 [INFO    ] AutoCut: Event loop exited with code 0
+2026-04-07 01:06:56 [INFO    ] AutoCut: ============================================================
+2026-04-07 01:06:56 [INFO    ] AutoCut: AutoCut starting up
+2026-04-07 01:06:56 [INFO    ] AutoCut: Python 3.10.10 (tags/v3.10.10:aad5f6a, Feb  7 2023, 17:20:36) [MSC v.1929 64 bit (AMD64)]
+2026-04-07 01:06:56 [INFO    ] AutoCut: Platform: win32
+2026-04-07 01:06:59 [INFO    ] AutoCut: Cairo font loaded — families: ['Cairo', 'Cairo ExtraLight', 'Cairo', 'Cairo Light', 'Cairo', 'Cairo', 'Cairo Medium', 'Cairo', 'Cairo SemiBold', 'Cairo', 'Cairo', 'Cairo ExtraBold', 'Cairo', 'Cairo Black']
+2026-04-07 01:06:59 [INFO    ] AutoCut: Creating main window...
+2026-04-07 01:07:03 [INFO    ] AutoCut: Main window shown — entering event loop
+2026-04-07 01:10:31 [INFO    ] AutoCut: Script uploaded: J:/Coding/Desktop/AutoCut/script.txt
+2026-04-07 01:11:27 [INFO    ] AutoCut: Starting prompt generation — reset=True, limit=70
+2026-04-07 01:11:33 [INFO    ] AutoCut: Limit active — generating 70 scenes only
+2026-04-07 01:11:33 [INFO    ] AutoCut: Audio duration: 566s | 7s per image | 70 total scenes | 7 batches
+2026-04-07 01:11:33 [INFO    ] AutoCut: Reset: deleted old prompts file
+2026-04-07 01:11:33 [INFO    ] AutoCut: DEBUG: resume_from=0 | total_images=70 | all_scenes=0
+2026-04-07 01:11:33 [INFO    ] AutoCut: DEBUG: script words=1015 | scenes_per_batch=10
+2026-04-07 01:11:34 [INFO    ] AutoCut: Batch 1/7 — 10 scenes...
+2026-04-07 01:11:39 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "A single banknote on a wooden bakery counter with twenty zeros",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor-illustrated banknote with twenty zeros is centered, underlined by a thin, vibrant red hand-drawn ink line. Soft directional lighting and smooth shading emphasize the worn parchment. Large bold text BANKNOTE is on a torn paper stri
+2026-04-07 01:11:39 [INFO    ] AutoCut:   Batch 1: parsed 10 scenes
+2026-04-07 01:11:39 [INFO    ] AutoCut:   Saved 10/70 scenes
+2026-04-07 01:11:39 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-07 01:11:43 [INFO    ] AutoCut: Batch 2/7 — 10 scenes...
+2026-04-07 01:11:52 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "The founding of the Ming Dynasty in 1368",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor-illustrated imperial seal is centered, with a thin, vibrant red hand-drawn ink line circling it. Soft directional lighting and smooth shading emphasize the seal's intricate details. Large bold text MING DYNASTY in a heavy vintage serif font is placed o
+2026-04-07 01:11:52 [INFO    ] AutoCut:   Batch 2: parsed 10 scenes
+2026-04-07 01:11:52 [INFO    ] AutoCut:   Saved 20/70 scenes
+2026-04-07 01:11:52 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-07 01:11:56 [INFO    ] AutoCut: Batch 3/7 — 10 scenes...
+2026-04-07 01:12:15 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "The printing blocks being used more often than they should have been",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor-illustrated printing block is centered, with a thin, vibrant red hand-drawn ink line circling it, symbolizing overuse. Soft directional lighting and smooth shading emphasize the subject. Large bold text OVERUSE in a heavy vi
+2026-04-07 01:12:15 [INFO    ] AutoCut:   Batch 3: parsed 10 scenes
+2026-04-07 01:12:15 [INFO    ] AutoCut:   Saved 30/70 scenes
+2026-04-07 01:12:15 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-07 01:12:19 [INFO    ] AutoCut: Batch 4/7 — 10 scenes...
+2026-04-07 01:12:32 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "Share prices in the Mississippi Company rising four thousand percent on the Paris exchange",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor-illustrated stock market ticker with a thin, vibrant red hand-drawn ink line circling the rising numbers. Soft directional lighting and smooth shading. Large bold text STOCK MARKET in a heavy vintage se
+2026-04-07 01:12:32 [INFO    ] AutoCut:   Batch 4: parsed 10 scenes
+2026-04-07 01:12:32 [INFO    ] AutoCut:   Saved 40/70 scenes
+2026-04-07 01:12:32 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-07 01:12:36 [INFO    ] AutoCut: Batch 5/7 — 10 scenes...
+2026-04-07 01:12:49 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "The note worth one quintillion pengős being used to buy a meal",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor illustration of a note worth one quintillion pengős with a thin, vibrant red hand-drawn ink line circling it, emphasizing its significance. Soft directional lighting and smooth shading. Large bold text QUINTILLION PENGŐ in a heavy
+2026-04-07 01:12:49 [INFO    ] AutoCut:   Batch 5: parsed 10 scenes
+2026-04-07 01:12:49 [INFO    ] AutoCut:   Saved 50/70 scenes
+2026-04-07 01:12:49 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-07 01:12:53 [INFO    ] AutoCut: Batch 6/7 — 10 scenes...
+2026-04-07 01:13:19 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "Visualizing the concept of global debt hitting 315 trillion dollars in 2024",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor-illustrated globe is circled by a thin, vibrant red hand-drawn ink line, symbolizing the overwhelming debt. Soft directional lighting and smooth shading emphasize the texture of the parchment. Large bold text GLOBAL D
+2026-04-07 01:13:19 [INFO    ] AutoCut:   Batch 6: parsed 10 scenes
+2026-04-07 01:13:19 [INFO    ] AutoCut:   Saved 60/70 scenes
+2026-04-07 01:13:19 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-07 01:13:23 [INFO    ] AutoCut: Batch 7/7 — 10 scenes...
+2026-04-07 01:13:40 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "A hand picking up a note with twenty zeros",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor-illustrated hand reaches for a note with twenty zeros, with a thin, vibrant red hand-drawn ink line circling the note. Soft directional lighting and smooth shading. Large bold text FINANCIAL STRAIN in a heavy vintage serif font on a torn paper strip.
+2026-04-07 01:13:40 [INFO    ] AutoCut:   Batch 7: parsed 10 scenes
+2026-04-07 01:13:40 [INFO    ] AutoCut:   Saved 70/70 scenes
+2026-04-07 01:13:40 [INFO    ] AutoCut: 
+Done! Total scenes: 70
+2026-04-07 01:13:40 [INFO    ] AutoCut: Output saved to: J:\Coding\Desktop\AutoCut\output/
+2026-04-07 01:13:40 [INFO    ] AutoCut: Step finished successfully [pbar_prompts]
+2026-04-07 01:21:53 [INFO    ] AutoCut: Audio uploaded: J:/Coding/Desktop/AutoCut/assets/audio/audio.MP3
+2026-04-07 01:22:07 [INFO    ] AutoCut: Images uploaded: 70 files
+2026-04-07 01:22:21 [INFO    ] AutoCut: Session images already in place: J:\Coding\Desktop\AutoCut\session\images (70 files)
+2026-04-07 01:22:21 [INFO    ] AutoCut: Session images folder: J:\Coding\Desktop\AutoCut\session\images (70 files)
+2026-04-07 01:22:21 [INFO    ] AutoCut: Session audio: J:\Coding\Desktop\AutoCut\assets\audio\audio.MP3
+2026-04-07 01:22:21 [INFO    ] AutoCut: Starting Video Builder | audio=J:\Coding\Desktop\AutoCut\assets\audio\audio.MP3
+2026-04-07 01:25:38 [INFO    ] AutoCut: Step finished successfully [pbar_2]
+2026-04-07 22:46:10 [INFO    ] AutoCut: ============================================================
+2026-04-07 22:46:10 [INFO    ] AutoCut: AutoCut starting up
+2026-04-07 22:46:10 [INFO    ] AutoCut: Python 3.10.10 (tags/v3.10.10:aad5f6a, Feb  7 2023, 17:20:36) [MSC v.1929 64 bit (AMD64)]
+2026-04-07 22:46:10 [INFO    ] AutoCut: Platform: win32
+2026-04-07 22:46:13 [INFO    ] AutoCut: Cairo font loaded — families: ['Cairo', 'Cairo ExtraLight', 'Cairo', 'Cairo Light', 'Cairo', 'Cairo', 'Cairo Medium', 'Cairo', 'Cairo SemiBold', 'Cairo', 'Cairo', 'Cairo ExtraBold', 'Cairo', 'Cairo Black']
+2026-04-07 22:46:13 [INFO    ] AutoCut: Creating main window...
+2026-04-07 22:46:17 [INFO    ] AutoCut: Main window shown — entering event loop
+2026-04-07 22:46:34 [INFO    ] AutoCut: Script uploaded: J:/Coding/Desktop/AutoCut/script.txt
+2026-04-07 22:46:36 [INFO    ] AutoCut: Starting prompt generation — reset=True, limit=60
+2026-04-07 22:46:43 [INFO    ] AutoCut: Limit active — generating 60 scenes only
+2026-04-07 22:46:43 [INFO    ] AutoCut: Audio duration: 566s | 7s per image | 60 total scenes | 6 batches
+2026-04-07 22:46:43 [INFO    ] AutoCut: Reset: deleted old prompts file
+2026-04-07 22:46:43 [INFO    ] AutoCut: DEBUG: resume_from=0 | total_images=60 | all_scenes=0
+2026-04-07 22:46:43 [INFO    ] AutoCut: DEBUG: script words=838 | scenes_per_batch=10
+2026-04-07 22:46:43 [INFO    ] AutoCut: Batch 1/6 — 10 scenes...
+2026-04-07 22:46:49 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "A line of shadows stretches around a full city block before dawn",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor-illustrated city block at dawn with people waiting, a thin, vibrant red hand-drawn ink line underlining the crowd. Soft directional lighting and smooth shading. Large bold text THE PANIC in a heavy vintage serif font on a torn p
+2026-04-07 22:46:49 [INFO    ] AutoCut:   Batch 1: parsed 10 scenes
+2026-04-07 22:46:49 [INFO    ] AutoCut:   Saved 10/60 scenes
+2026-04-07 22:46:49 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-07 22:46:53 [INFO    ] AutoCut: Batch 2/6 — 10 scenes...
+2026-04-07 22:47:01 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "A private banker is about to hold the entire American financial system together with his signature",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor-illustrated 18th-century banker's hand holds a quill pen, with a thin, vibrant red hand-drawn ink line underlining the signature. Soft directional lighting and smooth shading. Large bold text TH
+2026-04-07 22:47:01 [INFO    ] AutoCut:   Batch 2: parsed 10 scenes
+2026-04-07 22:47:01 [INFO    ] AutoCut:   Saved 20/60 scenes
+2026-04-07 22:47:01 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-07 22:47:05 [INFO    ] AutoCut: Batch 3/6 — 10 scenes...
+2026-04-07 22:47:11 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "The canals of a financially literate nation being turned into a laboratory of speculation",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor-illustrated 19th-century canal scene with a thin, vibrant red hand-drawn ink line circling a stock exchange building. Soft directional lighting and smooth shading. Large bold text SPECULATION in a heavy 
+2026-04-07 22:47:11 [INFO    ] AutoCut:   Batch 3: parsed 10 scenes
+2026-04-07 22:47:11 [INFO    ] AutoCut:   Saved 30/60 scenes
+2026-04-07 22:47:11 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-07 22:47:15 [INFO    ] AutoCut: Batch 4/6 — 10 scenes...
+2026-04-07 22:47:20 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "A heavy brass key turns in a lock in October 1907",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor-illustrated heavy brass key is centered, with a thin, vibrant red hand-drawn ink line circling it. Soft directional lighting and smooth shading emphasize the key. Large bold text THE KEY in a heavy vintage serif font is placed on a torn paper 
+2026-04-07 22:47:20 [INFO    ] AutoCut:   Batch 4: parsed 10 scenes
+2026-04-07 22:47:20 [INFO    ] AutoCut:   Saved 40/60 scenes
+2026-04-07 22:47:20 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-07 22:47:24 [INFO    ] AutoCut: Batch 5/6 — 10 scenes...
+2026-04-07 22:47:52 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "Innovation creates genuine wealth, attracting investors",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor illustration of a growing plant with a thin, vibrant red hand-drawn ink line circling its base, symbolizing growth. Soft directional lighting and smooth shading. Large bold text INNOVATION in a heavy vintage serif font on a torn paper st
+2026-04-07 22:47:52 [INFO    ] AutoCut:   Batch 5: parsed 10 scenes
+2026-04-07 22:47:52 [INFO    ] AutoCut:   Saved 50/60 scenes
+2026-04-07 22:47:52 [INFO    ] AutoCut: Waiting 4 seconds...
+2026-04-07 22:47:56 [INFO    ] AutoCut: Batch 6/6 — 10 scenes...
+2026-04-07 22:48:07 [INFO    ] AutoCut:   RAW RESPONSE: [
+  {
+    "scene_description": "The entity created to replace one man now holds more concentrated influence over the global economy",
+    "main_prompt": "Editorial collage illustration in watercolor style. A clear, singular focal point on a full-frame background of aged beige parchment paper. A watercolor illustration of a large, ornate key is centered, with a thin, vibrant red hand-drawn ink line circling it. Soft directional lighting and smooth shading. Large bold text CONCENTRATED POWER in a 
+2026-04-07 22:48:07 [INFO    ] AutoCut:   Batch 6: parsed 10 scenes
+2026-04-07 22:48:07 [INFO    ] AutoCut:   Saved 60/60 scenes
+2026-04-07 22:48:07 [INFO    ] AutoCut: 
+Done! Total scenes: 60
+2026-04-07 22:48:07 [INFO    ] AutoCut: Output saved to: J:\Coding\Desktop\AutoCut\output/
+2026-04-07 22:48:07 [INFO    ] AutoCut: Step finished successfully [pbar_prompts]
+2026-04-07 22:55:49 [INFO    ] AutoCut: Audio uploaded: J:/Coding/Desktop/AutoCut/assets/audio/audio.MP3
+2026-04-07 22:56:05 [INFO    ] AutoCut: Images uploaded: 60 files
+2026-04-07 22:56:10 [INFO    ] AutoCut: Session images already in place: J:\Coding\Desktop\AutoCut\session\images (60 files)
+2026-04-07 22:56:10 [INFO    ] AutoCut: Session images folder: J:\Coding\Desktop\AutoCut\session\images (60 files)
+2026-04-07 22:56:10 [INFO    ] AutoCut: Session audio: J:\Coding\Desktop\AutoCut\assets\audio\audio.MP3
+2026-04-07 22:56:10 [INFO    ] AutoCut: Starting Video Builder | audio=J:\Coding\Desktop\AutoCut\assets\audio\audio.MP3
+2026-04-07 22:59:28 [INFO    ] AutoCut: Step finished successfully [pbar_2]
+2026-04-07 23:03:20 [INFO    ] AutoCut: Event loop exited with code 0
+2026-04-08 22:16:19 [INFO    ] AutoCut: ============================================================
+2026-04-08 22:16:19 [INFO    ] AutoCut: AutoCut starting up
+2026-04-08 22:16:19 [INFO    ] AutoCut: Python 3.10.10 (tags/v3.10.10:aad5f6a, Feb  7 2023, 17:20:36) [MSC v.1929 64 bit (AMD64)]
+2026-04-08 22:16:19 [INFO    ] AutoCut: Platform: win32
+2026-04-08 22:16:22 [INFO    ] AutoCut: Cairo font loaded — families: ['Cairo', 'Cairo ExtraLight', 'Cairo', 'Cairo Light', 'Cairo', 'Cairo', 'Cairo Medium', 'Cairo', 'Cairo SemiBold', 'Cairo', 'Cairo', 'Cairo ExtraBold', 'Cairo', 'Cairo Black']
+2026-04-08 22:16:22 [INFO    ] AutoCut: Creating main window...
+2026-04-08 22:16:26 [INFO    ] AutoCut: Main window shown — entering event loop
+2026-04-08 22:18:25 [INFO    ] AutoCut: Audio uploaded: J:/Coding/Desktop/AutoCut/assets/audio/audio.MP3
+2026-04-08 22:18:38 [INFO    ] AutoCut: Images uploaded: 60 files
+2026-04-08 22:18:58 [INFO    ] AutoCut: Session images already in place: J:\Coding\Desktop\AutoCut\session\images (60 files)
+2026-04-08 22:18:58 [INFO    ] AutoCut: Session images folder: J:\Coding\Desktop\AutoCut\session\images (60 files)
+2026-04-08 22:18:58 [INFO    ] AutoCut: Session audio: J:\Coding\Desktop\AutoCut\assets\audio\audio.MP3
+2026-04-08 22:18:58 [INFO    ] AutoCut: Starting Video Builder | audio=J:\Coding\Desktop\AutoCut\assets\audio\audio.MP3
+2026-04-08 22:22:14 [INFO    ] AutoCut: Step finished successfully [pbar_2]

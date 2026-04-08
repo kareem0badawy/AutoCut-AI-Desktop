@@ -1,0 +1,7 @@
+{
+  "style_lock": "A still editorial collage illustration. Entire frame is densely filled with aged parchment paper — dark brown stained, heavily textured, torn and frayed at all edges bleeding to frame borders, zero white space anywhere. Layered torn paper scraps, brown masking tape strips, scattered period ink marks and handwritten text fragments cover every inch of background. Central subject is a watercolor-illustrated or hand-drawn vintage object or scene, illustrated not photographic. Warm historical palette: honey gold, deep amber, rich sepia, dark terracotta. Decorative elements include: green or brown postage stamps in corners, red wax seals, bold red rubber stamp labels, typewriter-font text labels on torn paper strips. Vintage scrapbook collage, aged documentary mixed media illustration.",
+  "negative_prompt": "white background, white margins, blank areas, empty space, white corners, white edges, clean background, studio background, photographic realism, photograph, camera photo, 3D render, CGI, anime, cartoon proportions, neon colors, modern digital art, glossy texture, black and white, monochrome, grayscale, washed out, blurry, futuristic, clipart, floating objects with no context, overcrowded illegible layout, abstract metaphors only",
+  "mood": "authoritative, historically significant, aged documentary, tactile physical media",
+  "label_style": "Bold red rubber stamp ink OR typewriter font on torn paper strip",
+  "aspect_ratio": "16:9"
+}

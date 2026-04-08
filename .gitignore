@@ -1,5 +1,7 @@
 # API Keys & Config
 config.json
+autocut.log
+aaaaaa.txt
 
 # Folders
 assets/
@@ -19,6 +21,3 @@ groq_keys.txt
 __pycache__/
 *.pyc
 *.pyo
-
-
-autocut.log

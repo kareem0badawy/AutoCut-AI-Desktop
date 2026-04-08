@@ -2,101 +2,601 @@
   {
     "scene_number": 1,
     "start": "00:00",
-    "end": "00:07",
+    "end": "00:09",
     "images": [
-      "scene_1.png"
+      "scene_001.jpg"
     ],
-    "scene_description": "Friedrich Hecker, a German banker, sits amidst worthless paper notes, his life savings gone, in a cold Berlin office, 1923, surrounded by empty financial ledgers and faded documents.",
-    "label_text": "BANKER'S DESPAIR"
+    "scene_description": "A line of shadows stretches around a full city block before dawn",
+    "label_text": "THE PANIC"
   },
   {
     "scene_number": 2,
-    "start": "00:07",
+    "start": "00:09",
     "end": "00:14",
     "images": [
-      "scene_2.png"
+      "scene_002.jpg"
     ],
-    "scene_description": "A split composition contrasts the fates of a city banker and a wheat farmer, one surrounded by worthless marks, the other by abundant grain, highlighting the disparity in their fortunes during the 1923 crisis.",
-    "label_text": "FORTUNE'S DIVIDE"
+    "scene_description": "Hands clutching bankbooks, eyes fixed on the heavy iron doors of the Knickerbocker Trust Company",
+    "label_text": "BANKBOOKS"
   },
   {
     "scene_number": 3,
     "start": "00:14",
     "end": "00:21",
     "images": [
-      "scene_3.png"
+      "scene_003.jpg"
     ],
-    "scene_description": "A single, gleaming gold bar rests on a pile of worthless paper reichsmarks, symbolizing the value of hard assets during times of economic turmoil, set against a backdrop of faded financial documents and worn leather bindings.",
-    "label_text": "GOLDEN REFUGE"
+    "scene_description": "The bank isn't failing because its vaults are empty, but because the belief in those vaults has died",
+    "label_text": "LOST FAITH"
   },
   {
     "scene_number": 4,
     "start": "00:21",
-    "end": "00:28",
+    "end": "00:26",
     "images": [
-      "scene_4.png"
+      "scene_004.jpg"
     ],
-    "scene_description": "Vast wheat fields stretch to the horizon outside Berlin, 1923, under a golden afternoon light, with a lone farmhouse in the distance, symbolizing the prosperity of the land during economic crisis.",
-    "label_text": "LAND'S PROSPERITY"
+    "scene_description": "The fear is the event, the panic is the cause",
+    "label_text": "FEAR"
   },
   {
     "scene_number": 5,
-    "start": "00:28",
-    "end": "00:35",
+    "start": "00:26",
+    "end": "00:31",
     "images": [
-      "scene_5.png"
+      "scene_005.jpg"
     ],
-    "scene_description": "A pension certificate, once a promise of security, now lies pinned to aged paper beside a wax seal and fountain pen, the promise of security framed like an old archival exhibit, highlighting the loss of trust in institutions.",
-    "label_text": "LOST SECURITY"
+    "scene_description": "A single telephone rings in a private library",
+    "label_text": "THE CALL"
   },
   {
     "scene_number": 6,
-    "start": "00:35",
-    "end": "00:42",
+    "start": "00:31",
+    "end": "00:38",
     "images": [
-      "scene_6.png"
+      "scene_006.jpg"
     ],
-    "scene_description": "A wheat farmer stands sovereign over his grain, the earth keeping its promises when paper cannot, symbolizing the reliability of natural assets during economic crisis, set against a backdrop of warm earthy tones and natural textures.",
-    "label_text": "EARTH'S PROMISE"
+    "scene_description": "The second-largest trust company in New York is about to collapse",
+    "label_text": "COLLAPSE"
   },
   {
     "scene_number": 7,
-    "start": "00:42",
-    "end": "00:49",
+    "start": "00:38",
+    "end": "00:44",
     "images": [
-      "scene_7.png"
+      "scene_007.jpg"
     ],
-    "scene_description": "A crumbling stone wall with old banknotes plastered over cracks like wallpaper, peeling away to reveal solid gold bricks underneath, symbolizing the true value beneath the surface of economic turmoil.",
-    "label_text": "GOLDEN FOUNDATION"
+    "scene_description": "A room filled with a figure from the early 20th century",
+    "label_text": "THE FIGURE"
   },
   {
     "scene_number": 8,
-    "start": "00:49",
-    "end": "00:56",
+    "start": "00:44",
+    "end": "00:51",
     "images": [
-      "scene_8.png"
+      "scene_008.jpg"
     ],
-    "scene_description": "A close-up of a single mark note, once a symbol of economic stability, now worthless, set against a backdrop of faded financial documents and worn leather bindings, highlighting the devaluation of currency during hyperinflation.",
-    "label_text": "WORTHLESS PAPER"
+    "scene_description": "The value inside the bank evaporates as the doors stay closed",
+    "label_text": "TIME"
   },
   {
     "scene_number": 9,
-    "start": "00:56",
-    "end": "01:03",
+    "start": "00:51",
+    "end": "00:58",
     "images": [
-      "scene_9.png"
+      "scene_009.jpg"
     ],
-    "scene_description": "A wheat field at sunset, with a few stalks of wheat in the foreground, symbolizing the abundance of natural resources during economic crisis, set against a backdrop of warm earthy tones and soft natural light.",
-    "label_text": "NATURAL ABUNDANCE"
+    "scene_description": "The Knickerbocker Trust Company's heavy iron doors",
+    "label_text": "IRON DOORS"
   },
   {
     "scene_number": 10,
-    "start": "01:03",
-    "end": "01:10",
+    "start": "00:58",
+    "end": "01:05",
     "images": [
-      "scene_10.png"
+      "scene_010.jpg"
     ],
-    "scene_description": "A contrast between a cityscape with a closed factory and a rural landscape with a thriving farm, highlighting the different outcomes of economic crisis on urban and rural areas, set against a backdrop of muted vintage colors and aged paper texture.",
-    "label_text": "URBAN RURAL DIVIDE"
+    "scene_description": "The collective terror of the people waiting outside the bank",
+    "label_text": "TERROR"
+  },
+  {
+    "scene_number": 11,
+    "start": "01:05",
+    "end": "01:11",
+    "images": [
+      "scene_011.jpg"
+    ],
+    "scene_description": "A private banker is about to hold the entire American financial system together with his signature",
+    "label_text": "THE SIGNATURE"
+  },
+  {
+    "scene_number": 12,
+    "start": "01:11",
+    "end": "01:18",
+    "images": [
+      "scene_012.jpg"
+    ],
+    "scene_description": "The institution built to ensure no single person could hold that much power again",
+    "label_text": "THE INSTITUTION"
+  },
+  {
+    "scene_number": 13,
+    "start": "01:18",
+    "end": "01:25",
+    "images": [
+      "scene_013.jpg"
+    ],
+    "scene_description": "The Dutch Republic's sophisticated financial instruments in 1720",
+    "label_text": "THE EXCHANGE"
+  },
+  {
+    "scene_number": 14,
+    "start": "01:25",
+    "end": "01:31",
+    "images": [
+      "scene_014.jpg"
+    ],
+    "scene_description": "The wave of paper shares from England in 1720",
+    "label_text": "PAPER SHARES"
+  },
+  {
+    "scene_number": 15,
+    "start": "01:31",
+    "end": "01:38",
+    "images": [
+      "scene_015.jpg"
+    ],
+    "scene_description": "The pattern of power and finance across three stories and three worlds",
+    "label_text": "THE PATTERN"
+  },
+  {
+    "scene_number": 16,
+    "start": "01:38",
+    "end": "01:47",
+    "images": [
+      "scene_016.jpg"
+    ],
+    "scene_description": "The same ending every time, a mirror to history",
+    "label_text": "THE MIRROR"
+  },
+  {
+    "scene_number": 17,
+    "start": "01:47",
+    "end": "01:54",
+    "images": [
+      "scene_017.jpg"
+    ],
+    "scene_description": "The landscape of Amsterdam in 1720, a hub of financial innovation",
+    "label_text": "AMSTERDAM"
+  },
+  {
+    "scene_number": 18,
+    "start": "01:54",
+    "end": "02:02",
+    "images": [
+      "scene_018.jpg"
+    ],
+    "scene_description": "The Dutch Republic's central banking system, a pioneering institution",
+    "label_text": "CENTRAL BANK"
+  },
+  {
+    "scene_number": 19,
+    "start": "02:02",
+    "end": "02:10",
+    "images": [
+      "scene_019.jpg"
+    ],
+    "scene_description": "The story of finance and power, a repeating pattern across eras",
+    "label_text": "THE CYCLE"
+  },
+  {
+    "scene_number": 20,
+    "start": "02:10",
+    "end": "02:18",
+    "images": [
+      "scene_020.jpg"
+    ],
+    "scene_description": "The institution's evolution over time, a reflection of its impact",
+    "label_text": "THE EVOLUTION"
+  },
+  {
+    "scene_number": 21,
+    "start": "02:18",
+    "end": "02:26",
+    "images": [
+      "scene_021.jpg"
+    ],
+    "scene_description": "The canals of a financially literate nation being turned into a laboratory of speculation",
+    "label_text": "SPECULATION"
+  },
+  {
+    "scene_number": 22,
+    "start": "02:26",
+    "end": "02:34",
+    "images": [
+      "scene_022.jpg"
+    ],
+    "scene_description": "The construction of the Ringstrasse, a grand circular boulevard in Vienna",
+    "label_text": "RINGSTRASSE"
+  },
+  {
+    "scene_number": 23,
+    "start": "02:34",
+    "end": "02:41",
+    "images": [
+      "scene_023.jpg"
+    ],
+    "scene_description": "The opening bell of the Vienna stock exchange in May 1873",
+    "label_text": "OPENING BELL"
+  },
+  {
+    "scene_number": 24,
+    "start": "02:41",
+    "end": "02:48",
+    "images": [
+      "scene_024.jpg"
+    ],
+    "scene_description": "Banks failing in a chain reaction across the Austro-Hungarian Empire",
+    "label_text": "BANK FAILURE"
+  },
+  {
+    "scene_number": 25,
+    "start": "02:48",
+    "end": "02:56",
+    "images": [
+      "scene_025.jpg"
+    ],
+    "scene_description": "Credit drying up overnight across the financial sector",
+    "label_text": "CREDIT CRISIS"
+  },
+  {
+    "scene_number": 26,
+    "start": "02:56",
+    "end": "03:02",
+    "images": [
+      "scene_026.jpg"
+    ],
+    "scene_description": "The crisis jumping across borders, triggering a global depression",
+    "label_text": "GLOBAL DEPRESSION"
+  },
+  {
+    "scene_number": 27,
+    "start": "03:03",
+    "end": "03:08",
+    "images": [
+      "scene_027.jpg"
+    ],
+    "scene_description": "Warnings published in fine print, ignored in favor of construction contracts",
+    "label_text": "WARNING SIGNS"
+  },
+  {
+    "scene_number": 28,
+    "start": "03:09",
+    "end": "03:16",
+    "images": [
+      "scene_028.jpg"
+    ],
+    "scene_description": "The panic spreading like ink in water, unaffected by intellect",
+    "label_text": "THE PANIC"
+  },
+  {
+    "scene_number": 29,
+    "start": "03:16",
+    "end": "03:22",
+    "images": [
+      "scene_029.jpg"
+    ],
+    "scene_description": "The laws of gravity seemingly suspended during the 18-month speculation period",
+    "label_text": "SPECULATION FEVER"
+  },
+  {
+    "scene_number": 30,
+    "start": "03:22",
+    "end": "03:28",
+    "images": [
+      "scene_030.jpg"
+    ],
+    "scene_description": "The six-year global depression that followed the crisis",
+    "label_text": "SIX YEAR DEPRESSION"
+  },
+  {
+    "scene_number": 31,
+    "start": "03:29",
+    "end": "03:35",
+    "images": [
+      "scene_031.jpg"
+    ],
+    "scene_description": "A heavy brass key turns in a lock in October 1907",
+    "label_text": "THE KEY"
+  },
+  {
+    "scene_number": 32,
+    "start": "03:36",
+    "end": "03:42",
+    "images": [
+      "scene_032.jpg"
+    ],
+    "scene_description": "J.P. Morgan gathers the presidents of every major bank in his personal library",
+    "label_text": "THE MEETING"
+  },
+  {
+    "scene_number": 33,
+    "start": "03:42",
+    "end": "03:48",
+    "images": [
+      "scene_033.jpg"
+    ],
+    "scene_description": "The presidents of every major bank sign a single document to pool their gold",
+    "label_text": "THE AGREEMENT"
+  },
+  {
+    "scene_number": 34,
+    "start": "03:49",
+    "end": "03:56",
+    "images": [
+      "scene_034.jpg"
+    ],
+    "scene_description": "The contagion stops after the bankers sign the document",
+    "label_text": "CONTAGION STOPPED"
+  },
+  {
+    "scene_number": 35,
+    "start": "03:56",
+    "end": "04:05",
+    "images": [
+      "scene_035.jpg"
+    ],
+    "scene_description": "A question haunts the halls of Congress about what happens next time",
+    "label_text": "NEXT TIME"
+  },
+  {
+    "scene_number": 36,
+    "start": "04:05",
+    "end": "04:11",
+    "images": [
+      "scene_036.jpg"
+    ],
+    "scene_description": "The answer is the Federal Reserve, established six years later",
+    "label_text": "FEDERAL RESERVE"
+  },
+  {
+    "scene_number": 37,
+    "start": "04:12",
+    "end": "04:17",
+    "images": [
+      "scene_037.jpg"
+    ],
+    "scene_description": "The Dutch tulip collapse of 1637 is an example of a similar financial crisis",
+    "label_text": "TULIP COLLAPSE"
+  },
+  {
+    "scene_number": 38,
+    "start": "04:18",
+    "end": "04:25",
+    "images": [
+      "scene_038.jpg"
+    ],
+    "scene_description": "The South Sea Bubble of 1720 is another example of a similar financial crisis",
+    "label_text": "SOUTH SEA BUBBLE"
+  },
+  {
+    "scene_number": 39,
+    "start": "04:25",
+    "end": "04:32",
+    "images": [
+      "scene_039.jpg"
+    ],
+    "scene_description": "The Panic of 1873 is another example of a similar financial crisis",
+    "label_text": "PANIC OF 1873"
+  },
+  {
+    "scene_number": 40,
+    "start": "04:32",
+    "end": "04:39",
+    "images": [
+      "scene_040.jpg"
+    ],
+    "scene_description": "The Great Depression of 1929 is another example of a similar financial crisis",
+    "label_text": "GREAT DEPRESSION"
+  },
+  {
+    "scene_number": 41,
+    "start": "04:39",
+    "end": "04:45",
+    "images": [
+      "scene_041.jpg"
+    ],
+    "scene_description": "Innovation creates genuine wealth, attracting investors",
+    "label_text": "INNOVATION"
+  },
+  {
+    "scene_number": 42,
+    "start": "04:45",
+    "end": "04:55",
+    "images": [
+      "scene_042.jpg"
+    ],
+    "scene_description": "Rising prices attract those who are chasing, not investing",
+    "label_text": "SPECULATION"
+  },
+  {
+    "scene_number": 43,
+    "start": "04:55",
+    "end": "05:03",
+    "images": [
+      "scene_043.jpg"
+    ],
+    "scene_description": "Leverage enters, fueling the ascent with borrowed money",
+    "label_text": "LEVERAGE"
+  },
+  {
+    "scene_number": 44,
+    "start": "05:03",
+    "end": "05:12",
+    "images": [
+      "scene_044.jpg"
+    ],
+    "scene_description": "A single rumor or a rate move breaks the confidence",
+    "label_text": "CONFIDENCE"
+  },
+  {
+    "scene_number": 45,
+    "start": "05:12",
+    "end": "05:18",
+    "images": [
+      "scene_045.jpg"
+    ],
+    "scene_description": "The system is rebuilt with new rules to prevent the last crisis",
+    "label_text": "REBUILD"
+  },
+  {
+    "scene_number": 46,
+    "start": "05:18",
+    "end": "05:24",
+    "images": [
+      "scene_046.jpg"
+    ],
+    "scene_description": "Global debt reached 313 trillion dollars in 2023",
+    "label_text": "GLOBAL DEBT"
+  },
+  {
+    "scene_number": 47,
+    "start": "05:25",
+    "end": "05:30",
+    "images": [
+      "scene_047.jpg"
+    ],
+    "scene_description": "US household debt hit 17.5 trillion in early 2024",
+    "label_text": "HOUSEHOLD DEBT"
+  },
+  {
+    "scene_number": 48,
+    "start": "05:30",
+    "end": "05:38",
+    "images": [
+      "scene_048.jpg"
+    ],
+    "scene_description": "Central bank balance sheets expanded past 28 trillion at their 2021 peak",
+    "label_text": "CENTRAL BANK"
+  },
+  {
+    "scene_number": 49,
+    "start": "05:38",
+    "end": "05:43",
+    "images": [
+      "scene_049.jpg"
+    ],
+    "scene_description": "The losses always hit the same people, not the ones who designed the system",
+    "label_text": "LOSSES"
+  },
+  {
+    "scene_number": 50,
+    "start": "05:43",
+    "end": "05:49",
+    "images": [
+      "scene_050.jpg"
+    ],
+    "scene_description": "The system is designed to prevent the last crisis, not the next one",
+    "label_text": "NEXT CRISIS"
+  },
+  {
+    "scene_number": 51,
+    "start": "05:50",
+    "end": "05:55",
+    "images": [
+      "scene_051.jpg"
+    ],
+    "scene_description": "The entity created to replace one man now holds more concentrated influence over the global economy",
+    "label_text": "CONCENTRATED POWER"
+  },
+  {
+    "scene_number": 52,
+    "start": "05:56",
+    "end": "06:01",
+    "images": [
+      "scene_052.jpg"
+    ],
+    "scene_description": "The system built to replace him is more complex and more interconnected than anything he ever controlled",
+    "label_text": "INTERCONNECTED SYSTEM"
+  },
+  {
+    "scene_number": 53,
+    "start": "06:01",
+    "end": "06:06",
+    "images": [
+      "scene_053.jpg"
+    ],
+    "scene_description": "The question isn't whether we've solved the problem of concentrated power",
+    "label_text": "CONCENTRATED POWER"
+  },
+  {
+    "scene_number": 54,
+    "start": "06:01",
+    "end": "06:06",
+    "images": [
+      "scene_054.jpg"
+    ],
+    "scene_description": "The question is whether we've just changed who holds the key",
+    "label_text": "WHO HOLDS THE KEY"
+  },
+  {
+    "scene_number": 55,
+    "start": "06:01",
+    "end": "06:06",
+    "images": [
+      "scene_055.jpg"
+    ],
+    "scene_description": "If this kind of history stays with you — subscribe",
+    "label_text": "STAY INFORMED"
+  },
+  {
+    "scene_number": 56,
+    "start": "06:01",
+    "end": "06:06",
+    "images": [
+      "scene_056.jpg"
+    ],
+    "scene_description": "Tell me in the comments: Do you think the Federal Reserve was the solution — or just a bigger library with a different lock",
+    "label_text": "FEDERAL RESERVE"
+  },
+  {
+    "scene_number": 57,
+    "start": "06:01",
+    "end": "06:06",
+    "images": [
+      "scene_057.jpg"
+    ],
+    "scene_description": "The system built to replace one man is more complex and more interconnected than anything he ever controlled",
+    "label_text": "COMPLEX SYSTEM"
+  },
+  {
+    "scene_number": 58,
+    "start": "06:01",
+    "end": "06:06",
+    "images": [
+      "scene_058.jpg"
+    ],
+    "scene_description": "The entity created to replace one man now holds more concentrated influence over the global economy",
+    "label_text": "GLOBAL ECONOMY"
+  },
+  {
+    "scene_number": 59,
+    "start": "06:01",
+    "end": "06:06",
+    "images": [
+      "scene_059.jpg"
+    ],
+    "scene_description": "The question is whether we've just changed who holds the key",
+    "label_text": "KEY TO POWER"
+  },
+  {
+    "scene_number": 60,
+    "start": "06:01",
+    "end": "06:03",
+    "images": [
+      "scene_060.jpg"
+    ],
+    "scene_description": "The system built to replace one man is more complex and more interconnected than anything he ever controlled",
+    "label_text": "INTERCONNECTED"
   }
 ]

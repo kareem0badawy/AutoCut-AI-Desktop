@@ -1,0 +1,97 @@
+[
+  {
+    "number": 1,
+    "script_analysis": {
+      "core_objects": [
+        "valuation report",
+        "plot of land"
+      ],
+      "core_tension": "confidence vs impending market crash",
+      "core_emotion": "doubt"
+    },
+    "pattern": "A/B/C/D/E",
+    "concept": "A hand holding a gold bar with a faint crack",
+    "focal_subject": "hand holding a gold bar with a faint crack",
+    "secondary_elements": [],
+    "prompt_for_flow": "Editorial collage illustration with a clear focal point. A hand holding a gold bar with a faint crack.\nBackground is aged brown parchment texture with soft tonal depth, slightly darker edges.\nSoft directional lighting, gentle shadows, gold slightly more vivid.\nA large bold text reading \"TOO RISKY?\" in a heavy vintage serif font, off-white with dark shadow, placed on a light paper strip with a small deep red accent.\nClean composition, sense of uncertainty, subtle tension.",
+    "negative_prompt": "photorealistic, 3D, CGI, engraving, comic, anime, flat watercolor, low contrast, clutter, tiny subject, empty background, unreadable text, bright colors",
+    "suggested_title": "Gold Bar Uncertainty",
+    "hook": "why this thumbnail earns the click"
+  },
+  {
+    "number": 2,
+    "script_analysis": {
+      "core_objects": [
+        "valuation report",
+        "plot of land"
+      ],
+      "core_tension": "absurdity of land's value",
+      "core_emotion": "curiosity"
+    },
+    "pattern": "A/B/C/D/E",
+    "concept": "A single gold coin with a large crack",
+    "focal_subject": "single gold coin with a large crack",
+    "secondary_elements": [],
+    "prompt_for_flow": "Editorial collage illustration with a clear focal point. A single gold coin with a large crack.\nBackground is aged brown parchment texture with soft tonal depth, slightly darker edges.\nSoft directional lighting, gentle shadows, gold slightly more vivid.\nA large bold text reading \"LAST ONE?\" in a heavy vintage serif font, off-white with dark shadow, placed on a light paper strip with a small deep red accent.\nClean composition, sense of surprise, strong focus.",
+    "negative_prompt": "photorealistic, 3D, CGI, engraving, comic, anime, flat watercolor, low contrast, clutter, tiny subject, empty background, unreadable text, bright colors",
+    "suggested_title": "Gold Coin Surprise",
+    "hook": "why this thumbnail earns the click"
+  },
+  {
+    "number": 3,
+    "script_analysis": {
+      "core_objects": [
+        "gold bag",
+        "empty interior"
+      ],
+      "core_tension": "illusion of safety",
+      "core_emotion": "fear"
+    },
+    "pattern": "A/B/C/D/E",
+    "concept": "A gold bag with an empty interior",
+    "focal_subject": "gold bag with an empty interior",
+    "secondary_elements": [],
+    "prompt_for_flow": "Editorial collage illustration with a clear focal point. A gold bag with an empty interior.\nBackground is aged brown parchment texture with soft tonal depth, slightly darker edges.\nSoft directional lighting, gentle shadows, gold slightly more vivid.\nA large bold text reading \"FULL?\" in a heavy vintage serif font, off-white with dark shadow, placed on a light paper strip with a small deep red accent.\nClean composition, sense of fear, strong visual contrast.",
+    "negative_prompt": "photorealistic, 3D, CGI, engraving, comic, anime, flat watercolor, low contrast, clutter, tiny subject, empty background, unreadable text, bright colors",
+    "suggested_title": "Gold Bag Deception",
+    "hook": "why this thumbnail earns the click"
+  },
+  {
+    "number": 4,
+    "script_analysis": {
+      "core_objects": [
+        "valuation report",
+        "gold bar"
+      ],
+      "core_tension": "the contradiction between the man's confidence in the land's value and the impending market crash",
+      "core_emotion": "doubt"
+    },
+    "pattern": "A",
+    "concept": "A hand holding a gold bar with a faint crack represents the contradiction between confidence and impending collapse.",
+    "focal_subject": "hand holding gold bar with faint crack",
+    "secondary_elements": [],
+    "prompt_for_flow": "Editorial collage illustration with a clear focal point. A hand in watercolor style tightly holding a gold bar with a faint crack.\nBackground is aged brown parchment texture with tonal harmony, slightly darker edges, softer center brightness. Minimal collage elements.\nSoft directional lighting, gentle shadows, gold slightly richer. A large bold text reading \"WHY CONFIDENCE FAILS?\" in a heavy vintage serif font, off-white with dark shadow, placed clearly on a torn paper strip with a small deep red accent.\nClean composition, subtle tension, curiosity-driven.",
+    "negative_prompt": "photorealistic, 3D, CGI, engraving, comic, anime, flat watercolor, low contrast, clutter, tiny subject, empty background, unreadable text, bright colors",
+    "suggested_title": "Market Crash",
+    "hook": "Why confidence fails?"
+  },
+  {
+    "number": 5,
+    "script_analysis": {
+      "core_objects": [
+        "valuation report",
+        "gold coin"
+      ],
+      "core_tension": "the absurdity of the land's value and the risk of the impending market crash",
+      "core_emotion": "surprise"
+    },
+    "pattern": "B",
+    "concept": "A single gold coin with a large crack represents the absurdity of the land's value and the risk of the impending market crash.",
+    "focal_subject": "single gold coin with large crack",
+    "secondary_elements": [],
+    "prompt_for_flow": "Editorial collage illustration with a clear focal point. A single gold coin in watercolor style with a large crack.\nBackground is aged brown parchment texture with tonal harmony, slightly darker edges, softer center brightness. Minimal collage elements.\nSoft directional lighting, gentle shadows, gold slightly more vivid. A large bold text reading \"WHAT'S THE RISK?\" in a heavy vintage serif font, off-white with dark shadow, placed clearly on a torn paper strip with a small deep red accent.\nClean composition, emotional tension, curiosity-driven.",
+    "negative_prompt": "photorealistic, 3D, CGI, engraving, comic, anime, flat watercolor, low contrast, clutter, tiny subject, empty background, unreadable text, bright colors",
+    "suggested_title": "Market Crash",
+    "hook": "What's the risk?"
+  }
+]
